@@ -1,0 +1,14 @@
+# Composer
+/vendor/
+
+# npm
+/node_modules
+
+# env
+.env
+
+# PhpStorm
+/.idea/
+
+# Autoloader
+/source/RIOClasses.php
