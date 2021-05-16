@@ -1,0 +1,25 @@
+{% extends "base.twig" %}
+{% block head %}
+    <link id="theme" rel="stylesheet" type="text/css" href="{{ theme_css }}" />
+{% endblock %}
+{% block theme_toggle %}
+    <div class="my-3">
+        {{ toggle_button }}
+    </div>
+{% endblock %}
+{% block content %}
+    {{ show_form }}
+    <h3>Login</h3>
+    <form action="{{ action }}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Benutzername:</label>
+            <input id="username" name="username" type="text" placeholder="m.muster" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Passwort:</label>
+            <input id="password" name="password" type="password" placeholder="Passwort" class="form-control" required>
+        </div>
+        <input id="theme" name="theme" type="hidden" value="no_theme_change">
+        <div><button type="submit" class="btn btn-primary">Login</button></div>
+    </form>
+{% endblock %}

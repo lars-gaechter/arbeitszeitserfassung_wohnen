@@ -1,0 +1,104 @@
+{% extends "base.twig" %}
+{% macro link(one_work_day_from_user_past, key) %}
+    <a href="{{ getAbsolutePath(['admin','presencetimecorrections']|merge(one_work_day_from_user_past.presencetimecorrections)|merge([key])) }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
+{% endmacro %}
+{% block head %}
+    <link id="theme" rel="stylesheet" type="text/css" href="{{ theme_css }}" />
+{% endblock %}
+{% block content %}
+    {% import _self as overview %}
+    {# @var MongoDB\Model\BSONArray[] all_work_days_from_user_past #}
+    <h3>Übersicht</h3>
+    <a href="{{ getAbsolutePath(['sessionlogin']) }}">Zeiterfassung</a>
+    <br>
+    <a href="{{ getAbsolutePath(['admin','edituser',session_username]) }}" class="d-none d-md-inline">Benutzer</a>
+    <div>
+        {{ [] is same as(all_work_days_from_user_past) ? "Es hat keine Einträge" }}
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="p-2">
+            <p>Präsenzzeiten für {{ display_username ~ ' ' ~ surname_username }}</p>
+        </div>
+    </div>
+    <div class="d-flex justify-content-around">
+        <div class="p-2">
+            {% if previous_month is not same as('') %}
+                <a href="{{ getAbsolutePath(['admin','overview',session_username,previous_month]) }}" class="d-none d-md-inline">{{ previous_month_name }}</a>
+            {% endif %}
+        </div>
+        <div class="p-2">
+            <p>{{ current_month_name }}</p>
+        </div>
+        <div class="p-2">
+            {% if next_month is not same as('') %}
+                <a href="{{ getAbsolutePath(['admin','overview',session_username,next_month]) }}" class="d-none d-md-inline">{{ next_month_name }}</a>
+            {% endif %}
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col" colspan="2">Datum</th>
+            <th scope="col">Startzeit</th>
+            <th scope="col">Endzeit</th>
+            <th scope="col">Soll</th>
+            <th scope="col">Ist</th>
+            <th scope="col">Differenz</th>
+            <th scope="col">Zeitsaldi (Woche)</th>
+            <th scope="col">Zeitsaldi (Monat)</th>
+            <th scope="col">Zeitsaldi (Total)</th>
+            <th scope="col">Kommentar</th>
+        </tr>
+        </thead>
+        <tbody>
+        {# @var MongoDB\Model\BSONArray one_work_day_from_user_past #}
+        {% for one_work_day_from_user_past in all_work_days_from_user_past %}
+            {% set length = one_work_day_from_user_past.offsetGet("time")|length %}
+            {% set print_mandatory_time = false %}
+            {% set print_date = false %}
+            {# @var MongoDB\Model\BSONDocument time #}
+            {% for key,time in one_work_day_from_user_past.offsetGet("time") %}
+                <tr>
+                    <td>{{ overview.link(one_work_day_from_user_past, key) }}</td>
+                    {% if false is same as(print_date) %}
+                        <th scope="row" rowspan="{{ length }}">{{ getWeekDayShortNameByDate(one_work_day_from_user_past.date) }}</th>
+                        <th scope="row" rowspan="{{ length }}">{{ one_work_day_from_user_past.date }}</th>
+                    {% endif %}
+                    <td>{{ '' is same as(time.offsetGet("start_corrected")) ? time.offsetGet("start") : time.offsetGet("start_corrected") }}</td>
+                    <td>{{ '' is same as(time.offsetGet("end_corrected")) ? time.offsetGet("end") : time.offsetGet("end_corrected") }}</td>
+                    {% if false is same as(print_mandatory_time) %}
+                        <td rowspan="{{ length }}">{{ one_work_day_from_user_past.offsetGet("mandatory_time") }}</td>
+                        {% set print_mandatory_time = true %}
+                    {% endif %}
+                    <td>{{ time.offsetGet("is_time") }}</td>
+                    <td>{{ time.offsetGet("diff_negative_positive")~time.offsetGet("diff") }}</td>
+                    {% if false is same as(print_date) %}
+                        <td rowspan="{{ length }}">{{ one_work_day_from_user_past.offsetGet("deviation_time_weekly") }}</td>
+                        <td rowspan="{{ length }}">{{ one_work_day_from_user_past.offsetGet("deviation_time_monthly") }}</td>
+                        <td rowspan="{{ length }}">{{ one_work_day_from_user_past.offsetGet("deviation_time_total") }}</td>
+                        {% set print_date = true %}
+                    {% endif %}
+                    <td>{{ time.offsetGet("comment") }}</td>
+                </tr>
+            {% endfor %}
+            {% if loop.last %}
+                <tr class="border-bottom-0">
+                    <td class="border-0"></td>
+                    <td class="border-0"></td>
+                    <th scope="row" class="border-0">Total</th>
+                    <td class="border-0"></td>
+                    <td class="border-0"></td>
+                    <td class="border-bottom">{{ one_work_day_from_user_past.offsetGet("mandatory_time_monthly") }}</td>
+                    <td class="border-bottom">{{ one_work_day_from_user_past.offsetGet("is_time_monthly") }}</td>
+                    <td class="border-0"></td>
+                    <td class="border-0"></td>
+                    <td class="border-bottom">{{ one_work_day_from_user_past.offsetGet("deviation_time_monthly") }}</td>
+                    <td class="border-bottom">{{ one_work_day_from_user_past.offsetGet("deviation_time_total") }}</td>
+                    <td class="border-0"></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

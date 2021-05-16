@@ -1,0 +1,18 @@
+{% extends "base.twig" %}
+{% block head %}
+    <link id="theme" rel="stylesheet" type="text/css" href="{{ theme_css }}" />
+{% endblock %}
+{% block content %}
+    <h3>Benutzer</h3>
+    <a href="{{ getAbsolutePath(['sessionlogin']) }}">Zeiterfassung</a>
+    <br>
+    <a href="{{ getAbsolutePath(['admin','overview',session_username,month_year]) }}">Übersicht</a>
+    <form action="{{ getAbsolutePath(['admin','updateuser',session_username]) }}" method="post">
+        <div class="mb-3">
+            <label for="mandatory_time" class="form-label">Pflichtzeit pro Tag</label>
+            <input type="time" class="form-control" id="mandatory_time" name="mandatory_time" value="{{ mandatory_time }}" aria-describedby="mandatory_time_help">
+            <div id="mandatory_time_help" class="form-text">Von Montag bis Freitag ausgenommen von Samstag, Sonntag und Feiertag. Diese Änderung wird erst am nächsten Tag in Kraft treten.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">OK</button>
+    </form>
+{% endblock %}

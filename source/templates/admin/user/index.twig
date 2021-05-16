@@ -1,0 +1,17 @@
+{% extends base ~ "base.twig" %}
+{% block head %}
+    <link id="theme" rel="stylesheet" type="text/css" href="{{ theme_css }}" />
+{% endblock %}
+{% block content %}
+    <div class="col-12">
+        {{ raw_html|raw }}
+        <form action="{{ getAbsolutePath("edit.php", ["admin", "user"]) }}" method="post">
+            <input value="{{ user_id }}" id="user_id" name="user_id" type="hidden">
+            <label for="create_user_locked"> Locked 1/0
+                <input value="{{ user_locked }}" id="create_user_locked" name="user_locked" type="number" min="0" max="1">
+            </label>
+            <button type="submit">Senden</button>
+        </form>
+        <a href="{{ getAbsolutePath('', ["admin"]) }}">Admin</a>
+    </div>
+{% endblock %}
