@@ -1,0 +1,27 @@
+{
+  "name": "arbeitszeitserfassung_wohnen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "sass": "^1.32.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.rafisa.org/l.gaechter/arbeitszeitserfassung_wohnen.git"
+  },
+  "author": "Lars Gächter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.rafisa.org/l.gaechter/arbeitszeitserfassung_wohnen/issues"
+  },
+  "homepage": "https://gitlab.rafisa.org/l.gaechter/arbeitszeitserfassung_wohnen#readme"
+}
