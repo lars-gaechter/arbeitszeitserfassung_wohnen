@@ -7,49 +7,12 @@
         <title>{{ title }}</title>
         <link rel="shortcut icon" type="image/x-icon" href="{{ getAbsolutePath([], "favicon.ico") }}" sizes="16x16">
         {% block head %}{% endblock %}
-        <script>
-            // this one is jut to wait for the page to load
-            document.addEventListener('DOMContentLoaded', () => {
-                const themeStylesheet = document.getElementById('theme');
-                const themeToggle = document.getElementById('theme-toggle');
-                //const themeToggleLabel = themeToggle.getElementsByTagName("label");
-                themeToggle.addEventListener('click', () => {
-                    // if it's light -> turn dark
-                    if(themeStylesheet.href.includes('light')){
-                        document.cookie = "theme=dark; path=/";
-                        themeStylesheet.href = '{{ getAbsolutePath(["css"], "dark-theme.css") }}';
-                        themeToggle.innerText = 'In den Lichtmodus wechseln';
-                        //document.getElementById('theme_id').value = 2;
-                    } else {
-                        // if it's dark -> turn light
-                        document.cookie = "theme=light; path=/";
-                        themeStylesheet.href = '{{ getAbsolutePath(["css"], "light-theme.css") }}';
-                        themeToggle.innerText = 'In den Dunkelmodus wechseln';
-                        //document.getElementById('theme_id').value = 1;
-                    }
-                })
-            })
-        </script>
     </head>
     <body>
         <div class="container-fluid">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-auto">
-                        {% set toggle_button %}
-                            {#<div id="theme-toggle" class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                                <label class="custom-control-label" for="customSwitch1">In den {{ "light" is same as(theme) ? "Dunkelmodus" : "dark" is same as(theme) ? "Lichtmodus" }} wechseln</label>
-                            </div>#}
-                            <button id="theme-toggle" type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false">In den {{ "light" is same as(theme) ? "Dunkelmodus" : "dark" is same as(theme) ? "Lichtmodus" }} wechseln</button>
-                        {% endset %}
-                        {% block theme_toggle %}
-                            <form action="{{ getAbsolutePath(['theme', theme]) }}">
-                                <div class="my-3">
-                                    {{ toggle_button }}
-                                </div>
-                            </form>
-                        {% endblock %}
                         {% block content %}{% endblock %}
                     </div>
                 </div>
@@ -57,8 +20,5 @@
         </div>
         <!-- JavaScript Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-        <script>
-            console.log(window.matchMedia("(prefers-color-scheme: dark)").matches);
-        </script>
     </body>
 </html>
