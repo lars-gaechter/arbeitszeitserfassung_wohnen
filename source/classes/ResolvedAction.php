@@ -5,18 +5,18 @@ declare(strict_types=1);
 class ResolvedAction
 {
     private array $path_partials;
-    private Maybe $controller_namespace;
-    private Maybe $controller_action;
-    private Maybe $frontend;
-    private Maybe $controller_action_parameters;
+    private RIOMaybe $controller_namespace;
+    private RIOMaybe $controller_action;
+    private RIOMaybe $frontend;
+    private RIOMaybe $controller_action_parameters;
 
     public function __construct(array $path_partials)
     {
         $this->path_partials = $path_partials;
-        $this->controller_namespace = Maybe::getEmpty();
-        $this->controller_action = Maybe::getEmpty();
-        $this->controller_action_parameters = Maybe::getEmpty();
-        $this->frontend = Maybe::getEmpty();
+        $this->controller_namespace = RIOMaybe::getEmpty();
+        $this->controller_action = RIOMaybe::getEmpty();
+        $this->controller_action_parameters = RIOMaybe::getEmpty();
+        $this->frontend = RIOMaybe::getEmpty();
     }
 
     public static function create(self $o): self
@@ -49,42 +49,42 @@ class ResolvedAction
         $this->path_partials = $path_partials;
     }
 
-    public function getControllerNamespace(): Maybe
+    public function getControllerNamespace(): RIOMaybe
     {
         return $this->controller_namespace;
     }
 
-    public function setControllerNamespace(Maybe $controller_namespace): void
+    public function setControllerNamespace(RIOMaybe $controller_namespace): void
     {
         $this->controller_namespace = $controller_namespace;
     }
 
-    public function getControllerAction(): Maybe
+    public function getControllerAction(): RIOMaybe
     {
         return $this->controller_action;
     }
 
-    public function setControllerAction(Maybe $controller_action): void
+    public function setControllerAction(RIOMaybe $controller_action): void
     {
         $this->controller_action = $controller_action;
     }
 
-    public function getControllerActionParameters(): Maybe
+    public function getControllerActionParameters(): RIOMaybe
     {
         return $this->controller_action_parameters;
     }
 
-    public function setControllerActionParameters(Maybe $controller_action_parameters): void
+    public function setControllerActionParameters(RIOMaybe $controller_action_parameters): void
     {
         $this->controller_action_parameters = $controller_action_parameters;
     }
 
-    public function getFrontend(): Maybe
+    public function getFrontend(): RIOMaybe
     {
         return $this->frontend;
     }
 
-    public function setFrontend(Maybe $frontend): void
+    public function setFrontend(RIOMaybe $frontend): void
     {
         $this->frontend = $frontend;
     }

@@ -53,9 +53,9 @@ class StaticResolver extends PartialResolver
                 $conf = $route[1];
                 $namespace = $conf['controller_namespace'];
                 $method = $conf['controller_method'];
-                $action->setControllerNamespace(Maybe::of($namespace));
-                $action->setControllerAction(Maybe::of($method));
-                $action->setControllerActionParameters(Maybe::of($action->getPathPartials()));
+                $action->setControllerNamespace(RIOMaybe::of($namespace));
+                $action->setControllerAction(RIOMaybe::of($method));
+                $action->setControllerActionParameters(RIOMaybe::of($action->getPathPartials()));
                 return $action;
             }
         }

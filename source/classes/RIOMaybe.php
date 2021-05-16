@@ -13,17 +13,17 @@ class RIOMaybe
         $this->checkIfValidState();
     }
 
-    public static function getEmpty(): Maybe
+    public static function getEmpty(): RIOMaybe
     {
         if (null === self::$empty) {
-            self::$empty = new class() extends Maybe {
+            self::$empty = new class() extends RIOMaybe {
                 public function __construct()
                 {
-                    parent::__construct('EmptyMaybe');
+                    parent::__construct('EmptyRIOMaybe');
                 }
                 public function getValue(): void
                 {
-                    throw new Error('Tried to getValue from empty Maybe!');
+                    throw new Error('Tried to getValue from empty RIOMaybe!');
                 }
             };
         }
@@ -41,7 +41,7 @@ class RIOMaybe
         return $this === self::$empty;
     }
 
-    public static function ofEmptiable($value): Maybe
+    public static function ofEmptiable($value): RIOMaybe
     {
         if (empty($value)) {
             return self::getEmpty();
@@ -49,7 +49,7 @@ class RIOMaybe
         return self::of($value);
     }
 
-    public static function ofSettable(&$value): Maybe
+    public static function ofSettable(&$value): RIOMaybe
     {
         if (isset($value) && !empty($value)) {
             return self::of($value);
@@ -57,15 +57,15 @@ class RIOMaybe
         return self::getEmpty();
     }
 
-    public static function of($value): Maybe
+    public static function of($value): RIOMaybe
     {
-        return new Maybe($value);
+        return new RIOMaybe($value);
     }
 
     private function checkIfValidState(): void
     {
         if (!isset($this->value)) {
-            throw new Error('Maybe state is invalid');
+            throw new Error('RIOMaybe state is invalid');
         }
     }
 }

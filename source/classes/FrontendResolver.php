@@ -21,7 +21,7 @@ class FrontendResolver extends PartialResolver
 
     public function resolve(ResolvedAction $action): ResolvedAction
     {
-        $possible_frontend = Maybe::ofSettable($action->getPathPartials()[0]);
+        $possible_frontend = RIOMaybe::ofSettable($action->getPathPartials()[0]);
 
         if (!$possible_frontend->isEmpty()) {
             foreach ($this->frontends as $frontend) {
@@ -35,7 +35,7 @@ class FrontendResolver extends PartialResolver
             }
         }
         // The first part of the parts isn't the area name
-        $action->setFrontend(Maybe::of($this->default_frontend));
+        $action->setFrontend(RIOMaybe::of($this->default_frontend));
 
         return $action;
     }

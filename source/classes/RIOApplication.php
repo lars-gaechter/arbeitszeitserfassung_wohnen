@@ -115,11 +115,11 @@ class RIOApplication
         $twig = self::getTwig($resolvedAction->getFrontend()->getValue());
         /** @var Main|Admin $instance */
         $instance = new $class($class, $twig, $request);
-        if(false === Maybe::ofSettable($class)->isEmpty()) {
+        if(false === RIOMaybe::ofSettable($class)->isEmpty()) {
             if(!class_exists($class)) {
                 return RedirectOrException::throwErrorException("Controller class called '".$class."' doesn't exist");
             }
-            if(false === Maybe::ofSettable($method)->isEmpty()) {
+            if(false === RIOMaybe::ofSettable($method)->isEmpty()) {
                 if(!method_exists($instance, $method)) {
                     return RedirectOrException::throwErrorException("Method called '".$method."' doesn't exist in controller class called '".$class."'");
                 }
