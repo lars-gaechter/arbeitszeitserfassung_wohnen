@@ -12,7 +12,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "main": "sass source/scss/_main.scss public/css/main.css --style compressed",
+    "main:watch": "sass --watch source/scss/_main.scss public/css/main.css --style compressed"
   },
   "repository": {
     "type": "git",

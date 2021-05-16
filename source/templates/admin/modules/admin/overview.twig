@@ -3,7 +3,7 @@
     <a href="{{ getAbsolutePath(['admin','presencetimecorrections']|merge(one_work_day_from_user_past.presencetimecorrections)|merge([key])) }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
 {% endmacro %}
 {% block head %}
-    <link id="theme" rel="stylesheet" type="text/css" href="{{ theme_css }}" />
+    <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
 {% endblock %}
 {% block content %}
     {% import _self as overview %}

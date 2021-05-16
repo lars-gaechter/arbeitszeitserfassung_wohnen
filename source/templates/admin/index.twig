@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
 {% block head %}
-    <link id="theme" rel="stylesheet" type="text/css" href="{{ theme_css }}" />
+    <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
 {% endblock %}
 {% block content %}
     {% if result_task_type.num_rows > 0 %}
