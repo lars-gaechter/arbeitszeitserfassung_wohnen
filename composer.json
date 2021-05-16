@@ -1,0 +1,11 @@
+{
+    "require": {
+        "twig/twig": "^3.0",
+        "ext-ldap": "*",
+        "ext-mbstring": "*",
+        "ext-mongodb": "^1.9",
+        "filp/whoops": "^2.9",
+        "mongodb/mongodb": "^1.8",
+        "symfony/dotenv": "^5.2"
+    }
+}
