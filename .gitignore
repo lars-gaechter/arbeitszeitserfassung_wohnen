@@ -13,3 +13,7 @@ composer.phar
 
 # Autoloader
 /source/RIOClasses.php
+
+# CSS
+/public/css/main.css
+/public/css/main.css.map
