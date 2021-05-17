@@ -5,7 +5,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use function source\getAbsolutePath;
-use function source\getAbsolutePathSecondHost;
 
 class RIOCustomTwigExtension extends AbstractExtension
 {
@@ -20,10 +19,36 @@ class RIOCustomTwigExtension extends AbstractExtension
         return [
             new TwigFunction('getAbsolutePath', [$this, 'getAbsolutePath']),
             new TwigFunction('getSession', [$this, 'getSession']),
-            new TwigFunction('getAbsolutePathSecondHost', [$this, 'getAbsolutePathSecondHost']),
             new TwigFunction('getWeekDayShortNameByDate', [$this, 'getWeekDayShortNameByDate']),
             new TwigFunction('isLoggedIn', [$this, 'isLoggedIn']),
             new TwigFunction('logoLink', [$this, 'logoLink'])
+        ];
+    }
+
+    /**
+     * @param string $active
+     * @return array
+     */
+    public function navByActive(string $active): array
+    {
+        return [
+            "nav" => [
+                [
+                    "name" => "Zeiterfassung",
+                    "active" => "user_home" === $active,
+                    "link" => $this->getAbsolutePath(["main","sessionLogin"])
+                ],
+                [
+                    "name" => "Benutzer",
+                    "active" => "edit_user" === $active,
+                    "link" => $this->getAbsolutePath(["admin","editUser"])
+                ],
+                [
+                    "name" => "Übersicht",
+                    "active" => "overview" === $active,
+                    "link" => $this->getAbsolutePath(["admin","overview"])
+                ]
+            ]
         ];
     }
 
@@ -78,15 +103,5 @@ class RIOCustomTwigExtension extends AbstractExtension
     public function getAbsolutePath(array $parts = [], string $after = ""): string
     {
         return getAbsolutePath($parts, $after);
-    }
-
-    /**
-     * @param string $after
-     * @param array $parts
-     * @return string
-     */
-    public function getAbsolutePathSecondHost(array $parts = [], string $after = ""): string
-    {
-        return getAbsolutePathSecondHost($after, $parts);
     }
 }

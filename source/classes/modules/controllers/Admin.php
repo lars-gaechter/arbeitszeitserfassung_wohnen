@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
-use function source\getDefaultTheme;
 
 /**
  * Class Admin
@@ -51,10 +50,11 @@ class Admin extends RIOAccessController
         $user = $this->getUsers()->findOne(['session_username' => $username]);
         $workday = new RIOWorkDayObject();
         $monthYear = $workday->getDate()->format("m.Y");
+        $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         return $this->renderPage(
             "edit_user.twig",
             array_merge(
-                getDefaultTheme(),
+                $customTwigExtension->navByActive("edit_user"),
                 [
                     "mandatory_time" => $user->offsetGet("mandatory_time"),
                     'month_year' => $monthYear,
@@ -93,42 +93,40 @@ class Admin extends RIOAccessController
         $time = $times->offsetGet($indexOfTime);
         $workdayObject = new RIOWorkDayObject();
         $monthYear = $workdayObject->getDate()->format("m.Y");
+        $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         return $this->renderPage(
             "presence_time_corrections.twig",
-            array_merge(
-                getDefaultTheme(),
-                [
-                    "date" => $date,
-                    "time" => $time,
-                    "time_start" => '' === $time->offsetGet("start_corrected") ? $time->offsetGet("start") : $time->offsetGet("start_corrected"),
-                    "time_start_corrected" => $time->offsetGet("start_corrected"),
-                    "time_end" => '' === $time->offsetGet("end_corrected") ? $time->offsetGet("end") : $time->offsetGet("end_corrected"),
-                    "time_end_corrected" => $time->offsetGet("end_corrected"),
-                    'display_username' => $user->offsetGet("display_username"),
-                    'surname_username' => $user->offsetGet("surname_username"),
-                    'presence_time' => '' === $time->offsetGet("presence_time_corrected") ? $time->offsetGet("presence_time") : $time->offsetGet("presence_time_corrected"),
-                    'presence_time_corrected' => $time->offsetGet("presence_time_corrected"),
-                    'absent_options' => RIOAbsentOptionObject::getOptions(),
-                    'absent_all_day' => $workDay->offsetGet("absent_all_day"),
-                    'absent_afternoon' => $workDay->offsetGet("absent_afternoon"),
-                    'absent_morning' => $workDay->offsetGet("absent_morning"),
-                    'comment' => $time->offsetGet("comment"),
-                    "mandatory_time" => $workDay->offsetGet("mandatory_time"),
-                    'working_time_performed_corrected' => $time->offsetGet("working_time_performed_corrected"),
-                    'working_time_performed' => '' === $time->offsetGet("working_time_performed_corrected") ? $time->offsetGet("working_time_performed") : $time->offsetGet("working_time_performed_corrected"),
-                    'presence_time_total' => $workDay->offsetGet("presence_time"),
-                    'presence_time_total_corrected' => $workDay->offsetGet("presence_time_corrected"),
-                    'deviation' => $workDay->offsetGet("deviation"),
-                    'deviation_negative_or_positive_or_zero' => $workDay->offsetGet("deviation_negative_or_positive_or_zero"),
-                    'time_credit' => $workDay->offsetGet("time_credit"),
-                    'time_credit_corrected' => $workDay->offsetGet("time_credit_corrected"),
-                    'month_year' => $monthYear,
-                    'username_date_time_index' => [$username, $date, $indexOfTime],
-                    'last_edited_user' => $time->offsetGet("last_edited_user"),
-                    'last_edited_date' => $time->offsetGet("last_edited_date"),
-                    'last_edited_time' => $time->offsetGet("last_edited_time")
-                ]
-            )
+            [
+                "date" => $date,
+                "time" => $time,
+                "time_start" => '' === $time->offsetGet("start_corrected") ? $time->offsetGet("start") : $time->offsetGet("start_corrected"),
+                "time_start_corrected" => $time->offsetGet("start_corrected"),
+                "time_end" => '' === $time->offsetGet("end_corrected") ? $time->offsetGet("end") : $time->offsetGet("end_corrected"),
+                "time_end_corrected" => $time->offsetGet("end_corrected"),
+                'display_username' => $user->offsetGet("display_username"),
+                'surname_username' => $user->offsetGet("surname_username"),
+                'presence_time' => '' === $time->offsetGet("presence_time_corrected") ? $time->offsetGet("presence_time") : $time->offsetGet("presence_time_corrected"),
+                'presence_time_corrected' => $time->offsetGet("presence_time_corrected"),
+                'absent_options' => RIOAbsentOptionObject::getOptions(),
+                'absent_all_day' => $workDay->offsetGet("absent_all_day"),
+                'absent_afternoon' => $workDay->offsetGet("absent_afternoon"),
+                'absent_morning' => $workDay->offsetGet("absent_morning"),
+                'comment' => $time->offsetGet("comment"),
+                "mandatory_time" => $workDay->offsetGet("mandatory_time"),
+                'working_time_performed_corrected' => $time->offsetGet("working_time_performed_corrected"),
+                'working_time_performed' => '' === $time->offsetGet("working_time_performed_corrected") ? $time->offsetGet("working_time_performed") : $time->offsetGet("working_time_performed_corrected"),
+                'presence_time_total' => $workDay->offsetGet("presence_time"),
+                'presence_time_total_corrected' => $workDay->offsetGet("presence_time_corrected"),
+                'deviation' => $workDay->offsetGet("deviation"),
+                'deviation_negative_or_positive_or_zero' => $workDay->offsetGet("deviation_negative_or_positive_or_zero"),
+                'time_credit' => $workDay->offsetGet("time_credit"),
+                'time_credit_corrected' => $workDay->offsetGet("time_credit_corrected"),
+                'month_year' => $monthYear,
+                'username_date_time_index' => [$username, $date, $indexOfTime],
+                'last_edited_user' => $time->offsetGet("last_edited_user"),
+                'last_edited_date' => $time->offsetGet("last_edited_date"),
+                'last_edited_time' => $time->offsetGet("last_edited_time")
+            ]
         );
     }
 
@@ -156,10 +154,11 @@ class Admin extends RIOAccessController
             $nextMonthYearName = '';
             $nextMonthYear = '';
         }
+        $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         return $this->renderPage(
             "overview.twig",
             array_merge(
-                getDefaultTheme(),
+                $customTwigExtension->navByActive("overview"),
                 [
                     "all_work_days_from_user_past" => $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username),
                     "previous_month_name" => $previousMonthYearName,

@@ -11,7 +11,6 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Twig\Environment;
 use function source\getAbsolutePath;
-use function source\getDefaultTheme;
 
 /**
  * Class Main
@@ -57,12 +56,9 @@ class Main extends RIOAccessController
     {
         return $this->renderPage(
             "home.twig",
-            array_merge(
-                [
-                    'action' => getAbsolutePath(["postlogin"])
-                ],
-                getDefaultTheme()
-            )
+            [
+                'action' => getAbsolutePath(["postlogin"])
+            ]
         );
     }
 
@@ -88,12 +84,13 @@ class Main extends RIOAccessController
         $user = new RIOUserObject($this);
         $workday = new RIOWorkDayObject();
         $monthYear = $workday->getDate()->format("m.Y");
+        $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         return $this->renderPage(
             "user_home.twig",
             array_merge_recursive(
                 array_merge(
                     $context,
-                    getDefaultTheme()
+                    $customTwigExtension->navByActive("user_home")
                 ),
                 [
                     "time_record_started" => $user->isTimeRecordStarted(),

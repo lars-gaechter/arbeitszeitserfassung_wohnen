@@ -5,7 +5,6 @@ class RIOUserObject implements RIOToJSON
 {
     private string $username;
     private string $sessionId;
-    private int $themeId;
     private bool $timeRecordStarted;
     private array $workDays;
     private DateTime $mandatoryTime;
@@ -44,7 +43,6 @@ class RIOUserObject implements RIOToJSON
             "surname_username" => '',
             "session_id" => $this->sessionId,
             "time_record_started" => $this->timeRecordStarted,
-            "theme" => $this->themeId,
             "mandatory_time" => $this->mandatoryTime,
             "location" => $this->location
         ];
@@ -131,22 +129,6 @@ class RIOUserObject implements RIOToJSON
     public function setSessionId(string $sessionId): void
     {
         $this->sessionId = $sessionId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getThemeId(): int
-    {
-        return $this->themeId;
-    }
-
-    /**
-     * @param int $themeId
-     */
-    public function setThemeId(int $themeId): void
-    {
-        $this->themeId = $themeId;
     }
 
     /**
