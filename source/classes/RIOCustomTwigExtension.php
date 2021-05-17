@@ -29,7 +29,7 @@ class RIOCustomTwigExtension extends AbstractExtension
      * @param string $active
      * @return array
      */
-    public function navByActive(string $active): array
+    public function navByActive(string $active, $sessionUsername, $monthYear): array
     {
         return [
             "nav" => [
@@ -41,12 +41,12 @@ class RIOCustomTwigExtension extends AbstractExtension
                 [
                     "name" => "Benutzer",
                     "active" => "edit_user" === $active,
-                    "link" => $this->getAbsolutePath(["admin","editUser"])
+                    "link" => $this->getAbsolutePath(["admin","editUser", $sessionUsername])
                 ],
                 [
                     "name" => "Übersicht",
                     "active" => "overview" === $active,
-                    "link" => $this->getAbsolutePath(["admin","overview"])
+                    "link" => $this->getAbsolutePath(["admin","overview", $sessionUsername, $monthYear])
                 ]
             ]
         ];

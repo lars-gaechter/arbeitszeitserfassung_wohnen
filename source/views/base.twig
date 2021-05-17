@@ -22,7 +22,13 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
-                            {% block nav %}{% endblock %}
+                            {% for item in nav %}
+                                {{ dump(item.name) }}
+                                {#
+                                <li class="nav-item">
+                                    <a href="{{ getAbsolutePath(['admin','overview',session_username,month_year]) }}" class="d-none d-md-inline nav-link">Übersicht</a>
+                                </li>#}
+                            {% endfor %}
                         </ul>
                     </div>
                 {% endif %}
