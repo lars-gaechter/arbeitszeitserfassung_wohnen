@@ -44,7 +44,7 @@ class Main extends RIOAccessController
      * @return Response
      * @throws Exception
      */
-    private function sessionLogin(): Response
+    public function sessionLogin(): Response
     {
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         if($customTwigExtension->isLoggedIn()) {
