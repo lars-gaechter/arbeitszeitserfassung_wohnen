@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class RIOUserObject implements RIOToJSON
 {
     private string $username;
