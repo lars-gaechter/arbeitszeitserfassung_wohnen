@@ -1,14 +1,7 @@
 <?php
 
-use MongoDB\Model\BSONArray;
-use MongoDB\Model\BSONDocument;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Twig\Environment;
 use function source\getAbsolutePath;
 
@@ -37,7 +30,7 @@ class Main extends RIOAccessController
      */
     public function showHomepage(): Response
     {
-        return $this->showHome()
+        return $this->showHome();
     }
 
     private function showHome(): Response
