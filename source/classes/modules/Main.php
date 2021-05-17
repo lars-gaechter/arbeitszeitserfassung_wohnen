@@ -39,12 +39,12 @@ class Main extends RIOAccessController
     }
 
     /**
-     * Tries to login with username and password from current session
+     * Tries to login user by current session if saved
      *
      * @return Response
      * @throws Exception
      */
-    private function autoLogin(): Response
+    private function sessionLogin(): Response
     {
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         if($customTwigExtension->isLoggedIn()) {
@@ -137,6 +137,6 @@ class Main extends RIOAccessController
             $request->getSession()->set("username", $usernamePost);
             return $this->userValidate($usernamePost, $passwordPost);
         }
-        return $this->showHome();
+        return $this->showHomepage();
     }
 }
