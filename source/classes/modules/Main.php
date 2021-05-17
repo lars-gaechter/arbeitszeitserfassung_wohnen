@@ -37,7 +37,7 @@ class Main extends RIOAccessController
      */
     public function showHomepage(): Response
     {
-        return RIORedirect::redirectResponse();
+        return $this->showHome()
     }
 
     private function showHome(): Response
