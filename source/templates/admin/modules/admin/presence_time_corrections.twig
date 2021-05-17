@@ -4,11 +4,6 @@
 {% endblock %}
 {% block content %}
     <h3>Korrektur</h3>
-    <a href="{{ getAbsolutePath(['sessionlogin']) }}">Zeiterfassung</a>
-    <br>
-    <a href="{{ getAbsolutePath(['admin','overview',username_date_time_index|first,month_year]) }}">Übersicht</a>
-    <br>
-    <a href="{{ getAbsolutePath(['admin','edituser', username_date_time_index|first]) }}" class="d-none d-md-inline">Benutzer</a>
     <p>Dies sind die Präsenzdaten vom {{ date }} für {{ display_username ~ ' ' ~ surname_username }}.</p>
     <p>Du kannst hier Korrekturen vornehmen.</p>
     <form action="{{ getAbsolutePath(['admin','updatepresencetimecorrections']|merge(username_date_time_index)) }}" method="post">

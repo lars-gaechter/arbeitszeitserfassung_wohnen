@@ -9,9 +9,6 @@
     {% import _self as overview %}
     {# @var MongoDB\Model\BSONArray[] all_work_days_from_user_past #}
     <h3>Übersicht</h3>
-    <a href="{{ getAbsolutePath(['sessionlogin']) }}">Zeiterfassung</a>
-    <br>
-    <a href="{{ getAbsolutePath(['admin','edituser',session_username]) }}" class="d-none d-md-inline">Benutzer</a>
     <div>
         {{ [] is same as(all_work_days_from_user_past) ? "Es hat keine Einträge" }}
     </div>

@@ -4,9 +4,6 @@
 {% endblock %}
 {% block content %}
     <h3>Benutzer</h3>
-    <a href="{{ getAbsolutePath(['sessionlogin']) }}">Zeiterfassung</a>
-    <br>
-    <a href="{{ getAbsolutePath(['admin','overview',session_username,month_year]) }}">Übersicht</a>
     <form action="{{ getAbsolutePath(['admin','updateuser',session_username]) }}" method="post">
         <div class="mb-3">
             <label for="mandatory_time" class="form-label">Pflichtzeit pro Tag</label>

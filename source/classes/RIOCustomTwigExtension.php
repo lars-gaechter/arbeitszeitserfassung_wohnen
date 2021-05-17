@@ -38,7 +38,7 @@ class RIOCustomTwigExtension extends AbstractExtension
                 [
                     "name" => "Zeiterfassung",
                     "active" => "user_home" === $active,
-                    "link" => $this->getAbsolutePath(["main","sessionLogin"])
+                    "link" => $this->getAbsolutePath(["admin","sessionLogin"])
                 ],
                 [
                     "name" => "Benutzer",
