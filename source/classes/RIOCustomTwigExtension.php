@@ -38,17 +38,20 @@ class RIOCustomTwigExtension extends AbstractExtension
                 [
                     "name" => "Zeiterfassung",
                     "active" => "user_home" === $active,
-                    "link" => $this->getAbsolutePath(["admin","sessionLogin"])
+                    "link" => $this->getAbsolutePath(["admin","sessionLogin"]),
+                    "mobile" => true
                 ],
                 [
                     "name" => "Benutzer",
                     "active" => "edit_user" === $active,
-                    "link" => $this->getAbsolutePath(["admin","editUser", $sessionUsername])
+                    "link" => $this->getAbsolutePath(["admin","editUser", $sessionUsername]),
+                    "mobile" => true
                 ],
                 [
                     "name" => "Übersicht",
                     "active" => "overview" === $active,
-                    "link" => $this->getAbsolutePath(["admin","overview", $sessionUsername, $monthYear])
+                    "link" => $this->getAbsolutePath(["admin","overview", $sessionUsername, $monthYear]),
+                    "mobile" => false
                 ]
             ]
         ];

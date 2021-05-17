@@ -24,7 +24,7 @@
                         <ul class="navbar-nav">
                             {% for item in nav %}
                                 <li class="nav-item">
-                                    <a href="{{ item.link }}" class="d-none d-md-inline nav-link{{ item.active is same as(true) ? ' active' : '' }}"{{ item.active is same as(true) ? ' aria-current="page"' : '' }}>{{ item.name }}</a>
+                                    <a href="{{ item.link }}" class="{{ item.mobile is same as(false) ? 'd-none d-md-inline ' : '' }}nav-link{{ item.active is same as(true) ? ' active' : '' }}"{{ item.active is same as(true) ? ' aria-current="page"' : '' }}>{{ item.name }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
