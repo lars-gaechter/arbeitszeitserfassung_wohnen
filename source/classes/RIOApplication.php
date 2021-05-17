@@ -109,15 +109,26 @@ class RIOApplication
             // Controller not isset
             return RIORedirect::error(404);
         }
-        if("RIOAdmin" === $class) {
+        if("Rioadmin" === $class) {
             $customTwigExtension = new RIOCustomTwigExtension($request);
             if(!$customTwigExtension->isLoggedIn()) {
                 return RIORedirect::redirectResponse();
             }
         }
         $twig = self::getTwig($resolvedAction->getFrontend()->getValue());
-        /** @var RIOMain|RIOAdmin $instance */
-        $instance = new $class($class, $twig, $request);
+        $className = '';
+        if("Rioadmin" === $class) {
+            $className .= "RIOAdmin";
+            /** @var RIOMain|RIOAdmin $instance */
+            $instance = new $className($className, $twig, $request);
+        } elseif("Riomain" === $class) {
+            $className .= "RIOMain";
+            /** @var RIOMain|RIOAdmin $instance */
+            $instance = new $className($className, $twig, $request);
+        } else {
+            /** @var RIOMain|RIOAdmin $instance */
+            $instance = new $class($class, $twig, $request);
+        }
         if(false === RIOMaybe::ofSettable($class)->isEmpty()) {
             if(!class_exists($class)) {
                 return RIORedirectOrException::throwErrorException("Controller class called '".$class."' doesn't exist");
