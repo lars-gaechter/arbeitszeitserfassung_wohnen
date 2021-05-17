@@ -39,6 +39,21 @@ class Main extends RIOAccessController
     }
 
     /**
+     * Tries to login with username and password from current session
+     *
+     * @return Response
+     * @throws Exception
+     */
+    private function autoLogin(): Response
+    {
+        $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
+        if($customTwigExtension->isLoggedIn()) {
+            return RIORedirect::redirectResponse(["admin", "sessionLogin"]);
+        }
+        return $this->showHomepage();
+    }
+
+    /**
      * Check if given user and password exists in LDAP
      *  create new MongoDB user if not exists or just insert new session id
      *
