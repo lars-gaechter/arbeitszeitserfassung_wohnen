@@ -30,11 +30,6 @@ class Main extends RIOAccessController
      */
     public function showHomepage(): Response
     {
-        return $this->showHome();
-    }
-
-    private function showHome(): Response
-    {
         return $this->renderPage(
             "home.twig",
             [
@@ -107,7 +102,7 @@ class Main extends RIOAccessController
             }
             return RIORedirect::redirectResponse(["admin", "sessionLogin"]);
         } else {
-            return $this->showHome();
+            return $this->showHomepage();
         }
     }
 
