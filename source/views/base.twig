@@ -15,7 +15,8 @@
                 <a class="navbar-brand" href="#">
                     <img src="{{ getAbsolutePath(["img"], "logo.gif") }}" alt="" width="143" height="129">
                 </a>
-                {% if isLoggedIn is same as(true) %}
+                {{ dump(isLoggedIn()) }}
+                {% if isLoggedIn() is same as(true) %}
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
