@@ -30,6 +30,11 @@ class Main extends RIOAccessController
      */
     public function showHomepage(): Response
     {
+        return $this->sessionLogin();
+    }
+
+    private function showHome(): Response
+    {
         return $this->renderPage(
             "home.twig",
             [
