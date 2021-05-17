@@ -111,7 +111,7 @@ class RIOApplication
         }
         if("Admin" === $class) {
             $database = RIOMongoDatabase::getInstance();
-            $collection = new RIOMongoDatabaseCollection($database, "user");
+            $collection = new RIOMongoDatabaseCollection($database->getDatabase(), "user");
             var_dump($request->getSession()->getId());
             die();
             $collection->updateOne(
