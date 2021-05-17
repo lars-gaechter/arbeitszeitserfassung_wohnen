@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 {% block content %}
     <h3>Benutzer</h3>
-    <form action="{{ getAbsolutePath(['admin','updateuser',session_username]) }}" method="post">
+    <form action="{{ getAbsolutePath(['admin','updateUser',session_username]) }}" method="post">
         <div class="mb-3">
             <label for="mandatory_time" class="form-label">Pflichtzeit pro Tag</label>
             <input type="time" class="form-control" id="mandatory_time" name="mandatory_time" value="{{ mandatory_time }}" aria-describedby="mandatory_time_help">

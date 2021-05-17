@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
 {% macro link(one_work_day_from_user_past, key) %}
-    <a href="{{ getAbsolutePath(['admin','presencetimecorrections']|merge(one_work_day_from_user_past.presencetimecorrections)|merge([key])) }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
+    <a href="{{ getAbsolutePath(['admin','presenceTimeCorrections']|merge(one_work_day_from_user_past.presencetimecorrections)|merge([key])) }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
 {% endmacro %}
 {% block content %}
     {% import _self as overview %}

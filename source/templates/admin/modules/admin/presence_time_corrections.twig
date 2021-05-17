@@ -3,7 +3,7 @@
     <h3>Korrektur</h3>
     <p>Dies sind die Präsenzdaten vom {{ date }} für {{ display_username ~ ' ' ~ surname_username }}.</p>
     <p>Du kannst hier Korrekturen vornehmen.</p>
-    <form action="{{ getAbsolutePath(['admin','updatepresencetimecorrections']|merge(username_date_time_index)) }}" method="post">
+    <form action="{{ getAbsolutePath(['admin','updatePresenceTimeCorrections']|merge(username_date_time_index)) }}" method="post">
         <div class="mb-3">
             <label for="date" class="form-label">Datum: </label>
             <input readonly id="date" name="date" class="form-control" value="{{ date }}">
