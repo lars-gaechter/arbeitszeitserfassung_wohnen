@@ -111,13 +111,14 @@ class RIOApplication
         }
         if("Admin" === $class) {
             $database = RIOMongoDatabase::getInstance();
-            $collection = new RIOMongoDatabaseCollection($database->getDatabase(), "user");
-            var_dump($request->getSession()->getId());
-            die();
-            $collection->updateOne(
+            $databaseCollection = new RIOMongoDatabaseCollection($database->getDatabase(), "user");
+            $collection = $databaseCollection->getCollection();
+            $userFind = $collection->findOne(
                 ["session_id" => $request->getSession()->getId()]
             );
-            // TODO: is logged in user?
+            if(null === $userFind) {
+                return RIORedirect::redirectResponse();
+            }
         }
         $twig = self::getTwig($resolvedAction->getFrontend()->getValue());
         /** @var Main|Admin $instance */
