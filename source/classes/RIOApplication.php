@@ -110,6 +110,13 @@ class RIOApplication
             return RIORedirect::error(404);
         }
         if("admin" === $class) {
+            $database = RIOMongoDatabase::getInstance();
+            $collection = new RIOMongoDatabaseCollection($database, "user");
+            var_dump($request->getSession()->getId());
+            die();
+            $collection->updateOne(
+                ["session_id" => $request->getSession()->getId()]
+            );
             // TODO: is logged in user?
         }
         $twig = self::getTwig($resolvedAction->getFrontend()->getValue());
