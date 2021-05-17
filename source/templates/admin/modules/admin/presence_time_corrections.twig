@@ -1,7 +1,4 @@
 {% extends "base.twig" %}
-{% block head %}
-    <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
-{% endblock %}
 {% block content %}
     <h3>Korrektur</h3>
     <p>Dies sind die Präsenzdaten vom {{ date }} für {{ display_username ~ ' ' ~ surname_username }}.</p>

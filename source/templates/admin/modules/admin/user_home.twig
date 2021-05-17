@@ -1,24 +1,21 @@
 {% extends "base.twig" %}
-{% block head %}
-    <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
-{% endblock %}
 {% block content %}
     <h3>Zeiterfassung</h3>
     <p>Willkommen, {{ display_username }}, bei der Administration von Rafisa</p>
     <p>Heute ist {{ day }}, der {{ date }}</p>
-    <form action="{{ getAbsolutePath(['logout']) }}">
+    <form action="{{ getAbsolutePath(["admin", "logout"]) }}">
         <div class="my-3">
             <button type="submit" class="btn btn-primary">Abmelden</button>
         </div>
     </form>
     {% if true is same as(time_record_started) %}
-        <form action="{{ getAbsolutePath(['stop']) }}">
+        <form action="{{ getAbsolutePath(["admin", "stop"]) }}">
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Zeiterfassung stoppen</button>
             </div>
         </form>
     {% else %}
-        <form action="{{ getAbsolutePath(['start']) }}">
+        <form action="{{ getAbsolutePath(["admin", "start"]) }}">
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Zeiterfassung starten</button>
             </div>

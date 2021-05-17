@@ -6,6 +6,7 @@
         <meta name="description" content="Zeiterfassungssystem">
         <title>{{ title }}</title>
         <link rel="shortcut icon" type="image/x-icon" href="{{ getAbsolutePath([], "favicon.ico") }}" sizes="16x16">
+        <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
         {% block head %}{% endblock %}
     </head>
     <body>

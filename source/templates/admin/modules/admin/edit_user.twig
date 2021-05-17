@@ -1,7 +1,4 @@
 {% extends "base.twig" %}
-{% block head %}
-    <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
-{% endblock %}
 {% block content %}
     <h3>Benutzer</h3>
     <form action="{{ getAbsolutePath(['admin','updateuser',session_username]) }}" method="post">
