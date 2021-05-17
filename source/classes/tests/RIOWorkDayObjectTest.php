@@ -7,7 +7,7 @@ use RIODateTimeFactory;
 use RIOWorkDayObject;
 
 /** The import directory before the git directory can vary the path. */
-include_once 'C:\Users\l.gaechter\git\ldap-user-authentication\source\RIOAutoloader.php';
+include_once 'C:\Users\Lars\git\arbeitszeitserfassung_wohnen\source\RIOAutoloader.php';
 
 class RIOWorkDayObjectTest extends TestCase
 {
