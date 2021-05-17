@@ -22,7 +22,19 @@ class RIOCustomTwigExtension extends AbstractExtension
             new TwigFunction('getSession', [$this, 'getSession']),
             new TwigFunction('getAbsolutePathSecondHost', [$this, 'getAbsolutePathSecondHost']),
             new TwigFunction('getWeekDayShortNameByDate', [$this, 'getWeekDayShortNameByDate']),
+            new TwigFunction('isLoggedIn', [$this, 'isLoggedIn'])
         ];
+    }
+
+    public function isLoggedIn(): bool
+    {
+        $database = RIOMongoDatabase::getInstance();
+        $databaseCollection = new RIOMongoDatabaseCollection($database->getDatabase(), "user");
+        $collection = $databaseCollection->getCollection();
+        $userFind = $collection->findOne(
+            ["session_id" => $this->request->getSession()->getId()]
+        );
+        return null !== $userFind;
     }
 
     /**

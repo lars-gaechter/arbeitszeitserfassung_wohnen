@@ -110,13 +110,8 @@ class RIOApplication
             return RIORedirect::error(404);
         }
         if("Admin" === $class) {
-            $database = RIOMongoDatabase::getInstance();
-            $databaseCollection = new RIOMongoDatabaseCollection($database->getDatabase(), "user");
-            $collection = $databaseCollection->getCollection();
-            $userFind = $collection->findOne(
-                ["session_id" => $request->getSession()->getId()]
-            );
-            if(null === $userFind) {
+            $customTwigExtension = new RIOCustomTwigExtension($request);
+            if(!$customTwigExtension->isLoggedIn()) {
                 return RIORedirect::redirectResponse();
             }
         }
