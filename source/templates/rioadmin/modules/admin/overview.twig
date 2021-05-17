@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
 {% macro link(one_work_day_from_user_past, key) %}
-    <a href="{{ getAbsolutePath(['admin','presenceTimeCorrections']|merge(one_work_day_from_user_past.presencetimecorrections)|merge([key])) }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
+    <a href="{{ getAbsolutePath(['rioadmin','presenceTimeCorrections']|merge(one_work_day_from_user_past.presencetimecorrections)|merge([key])) }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
 {% endmacro %}
 {% block content %}
     {% import _self as overview %}
@@ -17,7 +17,7 @@
     <div class="d-flex justify-content-around">
         <div class="p-2">
             {% if previous_month is not same as('') %}
-                <a href="{{ getAbsolutePath(['admin','overview',session_username,previous_month]) }}" class="d-none d-md-inline">{{ previous_month_name }}</a>
+                <a href="{{ getAbsolutePath(['rioadmin','overview',session_username,previous_month]) }}" class="d-none d-md-inline">{{ previous_month_name }}</a>
             {% endif %}
         </div>
         <div class="p-2">
@@ -25,7 +25,7 @@
         </div>
         <div class="p-2">
             {% if next_month is not same as('') %}
-                <a href="{{ getAbsolutePath(['admin','overview',session_username,next_month]) }}" class="d-none d-md-inline">{{ next_month_name }}</a>
+                <a href="{{ getAbsolutePath(['rioadmin','overview',session_username,next_month]) }}" class="d-none d-md-inline">{{ next_month_name }}</a>
             {% endif %}
         </div>
     </div>

@@ -115,7 +115,7 @@ class RIOAdmin extends RIOAccessController
                 ['$set' => ['mandatory_time' => $updatedMandatoryTime->format("H:i")]]
             );
         }
-        return RIORedirect::redirectResponse(['admin', 'edituser', $username]);
+        return RIORedirect::redirectResponse(['rioadmin', 'edituser', $username]);
     }
 
     public function editUser(string $username): RedirectResponse|Response
@@ -373,7 +373,7 @@ class RIOAdmin extends RIOAccessController
         $workday = new RIOWorkDayObject();
         $workday->setDate(RIODateTimeFactory::getDateTime($date));
         $monthYear = $workday->getDate()->format("m.Y");
-        return RIORedirect::redirectResponse(["admin", "overview", $username, $monthYear]);
+        return RIORedirect::redirectResponse(["rioadmin", "overview", $username, $monthYear]);
     }
 
     public function getFormattedDateByDate(DateTime $date): string
@@ -473,7 +473,7 @@ class RIOAdmin extends RIOAccessController
                 ['$set' => [ 'time_record_started' => true ]]
             );
         }
-        return RIORedirect::redirectResponse(["admin", "sessionlogin"]);
+        return RIORedirect::redirectResponse(["rioadmin", "sessionlogin"]);
     }
 
     /**
@@ -660,6 +660,6 @@ class RIOAdmin extends RIOAccessController
                 ['$set' => ['time_record_started' => false]]
             );
         }
-        return RIORedirect::redirectResponse(["admin", "sessionlogin"]);
+        return RIORedirect::redirectResponse(["rioadmin", "sessionlogin"]);
     }
 }

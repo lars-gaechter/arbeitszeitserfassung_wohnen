@@ -53,7 +53,7 @@ class RIOMain extends RIOAccessController
     {
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         if($customTwigExtension->isLoggedIn()) {
-            return RIORedirect::redirectResponse(["admin", "sessionLogin"]);
+            return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         }
         return $this->showHome();
     }
@@ -121,7 +121,7 @@ class RIOMain extends RIOAccessController
                     ]
                 );
             }
-            return RIORedirect::redirectResponse(["admin", "sessionLogin"]);
+            return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         } else {
             return $this->showHomepage();
         }

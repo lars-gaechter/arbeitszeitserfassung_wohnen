@@ -3,19 +3,19 @@
     <h3>Zeiterfassung</h3>
     <p>Willkommen, {{ display_username }}, bei der Administration von Rafisa</p>
     <p>Heute ist {{ day }}, der {{ date }}</p>
-    <form action="{{ getAbsolutePath(["admin", "logout"]) }}">
+    <form action="{{ getAbsolutePath(["rioadmin", "logout"]) }}">
         <div class="my-3">
             <button type="submit" class="btn btn-primary">Abmelden</button>
         </div>
     </form>
     {% if true is same as(time_record_started) %}
-        <form action="{{ getAbsolutePath(["admin", "stop"]) }}">
+        <form action="{{ getAbsolutePath(["rioadmin", "stop"]) }}">
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Zeiterfassung stoppen</button>
             </div>
         </form>
     {% else %}
-        <form action="{{ getAbsolutePath(["admin", "start"]) }}">
+        <form action="{{ getAbsolutePath(["rioadmin", "start"]) }}">
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Zeiterfassung starten</button>
             </div>
