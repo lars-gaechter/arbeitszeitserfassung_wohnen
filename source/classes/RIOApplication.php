@@ -109,14 +109,14 @@ class RIOApplication
             // Controller not isset
             return RIORedirect::error(404);
         }
-        if("Admin" === $class) {
+        if("RIOAdmin" === $class) {
             $customTwigExtension = new RIOCustomTwigExtension($request);
             if(!$customTwigExtension->isLoggedIn()) {
                 return RIORedirect::redirectResponse();
             }
         }
         $twig = self::getTwig($resolvedAction->getFrontend()->getValue());
-        /** @var Main|Admin $instance */
+        /** @var RIOMain|RIOAdmin $instance */
         $instance = new $class($class, $twig, $request);
         if(false === RIOMaybe::ofSettable($class)->isEmpty()) {
             if(!class_exists($class)) {
@@ -248,8 +248,8 @@ class RIOApplication
         $path = urldecode($_SERVER['REQUEST_URI']);
         $pathConfig = RIOResolverConfigFactory::config([
             RIOResolverConfigFactory::step([new RIOFrontendResolver($_ENV['DEFAULT_AREA_NAME'], [
-                'main',
-                'admin',
+                'riomain',
+                'rioadmin',
             ])]),
         ]);
         $pathResolver = new RIOResolver($pathConfig);

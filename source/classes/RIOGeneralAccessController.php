@@ -210,11 +210,11 @@ class RIOGeneralAccessController
     /**
      * Every workday of an user is unique
      *
-     * @param Main|Admin $controller
+     * @param RIOMain|RIOAdmin $controller
      * @return array
      * @throws Exception
      */
-    public function getUserAllPastWorkdays(Main|Admin $controller): array
+    public function getUserAllPastWorkdays(RIOMain|RIOAdmin $controller): array
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
@@ -226,7 +226,7 @@ class RIOGeneralAccessController
      * Month of a year is unique
      *
      * @param string $monthYear
-     * @param Main|Admin $controller
+     * @param RIOMain|RIOAdmin $controller
      * @return array
      * @throws Exception
      */
@@ -243,11 +243,11 @@ class RIOGeneralAccessController
      * Month of a year is unique
      *
      * @param string $monthYear
-     * @param Main|Admin $controller
+     * @param RIOMain|RIOAdmin $controller
      * @return array
      * @throws Exception
      */
-    public function getUserAllPastWorkdaysByMonthYear(string $monthYear, Main|Admin $controller): array
+    public function getUserAllPastWorkdaysByMonthYear(string $monthYear, RIOMain|RIOAdmin $controller): array
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
@@ -259,11 +259,11 @@ class RIOGeneralAccessController
      * Week of a year is unique
      *
      * @param string $weekYear
-     * @param Main|Admin $controller
+     * @param RIOMain|RIOAdmin $controller
      * @return array
      * @throws Exception
      */
-    public function getUserAllPastWorkdaysByWeek(string $weekYear, Main|Admin $controller): array
+    public function getUserAllPastWorkdaysByWeek(string $weekYear, RIOMain|RIOAdmin $controller): array
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();

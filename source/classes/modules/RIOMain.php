@@ -6,12 +6,12 @@ use Twig\Environment;
 use function source\getAbsolutePath;
 
 /**
- * Class Main
+ * Class RIOMain
  * User can be logged in or out state
- * This area Main should be used for editing user by it's user session
+ * This area RIOMain should be used for editing user by it's user session
  * Like user start and stop time record or login and logout user
  */
-class Main extends RIOAccessController
+class RIOMain extends RIOAccessController
 {
 
     public function __construct(

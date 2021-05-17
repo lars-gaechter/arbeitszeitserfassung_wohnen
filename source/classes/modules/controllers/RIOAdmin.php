@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
 /**
- * Class Admin
+ * Class RIOAdmin
  * User must be in logged in state, otherwise user can't change other users time record
- * This area Admin should be used for editing other users past or feature data
+ * This area RIOAdmin should be used for editing other users past or feature data
  * Like other users view overview, editing mandatory time and change there presence in the past
  */
-class Admin extends RIOAccessController
+class RIOAdmin extends RIOAccessController
 {
     public function __construct(
         string $directory_namespace,

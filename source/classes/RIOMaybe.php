@@ -41,14 +41,6 @@ class RIOMaybe
         return $this === self::$empty;
     }
 
-    public static function ofEmptiable($value): RIOMaybe
-    {
-        if (empty($value)) {
-            return self::getEmpty();
-        }
-        return self::of($value);
-    }
-
     public static function ofSettable(&$value): RIOMaybe
     {
         if (isset($value) && !empty($value)) {
