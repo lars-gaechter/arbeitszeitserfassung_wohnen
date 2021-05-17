@@ -54,7 +54,7 @@ class Admin extends RIOAccessController
         return $this->renderPage(
             "edit_user.twig",
             array_merge(
-                $customTwigExtension->navByActive("edit_user"),
+                $customTwigExtension->navByActive("edit_user", $user->offsetGet("session_username"), $monthYear),
                 [
                     "mandatory_time" => $user->offsetGet("mandatory_time"),
                     'month_year' => $monthYear,
@@ -158,7 +158,7 @@ class Admin extends RIOAccessController
         return $this->renderPage(
             "overview.twig",
             array_merge(
-                $customTwigExtension->navByActive("overview"),
+                $customTwigExtension->navByActive("overview", $user->offsetGet("session_username"), $monthYear),
                 [
                     "all_work_days_from_user_past" => $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username),
                     "previous_month_name" => $previousMonthYearName,
