@@ -44,7 +44,7 @@ final class RIOAreaSpecificRIOTwigProvider implements RIOTwigProvider
         $debug_mode_enabled = RIOConfig::isInDebugMode();
         $area_name = $this->area_name;
         $area_inheritance = [
-            'email' => 'main',
+            'email' => 'riomain',
         ];
         if ($debug_mode_enabled) {
             $this->checkIfDirectoriesExist($area_name);
