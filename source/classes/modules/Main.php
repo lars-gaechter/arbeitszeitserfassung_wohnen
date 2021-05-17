@@ -55,7 +55,7 @@ class Main extends RIOAccessController
         if($customTwigExtension->isLoggedIn()) {
             return RIORedirect::redirectResponse(["admin", "sessionLogin"]);
         }
-        return $this->showHomepage();
+        return $this->showHome();
     }
 
     /**
