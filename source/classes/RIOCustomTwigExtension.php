@@ -26,10 +26,12 @@ class RIOCustomTwigExtension extends AbstractExtension
     }
 
     /**
+     * @param string $sessionUsername
+     * @param string $monthYear
      * @param string $active
      * @return array
      */
-    public function navByActive(string $active, $sessionUsername, $monthYear): array
+    public function navByActive(string $sessionUsername, string $monthYear, string $active = ''): array
     {
         return [
             "nav" => [

@@ -90,7 +90,7 @@ class Main extends RIOAccessController
             array_merge_recursive(
                 array_merge(
                     $context,
-                    $customTwigExtension->navByActive("user_home", $user->getUsername(), $monthYear)
+                    $customTwigExtension->navByActive($user->getUsername(), $monthYear, "user_home")
                 ),
                 [
                     "time_record_started" => $user->isTimeRecordStarted(),
