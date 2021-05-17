@@ -109,9 +109,7 @@ class RIOApplication
             // Controller not isset
             return RIORedirect::error(404);
         }
-        var_dump($class);
-        die();
-        if("admin" === $class) {
+        if("Admin" === $class) {
             $database = RIOMongoDatabase::getInstance();
             $collection = new RIOMongoDatabaseCollection($database, "user");
             var_dump($request->getSession()->getId());
