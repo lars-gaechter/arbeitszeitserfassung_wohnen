@@ -42,7 +42,7 @@ class RIORedirect
      */
     public static function redirectToDomain(string $domain, array $path_parts, bool $secure = true): RedirectResponse
     {
-        $url_factory = new UrlFactory($domain, $secure);
+        $url_factory = new RIOUrlFactory($domain, $secure);
         $url = $url_factory->getLocalUrl($path_parts);
         return new RedirectResponse($url->getUrl());
     }
@@ -55,7 +55,7 @@ class RIORedirect
      */
     public static function redirectToDomainWithString(string $domain, string $path, bool $secure = true): RedirectResponse
     {
-        $url_factory = new UrlFactory($domain, $secure);
+        $url_factory = new RIOUrlFactory($domain, $secure);
         $protocol = $url_factory->getHttpOrHttps();
         return new RedirectResponse("$protocol://$domain/$path");
     }

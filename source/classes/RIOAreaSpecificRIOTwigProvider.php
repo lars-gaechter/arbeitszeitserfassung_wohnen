@@ -8,14 +8,14 @@ use Twig\Extension\DebugExtension;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 
-final class RIOAreaSpecificTwigProvider implements TwigProvider
+final class RIOAreaSpecificRIOTwigProvider implements RIOTwigProvider
 {
     /**
      * instance
      *
-     * @var null|RIOAreaSpecificTwigProvider
+     * @var null|RIOAreaSpecificRIOTwigProvider
      */
-    protected static ?RIOAreaSpecificTwigProvider $_instance = null;
+    protected static ?RIOAreaSpecificRIOTwigProvider $_instance = null;
 
     private string $area_name;
     private const ROOT_PREFIX = '';

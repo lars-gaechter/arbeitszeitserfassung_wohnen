@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class FrontendResolver extends PartialResolver
+class RIOFrontendResolver extends RIOPartialResolver
 {
     private string $default_frontend;
     /**
@@ -19,7 +19,7 @@ class FrontendResolver extends PartialResolver
         $this->frontends = $frontends;
     }
 
-    public function resolve(ResolvedAction $action): ResolvedAction
+    public function resolve(RIOResolvedAction $action): RIOResolvedAction
     {
         $possible_frontend = RIOMaybe::ofSettable($action->getPathPartials()[0]);
 

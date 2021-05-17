@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-class ResolverConfig
+class RIOResolverConfig
 {
     /**
-     * @var ResolverStep[]
+     * @var RIOResolverStep[]
      */
     private array $steps;
 
     /**
-     * @param ResolverStep[] $steps
+     * @param RIOResolverStep[] $steps
      */
     public function __construct(array $steps)
     {
@@ -18,7 +18,7 @@ class ResolverConfig
     }
 
     /**
-     * @return ResolverStep[]
+     * @return RIOResolverStep[]
      */
     public function getSteps(): array
     {

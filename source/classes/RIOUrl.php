@@ -5,7 +5,7 @@
  *
  * With this class you can avoid directly manipulating a string url.
  */
-class Url
+class RIOUrl
 {
     private string $domain;
     private string $protocol;
@@ -14,7 +14,7 @@ class Url
     /**
      * A link to a website.
      *
-     * Url constructor.
+     * RIOUrl constructor.
      * @param string $protocol
      * @param string $domain
      * @param RIOSplitString $path_parts

@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-class AccessController extends GeneralAccessController
+class RIOAccessController extends RIOGeneralAccessController
 {
     private static array $renderStack = [];
     private string $template = "templates";

@@ -5,7 +5,7 @@ declare(strict_types=1);
 class RIOMaybe
 {
     private mixed $value;
-    private static $empty = null;
+    private static ?RIOMaybe $empty = null;
 
     protected function __construct($value)
     {

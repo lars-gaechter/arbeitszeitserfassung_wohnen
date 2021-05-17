@@ -15,7 +15,7 @@ class RIOUserObject implements RIOToJSON
      * RIOUserObject constructor.
      * @throws Exception
      */
-    public function __construct(AccessController $accessController = null)
+    public function __construct(RIOAccessController $accessController = null)
     {
         if(null !== $accessController) {
             $user = $accessController->getUser();

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-class ResolverStep
+class RIOResolverStep
 {
     /**
-     * @var PartialResolver[]
+     * @var RIOPartialResolver[]
      */
     private array $partial_resolvers;
 
     /**
-     * @param PartialResolver[] $partial_resolvers
+     * @param RIOPartialResolver[] $partial_resolvers
      */
     public function __construct(array $partial_resolvers)
     {
@@ -18,7 +18,7 @@ class ResolverStep
     }
 
     /**
-     * @return PartialResolver[]
+     * @return RIOPartialResolver[]
      */
     public function getPartialResolvers(): array
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class UrlFactory
+class RIOUrlFactory
 {
     private string $hostname;
     private bool $secure;
@@ -15,43 +15,43 @@ class UrlFactory
         $this->secure = $secure;
     }
 
-    public static function get(): UrlFactory
+    public static function get(): RIOUrlFactory
     {
         $domain = $_ENV['HOSTNAME'];
         $secure = $_ENV['HTTPS'];
 
-        return new UrlFactory(
+        return new RIOUrlFactory(
             $domain,
             $secure
         );
     }
 
-    public function getLocalUrl(array $parts): Url
+    public function getLocalUrl(array $parts): RIOUrl
     {
         $split_string = new RIOSplitString($parts);
 
         return $this->getUrl($this->secure, $this->hostname, $split_string);
     }
 
-    public function getHttpUrl(string $domain, array $parts): Url
+    public function getHttpUrl(string $domain, array $parts): RIOUrl
     {
         $split_string = new RIOSplitString($parts);
 
         return $this->getUrl(false, $domain, $split_string);
     }
 
-    public function getHttpsUrl(string $domain, array $parts): Url
+    public function getHttpsUrl(string $domain, array $parts): RIOUrl
     {
         $split_string = new RIOSplitString($parts);
 
         return $this->getUrl(true, $domain, $split_string);
     }
 
-    private function getUrl(bool $secure, string $domain, RIOSplitString $parts): Url
+    private function getUrl(bool $secure, string $domain, RIOSplitString $parts): RIOUrl
     {
         $protocol = $this->getProtocol($secure);
 
-        return new Url($protocol, $domain, $parts);
+        return new RIOUrl($protocol, $domain, $parts);
     }
 
     public function getHttpOrHttps(): string

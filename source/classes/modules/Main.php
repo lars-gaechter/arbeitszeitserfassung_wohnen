@@ -19,7 +19,7 @@ use function source\getDefaultTheme;
  * This area Main should be used for editing user by it's user session
  * Like user start and stop time record or login and logout user
  */
-class Main extends AccessController
+class Main extends RIOAccessController
 {
 
     public function __construct(

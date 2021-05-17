@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class ResolvedAction
+class RIOResolvedAction
 {
     private array $path_partials;
     private RIOMaybe $controller_namespace;

@@ -1,7 +1,9 @@
 <?php
 
 
-class RedirectOrException
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+class RIORedirectOrException
 {
     /**
      * @param string $message
@@ -11,7 +13,7 @@ class RedirectOrException
      * @param string $filename
      * @param int $line
      * @param null $previous
-     * @return RIORedirect
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Whoops\Exception\ErrorException
      */
     public static function throwErrorException(
@@ -19,10 +21,10 @@ class RedirectOrException
         int $error_code = 404,
         int $code = 0,
         int $severity = 1,
-        $filename = __FILE__,
-        $line = __LINE__,
+        string $filename = __FILE__,
+        int $line = __LINE__,
         $previous = null
-    ): RIORedirect
+    ): RedirectResponse
     {
 
 

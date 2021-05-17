@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 /**
  * If the database connection has failed
- * Class ConnectionFailed
+ * Class RIOConnectionFailed
  */
-class ConnectionFailed extends Error
+class RIOConnectionFailed extends Error
 {
 }

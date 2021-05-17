@@ -67,7 +67,7 @@ class RIOApplication
 
             $resolvedAction = $this->getAreaPathParser();
             return $this->resolveAndExecuteActionControllerMethodParameter($resolvedAction);
-        } catch (NotFoundException $e) {
+        } catch (RIONotFoundException $e) {
             if (RIOConfig::isInDebugMode()) {
                 throw new Error("The page doesn't exist or is offline", 0, $e);
             } else {
@@ -79,13 +79,13 @@ class RIOApplication
     }
 
     /**
-     * @param ResolvedAction $resolvedAction
+     * @param RIOResolvedAction $resolvedAction
      * @return Response|null
-     * @throws NotFoundException
+     * @throws RIONotFoundException
      * @throws ReflectionException
      * @throws \Whoops\Exception\ErrorException
      */
-    private function resolveAndExecuteActionControllerMethodParameter(ResolvedAction $resolvedAction): RIORedirect|Response
+    private function resolveAndExecuteActionControllerMethodParameter(RIOResolvedAction $resolvedAction): RIORedirect|Response
     {
         $request = self::$request;
         $class = ucfirst($this->getAreaPathParser()->getFrontend()->getValue());
@@ -117,11 +117,11 @@ class RIOApplication
         $instance = new $class($class, $twig, $request);
         if(false === RIOMaybe::ofSettable($class)->isEmpty()) {
             if(!class_exists($class)) {
-                return RedirectOrException::throwErrorException("Controller class called '".$class."' doesn't exist");
+                return RIORedirectOrException::throwErrorException("Controller class called '".$class."' doesn't exist");
             }
             if(false === RIOMaybe::ofSettable($method)->isEmpty()) {
                 if(!method_exists($instance, $method)) {
-                    return RedirectOrException::throwErrorException("Method called '".$method."' doesn't exist in controller class called '".$class."'");
+                    return RIORedirectOrException::throwErrorException("Method called '".$method."' doesn't exist in controller class called '".$class."'");
                 }
                 $methodSignature = new ReflectionMethod($instance, $method);
                 $numberOfUserRequestedParameters = count($userRequestedParameters);
@@ -143,7 +143,7 @@ class RIOApplication
                     $x++;
                 }
                 if($numberOfRequiredParameters !== $numberOfUserRequestedParameters) {
-                    return RedirectOrException::throwErrorException(
+                    return RIORedirectOrException::throwErrorException(
                         "User requested ".
                         $numberOfUserRequestedParameters.
                         " parameter/s for controller ".
@@ -222,7 +222,7 @@ class RIOApplication
                     );
                 }
                 if(false === isset($response)) {
-                    return RedirectOrException::throwErrorException("Couldn't create valid controller method response for number of parameters may required", 500);
+                    return RIORedirectOrException::throwErrorException("Couldn't create valid controller method response for number of parameters may required", 500);
                 }
                 return $response;
             }
@@ -232,24 +232,24 @@ class RIOApplication
 
     private static function getTwig(string $areaName): Environment
     {
-        /** @var TwigProvider $twigProvider */
-        $twigProvider = RIOAreaSpecificTwigProvider::getInstance($areaName, self::$request);
+        /** @var RIOTwigProvider $twigProvider */
+        $twigProvider = RIOAreaSpecificRIOTwigProvider::getInstance($areaName, self::$request);
         return $twigProvider->getTwig();
     }
 
     /**
-     * @throws NotFoundException
+     * @throws RIONotFoundException
      */
-    public function getAreaPathParser(): ResolvedAction
+    public function getAreaPathParser(): RIOResolvedAction
     {
         $path = urldecode($_SERVER['REQUEST_URI']);
-        $pathConfig = ResolverConfigFactory::config([
-            ResolverConfigFactory::step([new FrontendResolver($_ENV['DEFAULT_AREA_NAME'], [
+        $pathConfig = RIOResolverConfigFactory::config([
+            RIOResolverConfigFactory::step([new RIOFrontendResolver($_ENV['DEFAULT_AREA_NAME'], [
                 'main',
                 'admin',
             ])]),
         ]);
-        $pathResolver = new Resolver($pathConfig);
+        $pathResolver = new RIOResolver($pathConfig);
         $resolvedAction = $pathResolver->resolveWithString($path);
 
         RIOApplication::addDebugInformation('Uri', [

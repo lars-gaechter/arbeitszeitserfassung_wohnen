@@ -58,7 +58,7 @@ RIOApplication::$perfData['session'] = [
 ];
 try {
     $response = RIOApplication::getInstance()->launch($request);
-} catch (ConnectionFailed $connectionFailed) {
+} catch (RIOConnectionFailed $connectionFailed) {
     if (RIOConfig::isInDebugMode()) {
         throw new Error("The database connection could not be established.", 0, $connectionFailed);
     } else {

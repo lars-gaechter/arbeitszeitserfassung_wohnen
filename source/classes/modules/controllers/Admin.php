@@ -14,7 +14,7 @@ use function source\getDefaultTheme;
  * This area Admin should be used for editing other users past or feature data
  * Like other users view overview, editing mandatory time and change there presence in the past
  */
-class Admin extends AccessController
+class Admin extends RIOAccessController
 {
     public function __construct(
         string $directory_namespace,

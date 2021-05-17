@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-class Resolver
+class RIOResolver
 {
-    private ResolverConfig $config;
+    private RIOResolverConfig $config;
 
-    public function __construct(ResolverConfig $config)
+    public function __construct(RIOResolverConfig $config)
     {
         $this->config = $config;
     }
 
     /**
-     * @throws NotFoundException
+     * @throws RIONotFoundException
      */
-    public function resolveWithString(string $path): ResolvedAction
+    public function resolveWithString(string $path): RIOResolvedAction
     {
         $path = $this->cleanPath($path);
         $splitter = new RIOSplitter($path);
@@ -24,34 +24,34 @@ class Resolver
     }
 
     /**
-     * @throws NotFoundException
+     * @throws RIONotFoundException
      */
-    public function resolveWithResolvedAction(ResolvedAction $resolved_action): ResolvedAction
+    public function resolveWithResolvedAction(RIOResolvedAction $resolved_action): RIOResolvedAction
     {
         /**
-         * @var ResolveException
+         * @var RIOResolveException
          */
         $lastError = null;
 
         foreach ($this->config->getSteps() as $step) {
             $solved = false;
-            $lastSuccessfulAction = ResolvedAction::create($resolved_action);
+            $lastSuccessfulAction = RIOResolvedAction::create($resolved_action);
             foreach ($step->getPartialResolvers() as $partialResolver) {
-                $last_successful_action_copy = ResolvedAction::create(
+                $last_successful_action_copy = RIOResolvedAction::create(
                     $lastSuccessfulAction
                 );
                 try {
                     $resolved_action = $partialResolver->resolve($last_successful_action_copy);
                     $solved = true;
                     break;
-                } catch (ResolveException $e) {
+                } catch (RIOResolveException $e) {
                     $lastError = $e;
                 }
             }
 
             if (!$solved) {
                 // 404
-                throw new NotFoundException("Resolver didn't find it", 0, $lastError);
+                throw new RIONotFoundException("RIOResolver didn't find it", 0, $lastError);
             }
         }
 
@@ -60,12 +60,12 @@ class Resolver
 
     /**
      * @param string[] $path_parts
-     * @return ResolvedAction
-     * @throws NotFoundException
+     * @return RIOResolvedAction
+     * @throws RIONotFoundException
      */
-    private function resolve(array $path_parts): ResolvedAction
+    private function resolve(array $path_parts): RIOResolvedAction
     {
-        $resolved_action = new ResolvedAction($path_parts);
+        $resolved_action = new RIOResolvedAction($path_parts);
         return $this->resolveWithResolvedAction($resolved_action);
     }
 

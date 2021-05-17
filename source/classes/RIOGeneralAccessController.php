@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Twig\Environment;
 
-class GeneralAccessController
+class RIOGeneralAccessController
 {
 
     private Environment $twig;
