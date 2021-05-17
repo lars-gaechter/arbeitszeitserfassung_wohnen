@@ -16,11 +16,10 @@
     "webpack-cli": "^4.5.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "main": "sass source/scss/_main.scss public/css/main.css --style compressed",
-    "main:watch": "sass --watch source/scss/_main.scss public/css/main.css --style compressed",
-    "dev": "./node_modules/.bin/webpack --watch",
-    "prod": "./node_modules/.bin/webpack"
+    "css:prod": "sass source/scss/_main.scss public/css/main.css --style compressed",
+    "css:dev": "sass --watch source/scss/_main.scss public/css/main.css --style compressed",
+    "js:prod": "./node_modules/.bin/webpack",
+    "js:dev": "./node_modules/.bin/webpack --watch"
   },
   "repository": {
     "type": "git",
