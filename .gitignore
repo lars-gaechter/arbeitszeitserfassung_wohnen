@@ -17,3 +17,6 @@ composer.phar
 # CSS
 /public/css/main.css
 /public/css/main.css.map
+
+# JS
+/public/js/app.js*
