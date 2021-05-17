@@ -2,13 +2,18 @@
 {% block head %}
     <link id="theme" rel="stylesheet" type="text/css" href="{{ getAbsolutePath(["css"]) ~ "main.css" }}" />
 {% endblock %}
+{% block nav %}
+    <li class="nav-item">
+        <a href="{{ getAbsolutePath(['admin','overview',session_username,month_year]) }}" class="d-none d-md-inline nav-link">Übersicht</a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ getAbsolutePath(['admin','edituser',session_username]) }}" class="d-none d-md-inline nav-link">Benutzer</a>
+    </li>
+{% endblock %}
 {% block content %}
     <h3>Zeiterfassung</h3>
     <p>Willkommen, {{ display_username }}, bei der Administration von Rafisa</p>
     <p>Heute ist {{ day }}, der {{ date }}</p>
-    <a href="{{ getAbsolutePath(['admin','overview',session_username,month_year]) }}" class="d-none d-md-inline">Übersicht</a>
-    <br>
-    <a href="{{ getAbsolutePath(['admin','edituser',session_username]) }}" class="d-none d-md-inline">Benutzer</a>
     <form action="{{ getAbsolutePath(['logout']) }}">
         <div class="my-3">
             <button type="submit" class="btn btn-primary">Abmelden</button>
