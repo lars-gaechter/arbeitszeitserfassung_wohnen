@@ -40,13 +40,14 @@ class Main extends RIOAccessController
 
     /**
      * Check if given user and password exists in LDAP
+     *  create new MongoDB user if not exists or just insert new session id
      *
-     * @param false $username
-     * @param false $password
+     * @param string $username
+     * @param string $password
      * @return Response|null
-     * @throws Exception
+     * @throws \Exception
      */
-    private function userValidate($username = FALSE, $password = FALSE): ?Response
+    private function userValidate(string $username, string $password): ?Response
     {
         /** @var resource $ldap */
         $ldap = ldap_connect($_ENV["LDAP_HOST"], $_ENV["LDAP_PORT"]);
