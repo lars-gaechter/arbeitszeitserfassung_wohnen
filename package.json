@@ -7,14 +7,19 @@
     "doc": "doc"
   },
   "dependencies": {
+    "@popperjs/core": "^2.9.2",
     "bootstrap": "^5.0.1",
     "sass": "^1.32.13"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack": "^5.26.0",
+    "webpack-cli": "^4.5.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "main": "sass source/scss/_main.scss public/css/main.css --style compressed",
-    "main:watch": "sass --watch source/scss/_main.scss public/css/main.css --style compressed"
+    "main:watch": "sass --watch source/scss/_main.scss public/css/main.css --style compressed",
+    "dev": "./node_modules/.bin/webpack --watch"
   },
   "repository": {
     "type": "git",
