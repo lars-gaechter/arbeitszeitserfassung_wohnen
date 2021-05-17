@@ -6,12 +6,12 @@ class RIODateTimeFactory
 {
 
     /**
-     * @param string $datetime
+     * @param mixed $datetime
      * @param DateTimeZone|null $timezone
      * @return DateTime
      * @throws Exception
      */
-    static function getDateTime(string $datetime = 'now', DateTimeZone $timezone = null): DateTime
+    static function getDateTime(mixed $datetime = 'now', DateTimeZone $timezone = null): DateTime
     {
         return new DateTime($datetime, (null === $timezone) ? new DateTimeZone("Europe/Zurich") : $timezone);
     }
