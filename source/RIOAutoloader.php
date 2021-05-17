@@ -6,8 +6,6 @@ use RecursiveIteratorIterator;
 
 /**
  * Klasse um einen Autoloader zu erzeugen
- *
- * @author Stefan Kuhn
  */
 RIOAutoloader::register();
 
@@ -28,7 +26,6 @@ class RIOAutoloader {
     /*
      * Erzeugt einen Autoloader, wenn es noch keinen gibt.
      */
-
     public static function register(): void
     {
         if (self::$autoloader === null) {
@@ -46,9 +43,6 @@ class RIOAutoloader {
      */
     function __autoload(string $className): void
     {
-        
-
-
         if (isset($GLOBALS[$className])) {
             if (file_exists($GLOBALS[$className])) {
                 include_once($GLOBALS[$className]);
@@ -58,7 +52,6 @@ class RIOAutoloader {
                 $this->initClassFile();
             }
         }
-
         /*
          * <code>RecursiveDirectoryIterator</code> enthält einen Array der 
          * unter anderem den Dateipfad enthält. 
