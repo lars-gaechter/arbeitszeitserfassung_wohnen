@@ -19,7 +19,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "main": "sass source/scss/_main.scss public/css/main.css --style compressed",
     "main:watch": "sass --watch source/scss/_main.scss public/css/main.css --style compressed",
-    "dev": "./node_modules/.bin/webpack --watch"
+    "dev": "./node_modules/.bin/webpack --watch",
+    "prod": "./node_modules/.bin/webpack"
   },
   "repository": {
     "type": "git",

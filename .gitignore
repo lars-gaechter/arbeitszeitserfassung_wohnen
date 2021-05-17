@@ -19,4 +19,4 @@ composer.phar
 /public/css/main.css.map
 
 # JS
-/public/js/app.js*
+/public/js/main.js*
