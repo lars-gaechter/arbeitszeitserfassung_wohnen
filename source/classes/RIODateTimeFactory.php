@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 class RIODateTimeFactory
 {
@@ -10,7 +11,7 @@ class RIODateTimeFactory
      * @return DateTime
      * @throws Exception
      */
-    static function getDateTime($datetime = 'now', DateTimeZone $timezone = null): DateTime
+    static function getDateTime(string $datetime = 'now', DateTimeZone $timezone = null): DateTime
     {
         return new DateTime($datetime, (null === $timezone) ? new DateTimeZone("Europe/Zurich") : $timezone);
     }
