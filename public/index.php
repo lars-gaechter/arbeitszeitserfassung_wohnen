@@ -46,6 +46,14 @@ if (!$request->hasSession()) {
     $request->setSession($session);
 }
 $request->getSession()->start();
+if($_ENV["SESSION_LIFE_TIME"] === $request->getSession()->getMetadataBag()->getLifetime()) {
+    if($_ENV["SESSION_LIFE_TIME"] >= $request->getSession()->getMetadataBag()->getLastUsed() - $request->getSession()->getMetadataBag()->getCreated()) {
+        // Session has still lifetime
+    } else {
+        // Session has no lifetime
+        $request->getSession()->invalidate();
+    }
+}
 /**
  * Force close the session
  * You cant use the session to store things unless you open it again

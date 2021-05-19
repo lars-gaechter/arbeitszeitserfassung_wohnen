@@ -21,52 +21,70 @@
             <tr>
                 <th scope="row">Arbeitsbeginn</th>
                 <td>{{ timeStart }}</td>
-                <td><label for="startCorrected" class="form-label d-inline"></label><input type="time" class="form-control" id="startCorrected" name="startCorrected" value="{{ timeStartCorrected }}"></td>
+                <td>
+                    <label for="startCorrected" class="form-label d-inline"></label>
+                    <input type="time" class="form-control" id="startCorrected" name="startCorrected" value="{{ timeStartCorrected }}">
+                </td>
                 <td>Zeitpunkt der Anmeldung</td>
             </tr>
             <tr>
                 <th scope="row">Arbeitsende</th>
                 <td>{{ timeEnd }}</td>
-                <td><label for="endCorrected" class="form-label d-inline"></label><input type="time" class="form-control" id="endCorrected" name="endCorrected" value="{{ timeEndCorrected }}"></td>
+                <td>
+                    <label for="endCorrected" class="form-label d-inline"></label>
+                    <input type="time" class="form-control" id="endCorrected" name="endCorrected" value="{{ timeEndCorrected }}">
+                </td>
                 <td>Zeitpunkt der Abmeldung</td>
             </tr>
             <tr>
                 <th scope="row">Pflichtzeit</th>
                 <td>{{ mandatoryTime }}</td>
-                <td><label for="mandatoryTimeCorrected" class="form-label d-inline"></label><input  class="form-control" id="mandatoryTimeCorrected" name="mandatoryTimeCorrected"></td>
+                <td>
+                    <label for="mandatoryTimeCorrected" class="form-label d-inline"></label>
+                    <input  class="form-control" id="mandatoryTimeCorrected" name="mandatoryTimeCorrected">
+                </td>
                 <td>Pflicht-Arbeitszeit</td>
             </tr>
             <tr>
                 <th scope="row">Zeitgutschrift</th>
                 <td>{{ timeCredit }}</td>
-                <td><label for="timeCreditCorrected" class="form-label d-inline"></label><input  class="form-control" id="timeCreditCorrected" name="timeCreditCorrected" value="{{ time_credit_corrected }}"></td>
+                <td>
+                    <label for="timeCreditCorrected" class="form-label d-inline"></label>
+                    <input  class="form-control" id="timeCreditCorrected" name="timeCreditCorrected" value="{{ timeCreditCorrected }}">
+                </td>
                 <td>kann auch negativ ausfallen</td>
             </tr>
             <tr>
                 <th scope="row">Präsenzzeit</th>
                 <td>{{ presenceTime }}</td>
-                <td><label for="presenceTimeCorrected" class="form-label d-inline"></label><input  class="form-control" id="presenceTimeCorrected" name="presenceTimeCorrected"></td>
+                <td>
+                    <label for="presenceTimeCorrected" class="form-label d-inline"></label>
+                    <input  class="form-control" id="presenceTimeCorrected" name="presenceTimeCorrected">
+                </td>
                 <td>Präsenzzeit</td>
             </tr>
             <tr>
                 <th scope="row">geleistete Arbeitszeit</th>
-                <td>{{ presence_time_total }}</td>
-                <td><label for="working_time_performed_corrected" class="form-label d-inline"></label><input  class="form-control" id="working_time_performed_corrected" name="working_time_performed_corrected" value="{{ presence_time_total_corrected }}"></td>
+                <td>{{ presenceTimeTotal }}</td>
+                <td>
+                    <label for="workingTimePerformedCorrected" class="form-label d-inline"></label>
+                    <input  class="form-control" id="workingTimePerformedCorrected" name="workingTimePerformedCorrected" value="{{ workingTimePerformedCorrected }}">
+                </td>
                 <td>grob gesagt: Präsenz minus Pause</td>
             </tr>
             <tr>
                 <th scope="row">Abweichung</th>
-                <td>{{ deviation_negative_or_positive_or_zero ~ deviation }}</td>
+                <td>{{ deviationNegativeOrPositiveOrZero ~ deviation }}</td>
                 <td></td>
-                <td>ergibt sich aus der Differenz zwischen geleisteter Arbeit ({{ presence_time_total }}) und Pflicht-Arbeitszeit ({{ mandatory_time }})</td>
+                <td>ergibt sich aus der Differenz zwischen geleisteter Arbeit ({{ presenceTimeTotal }}) und Pflicht-Arbeitszeit ({{ mandatoryTime }})</td>
             </tr>
             <tr>
                 <th scope="row">Abwesend?</th>
-                <td><div><label for="absent_all_day"></label>{{ absent_all_day }}</div></td>
+                <td><div><label for="absentAllDay"></label>{{ absentAllDay }}</div></td>
                 <td>
-                    <select class="form-select" id="absent_all_day" name="absent_all_day" aria-label="absent_all_day">
-                        {% for option in absent_options %}
-                        <option value="{{ option }}" {{ option is same as(absent_all_day) ? "selected" }}>{{ option }}</option>
+                    <select class="form-select" id="absentAllDay" name="absentAllDay" aria-label="absentAllDay">
+                        {% for option in absentOptions %}
+                        <option value="{{ option }}" {{ option is same as(absentAllDay) ? "selected" }}>{{ option }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -74,11 +92,11 @@
             </tr>
             <tr>
                 <th scope="row">vormittags</th>
-                <td><div><label for="absent_morning"></label>{{ absent_morning }}</div></td>
+                <td><div><label for="absentMorning"></label>{{ absentMorning }}</div></td>
                 <td>
-                    <select class="form-select" id="absent_morning" name="absent_morning" aria-label="absent_morning">
-                        {% for option in absent_options %}
-                            <option value="{{ option }}" {{ option is same as(absent_morning) ? "selected" }}>{{ option }}</option>
+                    <select class="form-select" id="absentMorning" name="absentMorning" aria-label="absentMorning">
+                        {% for option in absentOptions %}
+                            <option value="{{ option }}" {{ option is same as(absentMorning) ? "selected" }}>{{ option }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -86,11 +104,11 @@
             </tr>
             <tr>
                 <th scope="row">nachmittags</th>
-                <td><div><label for="absent_afternoon"></label>{{ absent_afternoon }}</div></td>
+                <td><div><label for="absentAfternoon"></label>{{ absentAfternoon }}</div></td>
                 <td>
-                    <select class="form-select" id="absent_afternoon" name="absent_afternoon" aria-label="absent_afternoon">
-                        {% for option in absent_options %}
-                            <option value="{{ option }}" {{ option is same as(absent_afternoon) ? "selected" }}>{{ option }}</option>
+                    <select class="form-select" id="absentAfternoon" name="absentAfternoon" aria-label="absentAfternoon">
+                        {% for option in absentOptions %}
+                            <option value="{{ option }}" {{ option is same as(absentAfternoon) ? "selected" }}>{{ option }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -110,7 +128,10 @@
             <tr>
                 <th scope="row">Gesamtsaldo</th>
                 <td></td>
-                <td><label for="working_time_performed_corrected" class="form-label d-inline"></label><input  class="form-control" id="working_time_performed_corrected" name="working_time_performed_corrected" value="{{ presence_time_total_corrected }}"></td>
+                <td>
+                    <label for="presenceTimeTotalCorrected" class="form-label d-inline"></label>
+                    <input class="form-control" id="presenceTimeTotalCorrected" name="presenceTimeTotalCorrected" value="{{ presenceTimeTotalCorrected }}">
+                </td>
                 <td>der hingegen schon</td>
             </tr>
             <tr>
@@ -125,8 +146,8 @@
             </tr>
             </tbody>
         </table>
-        {% if last_edited_user is not same as('') or last_edited_date is not same as('') or last_edited_time is not same as('') %}
-            <p>Wurde von {{ last_edited_user }} zuletzt am {{ last_edited_date }} um {{ last_edited_time }} Uhr korrigiert.</p>
+        {% if lastEditedUser is not same as('') or lastEditedDate is not same as('') or lastEditedTime is not same as('') %}
+            <p>Wurde von {{ lastEditedUser }} zuletzt am {{ lastEditedDate }} um {{ lastEditedTime }} Uhr korrigiert.</p>
         {% endif %}
         <button type="submit" class="btn btn-primary">OK</button>
     </form>

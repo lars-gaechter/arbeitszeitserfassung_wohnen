@@ -335,7 +335,18 @@ class RIOGeneralAccessController
         $username = $this->getSession()->get("username");
         $sessionId = $this->getSession()->getId();
         $timeRecordStarted = false;
-        $findUser = $this->getUsers()->findOne([ "sessionUsername" => $username, "sessionId" => $sessionId ]);
+        $findUser = $this->getUsers()->findOne([ "sessionId" => $sessionId ]);
+        if(null === $username) {
+            if(null !== $findUser) {
+                if($findUser->offsetExists("sessionUsername")) {
+                    $username = $findUser->offsetGet("sessionUsername");
+                } else {
+                    $username = '';
+                }
+            } else {
+                $username = '';
+            }
+        }
         if(null !== $findUser){
             $timeRecordStarted = [
                 'timeRecordStarted' => $this->getUsers()->findOne(
@@ -345,7 +356,7 @@ class RIOGeneralAccessController
             $timeRecordStarted = $timeRecordStarted["timeRecordStarted"];
         }
         $user = [
-            'sessionUsername' => null === $username ? '' : $username,
+            'sessionUsername' => $username,
             'sessionId' => null === $sessionId ? '' : $sessionId,
             'timeRecordStarted' => $timeRecordStarted,
         ];
@@ -365,10 +376,8 @@ class RIOGeneralAccessController
      */
     public function getUserFromSession(): array
     {
-        $username = $this->getSession()->get("username");
         $sessionId = $this->getSession()->getId();
         return [
-            'sessionUsername' => null === $username ? '' : $username,
             'sessionId' => null === $sessionId ? '' : $sessionId
         ];
     }

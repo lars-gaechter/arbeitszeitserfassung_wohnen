@@ -5,7 +5,7 @@ function getAbsolutePath(array $parts = [], string $after = ""): string
 {
     $path = "http";
     $path .= "true" === $_ENV['HTTPS'] ? "s" : "";
-    $path .= "://".$_ENV['APP_HOST']."/". getPathPartsToPath($parts) .$after;
+    $path .= "://".$_ENV['HOSTNAME']."/". getPathPartsToPath($parts) .$after;
     return $path;
 }
 

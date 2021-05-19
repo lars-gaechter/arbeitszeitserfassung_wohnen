@@ -69,10 +69,25 @@ class RIOCustomTwigExtension extends AbstractExtension
     {
         $databaseCollection = new RIOMongoDatabaseCollection(RIOMongoDatabase::getInstance()->getDatabase(), "user");
         $collection = $databaseCollection->getCollection();
+        $session = $this->request->getSession();
         $userFind = $collection->findOne(
-            ["sessionId" => $this->request->getSession()->getId()]
+            ["sessionId" => $session->getId()]
         );
-        return null !== $userFind;
+        if(null !== $userFind) {
+            $metadataBag = $session->getMetadataBag();
+            if($metadataBag->getLifetime() >= $metadataBag->getLastUsed() - $metadataBag->getCreated()) {
+                return true;
+            } else {
+                $collection->updateOne(
+                    [ "sessionId" => $session->getId() ],
+                    [
+                        '$set' => [ 'sessionId' => '' ]
+                    ]
+                );
+                $this->request->getSession()->invalidate();
+            }
+        }
+        return false;
     }
 
     /**

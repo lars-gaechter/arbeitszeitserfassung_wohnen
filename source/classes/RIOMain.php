@@ -94,7 +94,7 @@ class RIOMain extends RIOAccessController
         $authObjectNoTime = array_merge(
             $maybeAuthObject,
             [
-                'timeRecordStarted' => false, 'theme' => $request->get("theme"),
+                'timeRecordStarted' => false,
                 "mandatoryTime" => $user->getMandatoryTime()->format("H:i"),
                 "location" => $user->getLocation()
             ]
@@ -110,10 +110,16 @@ class RIOMain extends RIOAccessController
         if ($bind) {
             ldap_unbind($ldap);
             if(null === $auth_find) {
+                if("0" === $this->getSession()->getMetadataBag()->getLifetime()) {
+                    $this->getSession()->getMetadataBag()->stampNew($_ENV["SESSION_LIFE_TIME"]);
+                }
                 $this->getUsers()->insertOne(
                     $authObjectNoTime
                 );
             } else {
+                if("0" === $this->getSession()->getMetadataBag()->getLifetime()) {
+                    $this->getSession()->getMetadataBag()->stampNew($_ENV["SESSION_LIFE_TIME"]);
+                }
                 $this->getUsers()->updateOne(
                     $maybeObject,
                     [
