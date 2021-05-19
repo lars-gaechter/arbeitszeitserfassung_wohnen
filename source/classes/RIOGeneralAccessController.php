@@ -48,7 +48,7 @@ class RIOGeneralAccessController
      */
     public function getTimeRecording(): array
     {
-        $mandatoryTime = RIODateTimeFactory::getDateTime($this->getUser()["mandatory_time"]);
+        $mandatoryTime = RIODateTimeFactory::getDateTime($this->getUser()["mandatoryTime"]);
         $workDay = new RIOWorkDayObject();
         if($workDay->isRIOHoliday() || $workDay->isSunday()) {
             $workDay->getAbsentAllDay()->setOfficialHoliday();
@@ -58,25 +58,25 @@ class RIOGeneralAccessController
         }
         return [
             'date' => $this->dateTime->format("d.m.Y"),
-            'month_year' => $this->dateTime->format("m.Y"),
-            'week_year' => $this->dateTime->format("W.Y"),
+            'monthYear' => $this->dateTime->format("m.Y"),
+            'weekYear' => $this->dateTime->format("W.Y"),
             'month' => $this->dateTime->format("m"),
             'week' => $this->dateTime->format("W"),
             $this->getMandatoryTimeKey() => $mandatoryTime->format("H:i"),
             $this->getMandatoryTimeCorrectedKey() => '',
-            'time_credit' => '00:00',
-            'time_credit_corrected' => '',
-            'absent_all_day' => $workDay->getAbsentAllDay()->getOption(),
-            'absent_afternoon' => $workDay->getAbsentAfternoon()->getOption(),
-            'absent_morning' => $workDay->getAbsentMorning()->getOption(),
+            'timeCredit' => '00:00',
+            'timeCreditCorrected' => '',
+            'absentAllDay' => $workDay->getAbsentAllDay()->getOption(),
+            'absentAfternoon' => $workDay->getAbsentAfternoon()->getOption(),
+            'absentMorning' => $workDay->getAbsentMorning()->getOption(),
             'time' => [
                 [
                     'start' => $this->dateTime->format("H:i"),
-                    'start_corrected' => '',
+                    'startCorrected' => '',
                     'comment' => '',
-                    'last_edited_user' => '',
-                    'last_edited_date' => '',
-                    'last_edited_time' => ''
+                    'lastEditedUser' => '',
+                    'lastEditedDate' => '',
+                    'lastEditedTime' => ''
                 ]
             ]
         ];
@@ -100,11 +100,11 @@ class RIOGeneralAccessController
     {
         return new BSONDocument([
             'start' => $this->dateTime->format("H:i"),
-            'start_corrected' => '',
+            'startCorrected' => '',
             'comment' => '',
-            'last_edited_user' => '',
-            'last_edited_date' => '',
-            'last_edited_time' => ''
+            'lastEditedUser' => '',
+            'lastEditedDate' => '',
+            'lastEditedTime' => ''
         ]);
     }
 
@@ -117,17 +117,17 @@ class RIOGeneralAccessController
 
     public function getAbsentAllDayKey(): string
     {
-        return "absent_all_day";
+        return "absentAllDay";
     }
 
     public function getAbsentMorningKey(): string
     {
-        return "absent_morning";
+        return "absentMorning";
     }
 
     public function getAbsentAfternoonKey(): string
     {
-        return "absent_afternoon";
+        return "absentAfternoon";
     }
 
     public function getTimeRecordingStartKey(): string
@@ -137,7 +137,7 @@ class RIOGeneralAccessController
 
     public function getTimeRecordingStartCorrectedKey(): string
     {
-        return 'start_corrected';
+        return 'startCorrected';
     }
 
     public function getTimeRecordingEndKey(): string
@@ -147,17 +147,17 @@ class RIOGeneralAccessController
 
     public function getTimeRecordingEndCorrectedKey(): string
     {
-        return 'end_corrected';
+        return 'endCorrected';
     }
 
     public function getPresenceTimeKey(): string
     {
-        return 'presence_time';
+        return 'presenceTime';
     }
 
     public function getIsTimeKey(): string
     {
-        return 'is_time';
+        return 'isTime';
     }
 
     public function getDiffKey(): string
@@ -167,32 +167,32 @@ class RIOGeneralAccessController
 
     public function getDiffNegativePositiveKey(): string
     {
-        return 'diff_negative_positive';
+        return 'diffNegativePositive';
     }
 
     public function getMandatoryTimeKey(): string
     {
-        return 'mandatory_time';
+        return 'mandatoryTime';
     }
 
     public function getMandatoryTimeCorrectedKey(): string
     {
-        return 'mandatory_time_corrected';
+        return 'mandatoryTimeCorrected';
     }
 
     public function getWorkingTimePerformedKey(): string
     {
-        return 'working_time_performed';
+        return 'workingTimePerformed';
     }
 
     public function getWorkingTimePerformedCorrectedKey(): string
     {
-        return 'working_time_performed_corrected';
+        return 'workingTimePerformedCorrected';
     }
 
     public function getPresenceTimeCorrectedKey(): string
     {
-        return 'presence_time_corrected';
+        return 'presenceTimeCorrected';
     }
 
     public function getTimeRecordingEndValue(): string
@@ -218,7 +218,7 @@ class RIOGeneralAccessController
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDays()->find(["session_username" => $user->getUsername()])->toArray();
+        $allWorkDaysFromUser = $this->getWorkDays()->find(["sessionUsername" => $user->getUsername()])->toArray();
         return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
@@ -233,9 +233,9 @@ class RIOGeneralAccessController
     public function getUserAllPastWorkdaysByMonthYearUser(string $monthYear, string $username): array
     {
         /** @var BSONDocument $user */
-        $user = $this->getUsers()->findOne(['session_username' => $username]);
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["month_year" => $monthYear])->toArray();
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
         return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
@@ -251,7 +251,7 @@ class RIOGeneralAccessController
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$user->getUsername())->find(["session_username" => $user->getUsername(), "month_year" => $monthYear])->toArray();
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$user->getUsername())->find(["sessionUsername" => $user->getUsername(), "monthYear" => $monthYear])->toArray();
         return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
@@ -267,10 +267,13 @@ class RIOGeneralAccessController
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.01.".explode('.',$weekYear)[1])->format("Y"),$user->getUsername())->find(["session_username" => $user->getUsername(), "week_year" => $weekYear])->toArray();
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.01.".explode('.',$weekYear)[1])->format("Y"),$user->getUsername())->find(["sessionUsername" => $user->getUsername(), "weekYear" => $weekYear])->toArray();
         return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
+    /**
+     * @throws \Exception
+     */
     private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user): array
     {
         $allWorkDaysFromUserPast = [];
@@ -290,7 +293,7 @@ class RIOGeneralAccessController
         $OneWorkDayFromUserPastIndexed = [];
         $i = 0;
         foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
-            $OneWorkDayFromUserPast["presencetimecorrections"] = [$user->offsetGet("session_username"), $OneWorkDayFromUserPast["date"]];
+            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $OneWorkDayFromUserPast["date"]];
             $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
             $i++;
         }
@@ -316,7 +319,7 @@ class RIOGeneralAccessController
         $OneWorkDayFromUserPastIndexed = [];
         $i = 0;
         foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
-            $OneWorkDayFromUserPast["presencetimecorrections"] = [$user->getUsername(), $OneWorkDayFromUserPast["date"]];
+            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->getUsername(), $OneWorkDayFromUserPast["date"]];
             $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
             $i++;
         }
@@ -332,25 +335,25 @@ class RIOGeneralAccessController
         $username = $this->getSession()->get("username");
         $sessionId = $this->getSession()->getId();
         $timeRecordStarted = false;
-        $findUser = $this->getUsers()->findOne([ "session_username" => $username, "session_id" => $sessionId ]);
+        $findUser = $this->getUsers()->findOne([ "sessionUsername" => $username, "sessionId" => $sessionId ]);
         if(null !== $findUser){
             $timeRecordStarted = [
-                'time_record_started' => $this->getUsers()->findOne(
-                    [ "session_username" => $username ]
-                )["time_record_started"]
+                'timeRecordStarted' => $this->getUsers()->findOne(
+                    [ "sessionUsername" => $username ]
+                )["timeRecordStarted"]
             ];
-            $timeRecordStarted = $timeRecordStarted["time_record_started"];
+            $timeRecordStarted = $timeRecordStarted["timeRecordStarted"];
         }
         $user = [
-            'session_username' => null === $username ? '' : $username,
-            'session_id' => null === $sessionId ? '' : $sessionId,
-            'time_record_started' => $timeRecordStarted,
+            'sessionUsername' => null === $username ? '' : $username,
+            'sessionId' => null === $sessionId ? '' : $sessionId,
+            'timeRecordStarted' => $timeRecordStarted,
         ];
         if(null !== $findUser) {
             $user = array_merge(
                 $user,
                 [
-                    'mandatory_time' => $findUser["mandatory_time"]
+                    'mandatoryTime' => $findUser["mandatoryTime"]
                 ]
             );
         }
@@ -365,8 +368,8 @@ class RIOGeneralAccessController
         $username = $this->getSession()->get("username");
         $sessionId = $this->getSession()->getId();
         return [
-            'session_username' => null === $username ? '' : $username,
-            'session_id' => null === $sessionId ? '' : $sessionId
+            'sessionUsername' => null === $username ? '' : $username,
+            'sessionId' => null === $sessionId ? '' : $sessionId
         ];
     }
 
@@ -411,12 +414,12 @@ class RIOGeneralAccessController
      */
     public function getWorkDaysByUser(): array
     {
-        $collections = $this->getWorkDaysFromUser($this->getUser()['session_username']);
+        $collections = $this->getWorkDaysFromUser($this->getUser()['sessionUsername']);
         $collectionsArray = [];
         foreach ($collections as $collection) {
             $collectionsArray[] = $collection->find(
                 [
-                    "session_username" => $this->getUser()['session_username']
+                    "sessionUsername" => $this->getUser()['sessionUsername']
                 ]
             )->toArray();
         }

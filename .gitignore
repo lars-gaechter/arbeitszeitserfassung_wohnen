@@ -20,3 +20,11 @@ composer.phar
 
 # JS
 /public/js/main.js*
+
+# Microsoft Office
+*.tmp
+~$*.doc*
+Backup of *.doc*
+~$*.xls*
+*.xlk
+*.~vsd*

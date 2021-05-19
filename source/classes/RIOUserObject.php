@@ -17,15 +17,15 @@ class RIOUserObject implements RIOToJSON
     {
         if(null !== $accessController) {
             $user = $accessController->getUser();
-            $this->timeRecordStarted = $user["time_record_started"];
-            $this->sessionId = $user["session_id"];
-            $this->username = $user["session_username"];
+            $this->timeRecordStarted = $user["timeRecordStarted"];
+            $this->sessionId = $user["sessionId"];
+            $this->username = $user["sessionUsername"];
             $this->workDays = $accessController->getWorkDaysByUser();
-            if(false === array_key_exists("mandatory_time", $user)){
+            if(false === array_key_exists("mandatoryTime", $user)){
                 $this->mandatoryTime = RIODateTimeFactory::getDateTime();
                 $this->mandatoryTime->setTime(8,0);
             } else {
-                $this->mandatoryTime = RIODateTimeFactory::getDateTime($user["mandatory_time"]);
+                $this->mandatoryTime = RIODateTimeFactory::getDateTime($user["mandatoryTime"]);
             }
         } else {
             $this->mandatoryTime = RIODateTimeFactory::getDateTime();
@@ -37,12 +37,12 @@ class RIOUserObject implements RIOToJSON
     public function toJSON(): string
     {
         $array = [
-            "session_username" => $this->username,
-            "display_username" => '',
-            "surname_username" => '',
-            "session_id" => $this->sessionId,
-            "time_record_started" => $this->timeRecordStarted,
-            "mandatory_time" => $this->mandatoryTime,
+            "sessionUsername" => $this->username,
+            "displayUsername" => '',
+            "surnameUsername" => '',
+            "sessionId" => $this->sessionId,
+            "timeRecordStarted" => $this->timeRecordStarted,
+            "mandatoryTime" => $this->mandatoryTime,
             "location" => $this->location
         ];
         return json_encode($array);

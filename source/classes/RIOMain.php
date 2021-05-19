@@ -82,20 +82,20 @@ class RIOMain extends RIOAccessController
         $sessionId = $session->getId();
         $request = $this->getRequest();
         $maybeObject = [
-            'session_username' => $sessionUsername,
-            'display_username' => $displayUsername,
-            'surname_username' => $surnameUsername
+            'sessionUsername' => $sessionUsername,
+            'displayUsername' => $displayUsername,
+            'surnameUsername' => $surnameUsername
         ];
         $maybeAuthObject = array_merge(
           $maybeObject,
-          ['session_id' => $sessionId]
+          ['sessionId' => $sessionId]
         );
         $user = new RIOUserObject();
         $authObjectNoTime = array_merge(
             $maybeAuthObject,
             [
-                'time_record_started' => false, 'theme' => $request->get("theme"),
-                "mandatory_time" => $user->getMandatoryTime()->format("H:i"),
+                'timeRecordStarted' => false, 'theme' => $request->get("theme"),
+                "mandatoryTime" => $user->getMandatoryTime()->format("H:i"),
                 "location" => $user->getLocation()
             ]
         );
@@ -117,7 +117,7 @@ class RIOMain extends RIOAccessController
                 $this->getUsers()->updateOne(
                     $maybeObject,
                     [
-                        '$set' => [ 'session_id' => $sessionId, 'theme' => $request->get("theme") ]
+                        '$set' => [ 'sessionId' => $sessionId ]
                     ]
                 );
             }

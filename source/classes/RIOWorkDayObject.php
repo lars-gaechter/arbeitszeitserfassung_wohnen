@@ -84,11 +84,11 @@ class RIOWorkDayObject implements RIOToJSON
     public function toJSON(): string
     {
         $array = [
-            "session_username" => $this->username,
+            "sessionUsername" => $this->username,
             "date" => $this->date,
-            "mandatory_time" => $this->mandatoryTime,
+            "mandatoryTime" => $this->mandatoryTime,
             "time" => $this->times,
-            "presence_time" => $this->presenceTime
+            "presenceTime" => $this->presenceTime
         ];
         return json_encode($array);
     }

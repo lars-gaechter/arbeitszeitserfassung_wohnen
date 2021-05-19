@@ -1,9 +1,9 @@
 {% extends "base.twig" %}
 {% block content %}
     <h3>Korrektur</h3>
-    <p>Dies sind die Präsenzdaten vom {{ date }} für {{ display_username ~ ' ' ~ surname_username }}.</p>
+    <p>Dies sind die Präsenzdaten vom {{ date }} für {{ displayUsername ~ ' ' ~ surnameUsername }}.</p>
     <p>Du kannst hier Korrekturen vornehmen.</p>
-    <form action="{{ getAbsolutePath(['rioadmin','updatePresenceTimeCorrections']|merge(username_date_time_index)) }}" method="post">
+    <form action="{{ getAbsolutePath(['rioadmin','updatePresenceTimeCorrections']|merge(usernameDateTimeIndex)) }}" method="post">
         <div class="mb-3">
             <label for="date" class="form-label">Datum: </label>
             <input readonly id="date" name="date" class="form-control" value="{{ date }}">
@@ -20,32 +20,32 @@
             <tbody>
             <tr>
                 <th scope="row">Arbeitsbeginn</th>
-                <td>{{ time_start }}</td>
-                <td><label for="start_corrected" class="form-label d-inline"></label><input type="time" class="form-control" id="start_corrected" name="start_corrected" value="{{ time_start_corrected }}"></td>
+                <td>{{ timeStart }}</td>
+                <td><label for="startCorrected" class="form-label d-inline"></label><input type="time" class="form-control" id="startCorrected" name="startCorrected" value="{{ timeStartCorrected }}"></td>
                 <td>Zeitpunkt der Anmeldung</td>
             </tr>
             <tr>
                 <th scope="row">Arbeitsende</th>
-                <td>{{ time_end }}</td>
-                <td><label for="end_corrected" class="form-label d-inline"></label><input type="time" class="form-control" id="end_corrected" name="end_corrected" value="{{ time_end_corrected }}"></td>
+                <td>{{ timeEnd }}</td>
+                <td><label for="endCorrected" class="form-label d-inline"></label><input type="time" class="form-control" id="endCorrected" name="endCorrected" value="{{ timeEndCorrected }}"></td>
                 <td>Zeitpunkt der Abmeldung</td>
             </tr>
             <tr>
                 <th scope="row">Pflichtzeit</th>
-                <td>{{ mandatory_time }}</td>
-                <td><label for="mandatory_time_corrected" class="form-label d-inline"></label><input  class="form-control" id="mandatory_time_corrected" name="mandatory_time_corrected"></td>
+                <td>{{ mandatoryTime }}</td>
+                <td><label for="mandatoryTimeCorrected" class="form-label d-inline"></label><input  class="form-control" id="mandatoryTimeCorrected" name="mandatoryTimeCorrected"></td>
                 <td>Pflicht-Arbeitszeit</td>
             </tr>
             <tr>
                 <th scope="row">Zeitgutschrift</th>
-                <td>{{ time_credit }}</td>
-                <td><label for="time_credit_corrected" class="form-label d-inline"></label><input  class="form-control" id="time_credit_corrected" name="time_credit_corrected" value="{{ time_credit_corrected }}"></td>
+                <td>{{ timeCredit }}</td>
+                <td><label for="timeCreditCorrected" class="form-label d-inline"></label><input  class="form-control" id="timeCreditCorrected" name="timeCreditCorrected" value="{{ time_credit_corrected }}"></td>
                 <td>kann auch negativ ausfallen</td>
             </tr>
             <tr>
                 <th scope="row">Präsenzzeit</th>
-                <td>{{ presence_time }}</td>
-                <td><label for="presence_time_corrected" class="form-label d-inline"></label><input  class="form-control" id="presence_time_corrected" name="presence_time_corrected"></td>
+                <td>{{ presenceTime }}</td>
+                <td><label for="presenceTimeCorrected" class="form-label d-inline"></label><input  class="form-control" id="presenceTimeCorrected" name="presenceTimeCorrected"></td>
                 <td>Präsenzzeit</td>
             </tr>
             <tr>

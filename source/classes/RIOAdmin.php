@@ -33,9 +33,9 @@ class RIOAdmin extends RIOAccessController
     {
         $user = new RIOUserObject($this);
         $this->getUsers()->updateOne(
-            [ "session_username" => $user->getUsername(), "session_id" => $user->getSessionId() ],
+            [ "sessionUsername" => $user->getUsername(), "sessionId" => $user->getSessionId() ],
             [
-                '$set' => [ 'session_id' => '' ]
+                '$set' => [ 'sessionId' => '' ]
             ]
         );
         $this->getSession()->invalidate();
@@ -71,7 +71,7 @@ class RIOAdmin extends RIOAccessController
     /**
      * @throws Exception
      */
-    private function showUser(array $context = []): Response
+    private function showUser(): Response
     {
         $user = new RIOUserObject($this);
         $workday = new RIOWorkDayObject();
@@ -80,17 +80,14 @@ class RIOAdmin extends RIOAccessController
         return $this->renderPage(
             "user_home.twig",
             array_merge_recursive(
-                array_merge(
-                    $context,
-                    $customTwigExtension->navByActive($user->getUsername(), $monthYear, "user_home")
-                ),
+                $customTwigExtension->navByActive($user->getUsername(), $monthYear, "user_home"),
                 [
-                    "time_record_started" => $user->isTimeRecordStarted(),
+                    "timeRecordStarted" => $user->isTimeRecordStarted(),
                     "day" => $workday->getWeekDay(),
                     "date" => $workday->getFormattedDate(),
-                    'display_username' => $this->getUsers()->findOne($this->getUserFromSession())["display_username"],
-                    'month_year' => $monthYear,
-                    'session_username' => $user->getUsername()
+                    'displayUsername' => $this->getUsers()->findOne($this->getUserFromSession())["displayUsername"],
+                    'monthYear' => $monthYear,
+                    'sessionUsername' => $user->getUsername()
                 ]
             )
 
@@ -103,16 +100,16 @@ class RIOAdmin extends RIOAccessController
     public function updateUser(string $username): RedirectResponse
     {
         /** @var BSONDocument $user */
-        $user = $this->getUsers()->findOne(['session_username' => $username]);
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $request = $this->getRequest();
-        $mandatoryTime = $request->get("mandatory_time");
+        $mandatoryTime = $request->get("mandatoryTime");
         if(null !== $mandatoryTime && '' !== $mandatoryTime) {
-            $user->offsetSet("mandatory_time",RIODateTimeFactory::getDateTime($mandatoryTime));
+            $user->offsetSet("mandatoryTime",RIODateTimeFactory::getDateTime($mandatoryTime));
             /** @var DateTime $updatedMandatoryTime */
-            $updatedMandatoryTime = $user->offsetGet("mandatory_time");
+            $updatedMandatoryTime = $user->offsetGet("mandatoryTime");
             $this->getUsers()->findOneAndUpdate(
-                ["session_username" => $user->getUsername()],
-                ['$set' => ['mandatory_time' => $updatedMandatoryTime->format("H:i")]]
+                ["sessionUsername" => $user->offsetGet("sessionUsername")],
+                ['$set' => ['mandatoryTime' => $updatedMandatoryTime->format("H:i")]]
             );
         }
         return RIORedirect::redirectResponse(['rioadmin', 'edituser', $username]);
@@ -121,18 +118,18 @@ class RIOAdmin extends RIOAccessController
     public function editUser(string $username): RedirectResponse|Response
     {
         /** @var BSONDocument $user */
-        $user = $this->getUsers()->findOne(['session_username' => $username]);
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $workday = new RIOWorkDayObject();
         $monthYear = $workday->getDate()->format("m.Y");
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         return $this->renderPage(
             "edit_user.twig",
             array_merge(
-                $customTwigExtension->navByActive($user->offsetGet("session_username"), $monthYear, "edit_user"),
+                $customTwigExtension->navByActive($user->offsetGet("sessionUsername"), $monthYear, "edit_user"),
                 [
-                    "mandatory_time" => $user->offsetGet("mandatory_time"),
-                    'month_year' => $monthYear,
-                    'session_username' => $user->offsetGet("session_username")
+                    "mandatoryTime" => $user->offsetGet("mandatoryTime"),
+                    'monthYear' => $monthYear,
+                    'sessionUsername' => $user->offsetGet("sessionUsername")
                 ]
             )
         );
@@ -150,7 +147,7 @@ class RIOAdmin extends RIOAccessController
     public function presenceTimeCorrections(string $username, string $date, string $indexOfTime): RedirectResponse|Response
     {
         /** @var BSONDocument $user */
-        $user = $this->getUsers()->findOne(['session_username' => $username]);
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         if(null === $user) {
             throw new Error("User with this username ".$username." doesn't exist.");
         }
@@ -175,33 +172,33 @@ class RIOAdmin extends RIOAccessController
                 [
                     "date" => $date,
                     "time" => $time,
-                    "time_start" => '' === $time->offsetGet("start_corrected") ? $time->offsetGet("start") : $time->offsetGet("start_corrected"),
-                    "time_start_corrected" => $time->offsetGet("start_corrected"),
-                    "time_end" => '' === $time->offsetGet("end_corrected") ? $time->offsetGet("end") : $time->offsetGet("end_corrected"),
-                    "time_end_corrected" => $time->offsetGet("end_corrected"),
-                    'display_username' => $user->offsetGet("display_username"),
-                    'surname_username' => $user->offsetGet("surname_username"),
-                    'presence_time' => '' === $time->offsetGet("presence_time_corrected") ? $time->offsetGet("presence_time") : $time->offsetGet("presence_time_corrected"),
-                    'presence_time_corrected' => $time->offsetGet("presence_time_corrected"),
-                    'absent_options' => RIOAbsentOptionObject::getOptions(),
-                    'absent_all_day' => $workDay->offsetGet("absent_all_day"),
-                    'absent_afternoon' => $workDay->offsetGet("absent_afternoon"),
-                    'absent_morning' => $workDay->offsetGet("absent_morning"),
+                    "timeStart" => '' === $time->offsetGet("startCorrected") ? $time->offsetGet("start") : $time->offsetGet("startCorrected"),
+                    "timeStartCorrected" => $time->offsetGet("startCorrected"),
+                    "timeEnd" => '' === $time->offsetGet("endCorrected") ? $time->offsetGet("end") : $time->offsetGet("endCorrected"),
+                    "timeEndCorrected" => $time->offsetGet("endCorrected"),
+                    'displayUsername' => $user->offsetGet("displayUsername"),
+                    'surnameUsername' => $user->offsetGet("surnameUsername"),
+                    'presenceTime' => '' === $time->offsetGet("presenceTimeCorrected") ? $time->offsetGet("presenceTime") : $time->offsetGet("presenceTimeCorrected"),
+                    'presenceTimeCorrected' => $time->offsetGet("presenceTimeCorrected"),
+                    'absentOptions' => RIOAbsentOptionObject::getOptions(),
+                    'absentAllDay' => $workDay->offsetGet("absentAllDay"),
+                    'absentAfternoon' => $workDay->offsetGet("absentAfternoon"),
+                    'absentMorning' => $workDay->offsetGet("absentMorning"),
                     'comment' => $time->offsetGet("comment"),
-                    "mandatory_time" => $workDay->offsetGet("mandatory_time"),
-                    'working_time_performed_corrected' => $time->offsetGet("working_time_performed_corrected"),
-                    'working_time_performed' => '' === $time->offsetGet("working_time_performed_corrected") ? $time->offsetGet("working_time_performed") : $time->offsetGet("working_time_performed_corrected"),
-                    'presence_time_total' => $workDay->offsetGet("presence_time"),
-                    'presence_time_total_corrected' => $workDay->offsetGet("presence_time_corrected"),
+                    "mandatoryTime" => $workDay->offsetGet("mandatoryTime"),
+                    'workingTimePerformedCorrected' => $time->offsetGet("workingTimePerformedCorrected"),
+                    'workingTimePerformed' => '' === $time->offsetGet("workingTimePerformedCorrected") ? $time->offsetGet("workingTimePerformed") : $time->offsetGet("workingTimePerformedCorrected"),
+                    'presenceTimeTotal' => $workDay->offsetGet("presenceTime"),
+                    'presenceTimeTotalCorrected' => $workDay->offsetGet("presenceTimeCorrected"),
                     'deviation' => $workDay->offsetGet("deviation"),
-                    'deviation_negative_or_positive_or_zero' => $workDay->offsetGet("deviation_negative_or_positive_or_zero"),
-                    'time_credit' => $workDay->offsetGet("time_credit"),
-                    'time_credit_corrected' => $workDay->offsetGet("time_credit_corrected"),
-                    'month_year' => $monthYear,
-                    'username_date_time_index' => [$username, $date, $indexOfTime],
-                    'last_edited_user' => $time->offsetGet("last_edited_user"),
-                    'last_edited_date' => $time->offsetGet("last_edited_date"),
-                    'last_edited_time' => $time->offsetGet("last_edited_time")
+                    'deviationNegativeOrPositiveOrZero' => $workDay->offsetGet("deviationNegativeOrPositiveOrZero"),
+                    'timeCredit' => $workDay->offsetGet("timeCredit"),
+                    'timeCreditCorrected' => $workDay->offsetGet("timeCreditCorrected"),
+                    'monthYear' => $monthYear,
+                    'usernameDateTimeIndex' => [$username, $date, $indexOfTime],
+                    'lastEditedUser' => $time->offsetGet("lastEditedUser"),
+                    'lastEditedDate' => $time->offsetGet("lastEditedDate"),
+                    'lastEditedTime' => $time->offsetGet("lastEditedTime")
                 ]
             )
         );
@@ -216,7 +213,7 @@ class RIOAdmin extends RIOAccessController
     public function overview(string $username, string $monthYear): RedirectResponse|Response
     {
         /** @var BSONDocument $user */
-        $user = $this->getUsers()->findOne(['session_username' => $username]);
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $previousMonthYear = $this->getAdjacentMonth($monthYear);
         if([] !== $this->getUserAllPastWorkdaysByMonthYearUser($previousMonthYear, $username)) {
             $previousMonthYearName = $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$previousMonthYear));
@@ -235,17 +232,17 @@ class RIOAdmin extends RIOAccessController
         return $this->renderPage(
             "overview.twig",
             array_merge(
-                $customTwigExtension->navByActive($user->offsetGet("session_username"), $monthYear, "overview"),
+                $customTwigExtension->navByActive($user->offsetGet("sessionUsername"), $monthYear, "overview"),
                 [
-                    "all_work_days_from_user_past" => $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username),
-                    "previous_month_name" => $previousMonthYearName,
-                    "next_month_name" => $nextMonthYearName,
-                    "current_month_name" => $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear)),
-                    "previous_month" => $previousMonthYear,
-                    "next_month" => $nextMonthYear,
-                    'display_username' => $user->offsetGet("display_username"),
-                    'surname_username' => $user->offsetGet("surname_username"),
-                    'session_username' => $user->offsetGet("session_username")
+                    "allWorkDaysFromUserPast" => $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username),
+                    "previousMonthName" => $previousMonthYearName,
+                    "nextMonthName" => $nextMonthYearName,
+                    "currentMonthName" => $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear)),
+                    "previousMonth" => $previousMonthYear,
+                    "nextMonth" => $nextMonthYear,
+                    'displayUsername' => $user->offsetGet("displayUsername"),
+                    'surnameUsername' => $user->offsetGet("surnameUsername"),
+                    'sessionUsername' => $user->offsetGet("sessionUsername")
                 ]
             )
         );
@@ -299,16 +296,16 @@ class RIOAdmin extends RIOAccessController
             $time->offsetSet("comment", $comment);
             $formHasChanged = true;
         }
-        if ($absentAllDay !== $workDay->offsetGet("absent_all_day")) {
-            $workDay->offsetSet("absent_all_day", $absentAllDay);
+        if ($absentAllDay !== $workDay->offsetGet($this->getAbsentAllDayKey())) {
+            $workDay->offsetSet($this->getAbsentAllDayKey(), $absentAllDay);
             $formHasChanged = true;
         }
-        if ($absentMorning !== $workDay->offsetGet("absent_morning")) {
-            $workDay->offsetSet("absent_morning", $absentMorning);
+        if ($absentMorning !== $workDay->offsetGet($this->getAbsentMorningKey())) {
+            $workDay->offsetSet($this->getAbsentMorningKey(), $absentMorning);
             $formHasChanged = true;
         }
-        if ($absentAfternoon !== $workDay->offsetGet("absent_afternoon")) {
-            $workDay->offsetSet("absent_afternoon", $absentAfternoon);
+        if ($absentAfternoon !== $workDay->offsetGet($this->getAbsentAfternoonKey())) {
+            $workDay->offsetSet($this->getAbsentAfternoonKey(), $absentAfternoon);
             $formHasChanged = true;
         }
         if ($startCorrected !== $time->offsetGet($this->getTimeRecordingStartCorrectedKey())) {
@@ -351,18 +348,18 @@ class RIOAdmin extends RIOAccessController
             // The form has changed
             $user = $this->getUsers()->findOne($this->getUserFromSession());
             $timestamp = RIODateTimeFactory::getDateTime();
-            $time->offsetSet("last_edited_user", $user->offsetGet("display_username") . ' ' . $user->offsetGet("surname_username"));
-            $time->offsetSet("last_edited_date", $timestamp->format("d.m.Y"));
-            $time->offsetSet("last_edited_time", $timestamp->format("H:i"));
+            $time->offsetSet("lastEditedUser", $user->offsetGet("displayUsername") . ' ' . $user->offsetGet("surnameUsername"));
+            $time->offsetSet("lastEditedDate", $timestamp->format("d.m.Y"));
+            $time->offsetSet("lastEditedTime", $timestamp->format("H:i"));
             $times->offsetSet($indexOfTime, $time);
             $workDays->findOneAndUpdate(
                 $givenTime,
                 [
                     '$set' => [
                         'time' => $times,
-                        'absent_all_day' => $workDay->offsetGet("absent_all_day"),
-                        'absent_morning' => $workDay->offsetGet("absent_morning"),
-                        'absent_afternoon' => $workDay->offsetGet("absent_afternoon"),
+                        $this->getAbsentAllDayKey() => $workDay->offsetGet($this->getAbsentAllDayKey()),
+                        $this->getAbsentMorningKey() => $workDay->offsetGet($this->getAbsentMorningKey()),
+                        $this->getAbsentAfternoonKey() => $workDay->offsetGet($this->getAbsentAfternoonKey()),
                         $this->getMandatoryTimeCorrectedKey() => $workDay->offsetGet($this->getMandatoryTimeCorrectedKey()),
                         $this->getMandatoryTimeKey() => $workDay->offsetGet($this->getMandatoryTimeKey())
                     ]
@@ -451,7 +448,7 @@ class RIOAdmin extends RIOAccessController
             $findOneWorkDay = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOne(
                 array_merge(
                     [
-                        "session_username" =>  $this->getSession()->get("username")
+                        "sessionUsername" =>  $this->getSession()->get("username")
                     ],
                     $this->getDate()
                 )
@@ -469,8 +466,8 @@ class RIOAdmin extends RIOAccessController
                 );
             }
             $this->getUsers()->updateOne(
-                [ "session_username" => $user->getUsername(), 'time_record_started' => false ],
-                ['$set' => [ 'time_record_started' => true ]]
+                [ "sessionUsername" => $user->getUsername(), 'timeRecordStarted' => false ],
+                ['$set' => [ 'timeRecordStarted' => true ]]
             );
         }
         return RIORedirect::redirectResponse(["rioadmin", "sessionlogin"]);
@@ -592,9 +589,9 @@ class RIOAdmin extends RIOAccessController
             if($presenceTimeTotal->format("H:i") < $findOneWorkDay->offsetGet($this->getMandatoryTimeKey())) {
                 $deviationNegativeOrPositiveOrZero .= '-';
             }
-            $userMonth = $this->getUserAllPastWorkdaysByMonthYear($findOneWorkDay->offsetGet("month_year"), $this);
+            $userMonth = $this->getUserAllPastWorkdaysByMonthYear($findOneWorkDay->offsetGet("monthYear"), $this);
             $userTotal = $this->getUserAllPastWorkdays($this);
-            $userWeek = $this->getUserAllPastWorkdaysByWeek($findOneWorkDay->offsetGet("week_year"), $this);
+            $userWeek = $this->getUserAllPastWorkdaysByWeek($findOneWorkDay->offsetGet("weekYear"), $this);
             $isTimeMonthly = RIODateTimeFactory::getDateTime();
             $isTimeMonthly->setTime(0, 0);
             $mandatoryTimeMonthly = RIODateTimeFactory::getDateTime();
@@ -603,8 +600,8 @@ class RIOAdmin extends RIOAccessController
             $deviationTimeMonthly->setTime(0, 0);
             /** @var BSONDocument $day */
             foreach ($userMonth as $day) {
-                $dayTime = RIODateTimeFactory::getDateTime($day->offsetGet("presence_time"));
-                $dayMandatoryTime = RIODateTimeFactory::getDateTime($day->offsetGet("mandatory_time"));
+                $dayTime = RIODateTimeFactory::getDateTime($day->offsetGet("presenceTime"));
+                $dayMandatoryTime = RIODateTimeFactory::getDateTime($day->offsetGet("mandatoryTime"));
                 $isTimeMonthly->add($startTime->diff($dayTime));
                 $mandatoryTimeMonthly->add($startTime->diff($dayMandatoryTime));
             }
@@ -616,8 +613,8 @@ class RIOAdmin extends RIOAccessController
             $deviationTimeTotal = RIODateTimeFactory::getDateTime();
             $deviationTimeTotal->setTime(0, 0);
             foreach ($userTotal as $day) {
-                $dayTime = RIODateTimeFactory::getDateTime($day->offsetGet("presence_time"));
-                $dayMandatoryTime = RIODateTimeFactory::getDateTime($day->offsetGet("mandatory_time"));
+                $dayTime = RIODateTimeFactory::getDateTime($day->offsetGet("presenceTime"));
+                $dayMandatoryTime = RIODateTimeFactory::getDateTime($day->offsetGet("mandatoryTime"));
                 $isTimeTotal->add($startTime->diff($dayTime));
                 $mandatoryTimeTotal->add($startTime->diff($dayMandatoryTime));
             }
@@ -629,8 +626,8 @@ class RIOAdmin extends RIOAccessController
             $deviationTimeWeekly = RIODateTimeFactory::getDateTime();
             $deviationTimeWeekly->setTime(0, 0);
             foreach ($userWeek as $day) {
-                $dayTime = RIODateTimeFactory::getDateTime($day->offsetGet("presence_time"));
-                $dayMandatoryTime = RIODateTimeFactory::getDateTime($day->offsetGet("mandatory_time"));
+                $dayTime = RIODateTimeFactory::getDateTime($day->offsetGet("presenceTime"));
+                $dayMandatoryTime = RIODateTimeFactory::getDateTime($day->offsetGet("mandatoryTime"));
                 $isTimeWeekly->add($startTime->diff($dayTime));
                 $mandatoryTimeWeekly->add($startTime->diff($dayMandatoryTime));
             }
@@ -638,26 +635,26 @@ class RIOAdmin extends RIOAccessController
             $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOneAndUpdate(
                 $this->getTimeRecordingFilterStarted(),
                 ['$set' => [
-                    'presence_time' => $presenceTimeTotal->format("H:i"),
-                    'presence_time_corrected' => '',
+                    'presenceTime' => $presenceTimeTotal->format("H:i"),
+                    'presenceTimeCorrected' => '',
                     'time' => $findOneWorkDay->offsetGet("time"),
                     'deviation' => $deviation->format("H:i"),
-                    'deviation_negative_or_positive_or_zero' => $deviationNegativeOrPositiveOrZero,
-                    'is_time_monthly' => $isTimeMonthly->format("H:i"),
-                    'is_time_total' => $isTimeTotal->format("H:i"),
-                    'is_time_weekly' => $isTimeWeekly->format("H:i"),
-                    'mandatory_time_monthly' => $mandatoryTimeMonthly->format("H:i"),
-                    'mandatory_time_total' => $mandatoryTimeTotal->format("H:i"),
-                    'mandatory_time_weekly' => $mandatoryTimeWeekly->format("H:i"),
-                    'deviation_time_monthly' => $deviationTimeMonthly->format("H:i"),
-                    'deviation_time_total' => $deviationTimeTotal->format("H:i"),
-                    'deviation_time_weekly' => $mandatoryTimeWeekly->format("H:i")
+                    'deviationNegativeOrPositiveOrZero' => $deviationNegativeOrPositiveOrZero,
+                    'isTimeMonthly' => $isTimeMonthly->format("H:i"),
+                    'isTimeTotal' => $isTimeTotal->format("H:i"),
+                    'isTimeWeekly' => $isTimeWeekly->format("H:i"),
+                    'mandatoryTimeMonthly' => $mandatoryTimeMonthly->format("H:i"),
+                    'mandatoryTimeTotal' => $mandatoryTimeTotal->format("H:i"),
+                    'mandatoryTimeWeekly' => $mandatoryTimeWeekly->format("H:i"),
+                    'deviationTimeMonthly' => $deviationTimeMonthly->format("H:i"),
+                    'deviationTimeTotal' => $deviationTimeTotal->format("H:i"),
+                    'deviationTimeWeekly' => $mandatoryTimeWeekly->format("H:i")
                 ]
                 ]
             );
             $this->getUsers()->findOneAndUpdate(
-                ["session_username" => $user->getUsername(), 'time_record_started' => true],
-                ['$set' => ['time_record_started' => false]]
+                ["sessionUsername" => $user->getUsername(), 'timeRecordStarted' => true],
+                ['$set' => ['timeRecordStarted' => false]]
             );
         }
         return RIORedirect::redirectResponse(["rioadmin", "sessionlogin"]);

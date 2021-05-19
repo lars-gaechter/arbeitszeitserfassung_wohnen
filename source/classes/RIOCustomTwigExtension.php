@@ -70,7 +70,7 @@ class RIOCustomTwigExtension extends AbstractExtension
         $databaseCollection = new RIOMongoDatabaseCollection(RIOMongoDatabase::getInstance()->getDatabase(), "user");
         $collection = $databaseCollection->getCollection();
         $userFind = $collection->findOne(
-            ["session_id" => $this->request->getSession()->getId()]
+            ["sessionId" => $this->request->getSession()->getId()]
         );
         return null !== $userFind;
     }
