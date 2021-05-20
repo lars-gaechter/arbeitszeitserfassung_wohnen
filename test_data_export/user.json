@@ -1,0 +1,23 @@
+[{
+  "_id": {
+    "$oid": "60a64ce14843ac5d15236e74"
+  },
+  "sessionUsername": "l.gaechter",
+  "displayUsername": "Lars",
+  "surnameUsername": "Gaechter",
+  "sessionId": "",
+  "timeRecordStarted": false,
+  "mandatoryTime": "08:00",
+  "location": "dietikon"
+},{
+  "_id": {
+    "$oid": "60a67026ce7e37525567ea02"
+  },
+  "sessionUsername": "m.schmid",
+  "displayUsername": "Monika",
+  "surnameUsername": "Schmid",
+  "sessionId": "",
+  "timeRecordStarted": false,
+  "mandatoryTime": "08:00",
+  "location": "dietikon"
+}]

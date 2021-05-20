@@ -50,7 +50,7 @@ class RIOGeneralAccessController
     {
         $mandatoryTime = RIODateTimeFactory::getDateTime($this->getUser()["mandatoryTime"]);
         $workDay = new RIOWorkDayObject();
-        if($workDay->isRIOHoliday() || $workDay->isSunday()) {
+        if($workDay->isRIOHoliday() || $workDay->isSunday() || $workDay->isSaturday()) {
             $workDay->getAbsentAllDay()->setOfficialHoliday();
             $workDay->getAbsentMorning()->setOfficialHoliday();
             $workDay->getAbsentAfternoon()->setOfficialHoliday();
@@ -64,8 +64,8 @@ class RIOGeneralAccessController
             'week' => $this->dateTime->format("W"),
             $this->getMandatoryTimeKey() => $mandatoryTime->format("H:i"),
             $this->getMandatoryTimeCorrectedKey() => '',
-            'timeCredit' => '00:00',
-            'timeCreditCorrected' => '',
+            $this->getTimeCreditKey() => '00:00',
+            $this->getTimeCreditCorrectedKey() => '',
             'absentAllDay' => $workDay->getAbsentAllDay()->getOption(),
             'absentAfternoon' => $workDay->getAbsentAfternoon()->getOption(),
             'absentMorning' => $workDay->getAbsentMorning()->getOption(),
@@ -155,6 +155,16 @@ class RIOGeneralAccessController
         return 'presenceTime';
     }
 
+    public function getTimeCreditKey(): string
+    {
+        return "timeCredit";
+    }
+
+    public function getTimeCreditCorrectedKey(): string
+    {
+        return "timeCreditCorrected";
+    }
+
     public function getIsTimeKey(): string
     {
         return 'isTime';
@@ -180,6 +190,41 @@ class RIOGeneralAccessController
         return 'mandatoryTimeCorrected';
     }
 
+    public function getMandatoryTimeMonthlyKey(): string
+    {
+        return "mandatoryTimeMonthly";
+    }
+
+    public function getMandatoryTimeTotalKey(): string
+    {
+        return "mandatoryTimeTotal";
+    }
+
+    public function getMandatoryTimeWeeklyKey(): string
+    {
+        return "mandatoryTimeWeekly";
+    }
+
+    public function getDeviationTimeMonthlyKey(): string
+    {
+        return "deviationTimeMonthly";
+    }
+
+    public function getDeviationTimeTotalKey(): string
+    {
+        return "deviationTimeTotal";
+    }
+
+    public function getDeviationTimeWeeklyKey(): string
+    {
+        return "deviationTimeWeekly";
+    }
+
+    public function getDeviationTimeTotalCorrectedKey(): string
+    {
+        return "deviationTimeTotalCorrected";
+    }
+
     public function getWorkingTimePerformedKey(): string
     {
         return 'workingTimePerformed';
@@ -193,6 +238,11 @@ class RIOGeneralAccessController
     public function getPresenceTimeCorrectedKey(): string
     {
         return 'presenceTimeCorrected';
+    }
+
+    public function getPresenceTimeTotalCorrectedKey(): string
+    {
+        return "presenceTimeTotalCorrected";
     }
 
     public function getTimeRecordingEndValue(): string

@@ -189,7 +189,10 @@ class RIOAdmin extends RIOAccessController
                     'workingTimePerformedCorrected' => $time->offsetGet("workingTimePerformedCorrected"),
                     'workingTimePerformed' => '' === $time->offsetGet("workingTimePerformedCorrected") ? $time->offsetGet("workingTimePerformed") : $time->offsetGet("workingTimePerformedCorrected"),
                     'presenceTimeTotal' => $workDay->offsetGet("presenceTime"),
-                    'presenceTimeTotalCorrected' => $workDay->offsetGet("presenceTimeCorrected"),
+                    $this->getDeviationTimeTotalKey() => $workDay->offsetGet("deviationTimeTotal"),
+                    $this->getDeviationTimeMonthlyKey() => $workDay->offsetGet("deviationTimeMonthly"),
+                    $this->getDeviationTimeWeeklyKey() => $workDay->offsetGet("deviationTimeWeekly"),
+                    $this->getDeviationTimeTotalCorrectedKey() => $workDay->offsetGet("deviationTimeTotalCorrected"),
                     'deviation' => $workDay->offsetGet("deviation"),
                     'deviationNegativeOrPositiveOrZero' => $workDay->offsetGet("deviationNegativeOrPositiveOrZero"),
                     'timeCredit' => $workDay->offsetGet("timeCredit"),
@@ -253,7 +256,7 @@ class RIOAdmin extends RIOAccessController
      */
     public function updatePresenceTimeCorrections(string $username, string $date, string $indexOfTime): RedirectResponse|Response
     {
-        // By default the form hasn't changed
+        // By default the form hasn't changed compared to database data
         $formHasChanged = false;
 
         // Get all from requests
@@ -265,6 +268,10 @@ class RIOAdmin extends RIOAccessController
         $mandatoryTimeCorrected = $request->get($this->getMandatoryTimeCorrectedKey());
         $startCorrected = $request->get($this->getTimeRecordingStartCorrectedKey());
         $endCorrected = $request->get($this->getTimeRecordingEndCorrectedKey());
+        $timeCreditCorrected = $request->get($this->getTimeCreditCorrectedKey());
+        $presenceTimeCorrected = $request->get($this->getPresenceTimeCorrectedKey());
+        $workingTimePerformedCorrected = $request->get($this->getWorkingTimePerformedCorrectedKey());
+        $deviationTimeTotal = $request->get($this->getDeviationTimeTotalKey());
 
         // Input validation
         if(RIODateTimeFactory::getDateTime($startCorrected) > RIODateTimeFactory::getDateTime($endCorrected)) {
@@ -446,12 +453,7 @@ class RIOAdmin extends RIOAccessController
         if($user->isTimeRecordStopped()){
             /** @var BSONDocument $findOneWorkDay */
             $findOneWorkDay = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOne(
-                array_merge(
-                    [
-                        "sessionUsername" =>  $this->getSession()->get("username")
-                    ],
-                    $this->getDate()
-                )
+                $this->getDate()
             );
             if(null === $findOneWorkDay) {
                 $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->insertOne(
@@ -643,12 +645,13 @@ class RIOAdmin extends RIOAccessController
                     'isTimeMonthly' => $isTimeMonthly->format("H:i"),
                     'isTimeTotal' => $isTimeTotal->format("H:i"),
                     'isTimeWeekly' => $isTimeWeekly->format("H:i"),
-                    'mandatoryTimeMonthly' => $mandatoryTimeMonthly->format("H:i"),
-                    'mandatoryTimeTotal' => $mandatoryTimeTotal->format("H:i"),
-                    'mandatoryTimeWeekly' => $mandatoryTimeWeekly->format("H:i"),
-                    'deviationTimeMonthly' => $deviationTimeMonthly->format("H:i"),
-                    'deviationTimeTotal' => $deviationTimeTotal->format("H:i"),
-                    'deviationTimeWeekly' => $mandatoryTimeWeekly->format("H:i")
+                    $this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
+                    $this->getMandatoryTimeTotalKey() => $mandatoryTimeTotal->format("H:i"),
+                    $this->getMandatoryTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
+                    $this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
+                    $this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
+                    $this->getDeviationTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
+                    $this->getDeviationTimeTotalCorrectedKey() => '',
                 ]
                 ]
             );

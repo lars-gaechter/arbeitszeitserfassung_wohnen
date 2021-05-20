@@ -200,6 +200,18 @@ class RIOWorkDayObject implements RIOToJSON
 
     }
 
+    public function isSaturday(): bool
+    {
+        $date = $this->date->getTimestamp();
+        $day = date("D", strtotime($date));
+        if($day === 'Sat') {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public function getWeekDay(): string
     {
         $dayNames = [
