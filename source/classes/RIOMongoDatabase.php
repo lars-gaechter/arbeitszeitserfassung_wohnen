@@ -128,7 +128,7 @@ class RIOMongoDatabase
 
     public function getWorkDaysCollectionByYearUserAsString(string $year, string $username): string
     {
-        return "work_day*".$year.'*'.$username;
+        return "work_day_".$year.'_'.$username;
     }
 
     public function getUsersCollection(): Collection
