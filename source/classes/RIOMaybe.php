@@ -41,7 +41,11 @@ class RIOMaybe
         return $this === self::$empty;
     }
 
-    public static function ofSettable(&$value): RIOMaybe
+    /**
+     * @param &$value
+     * @return \RIOMaybe
+     */
+    public static function ofSettable($value): RIOMaybe
     {
         if (isset($value) && !empty($value)) {
             return self::of($value);

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -46,7 +47,7 @@ class RIOApplication
         return self::$instance;
     }
 
-    public function launch(Request $request): Response
+    public function launch(Request $request): RedirectResponse|Response
     {
         if(RIOConfig::isDevelopmentMode()) {
             $run = new Run();
@@ -60,11 +61,17 @@ class RIOApplication
         return $this->serveClientRequest($request);
     }
 
-    private function serveClientRequest(Request $request): RIORedirect|Response
+    private function serveClientRequest(Request $request): RedirectResponse|Response
     {
+        self::$request = $request;
+
+        $resolvedAction = $this->getAreaPathParser();
+        echo "<pre>";
+        var_dump($this->resolveAndExecuteActionControllerMethodParameter($resolvedAction));
+        echo "</pre>";
+        die();
         try {
             self::$request = $request;
-
             $resolvedAction = $this->getAreaPathParser();
             return $this->resolveAndExecuteActionControllerMethodParameter($resolvedAction);
         } catch (RIONotFoundException $e) {

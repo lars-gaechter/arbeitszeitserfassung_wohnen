@@ -188,28 +188,23 @@ class RIOWorkDayObject implements RIOToJSON
         );
     }
 
-    public function isSunday(): bool
+    public function isDayByDayName(string $dayName): bool
     {
-        $date = $this->date->getTimestamp();
-        $day = date("D", strtotime($date));
-        if($day === 'Sun') {
+        if($this->date->format("D") === $dayName) {
             return true;
         } else {
             return false;
         }
+    }
 
+    public function isSunday(): bool
+    {
+        return $this->isDayByDayName("Sun");
     }
 
     public function isSaturday(): bool
     {
-        $date = $this->date->getTimestamp();
-        $day = date("D", strtotime($date));
-        if($day === 'Sat') {
-            return true;
-        } else {
-            return false;
-        }
-
+        return $this->isDayByDayName("Sat");
     }
 
     public function getWeekDay(): string

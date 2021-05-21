@@ -428,7 +428,7 @@ class RIOAdmin extends RIOAccessController
             }
         }
         if(null === $djacentMonth || null === $year) {
-            throw new Error("Wrong djacent argument can be previous or next");
+            throw new Error("Wrong adjacent argument can be previous or next");
         }
         $currentDate = RIODateTimeFactory::getDateTime();
         $date->setDate($year, $djacentMonth, 1);
@@ -484,6 +484,36 @@ class RIOAdmin extends RIOAccessController
         if($user->isTimeRecordStarted()) {
             /** @var BSONDocument $findOneWorkDay */
             $findOneWorkDay = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOne($this->getDate());
+
+            // Start for nightly cronjob
+            /** @var BSONDocument[] $findWorkDaysFromLastMonth */
+            $findWorkDaysFromLastMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getLastMonth())->toArray();
+            /** @var BSONDocument[] $findWorkDaysFromThisMonth */
+            $findWorkDaysFromThisMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getMonth())->toArray();
+
+
+            /** @var BSONDocument $lastDayThisMonth */
+            $lastDayThisMonth = end($findWorkDaysFromThisMonth);
+            if(count($findWorkDaysFromThisMonth) >= 2) {
+                $lastDayThisMonth = $findWorkDaysFromThisMonth[count($findWorkDaysFromThisMonth)-2];
+            }
+
+
+            $mandatoryTimeMonthly = $lastDayThisMonth->offsetGet($this->getMandatoryTimeMonthlyKey());
+            $currentMandatoryTimeMonthly = RIODateTimeFactory::getDateTime();
+            $time = $this->stringTimeToIntArray($mandatoryTimeMonthly);
+            $mandatoryTime = $findOneWorkDay->offsetGet($this->getMandatoryTimeKey());
+            $mandatoryTimeCorrected = $findOneWorkDay->offsetGet($this->getMandatoryTimeCorrectedKey());
+            if('' !== $mandatoryTimeCorrected) {
+                $mandatoryTimeCorrectedDateTime = RIODateTimeFactory::getDateTime($mandatoryTimeCorrected);
+                $final = $this->calculationOverTwentyfourHours($currentMandatoryTimeMonthly, $time, $mandatoryTimeCorrectedDateTime);
+            } else {
+                $mandatoryTimeDateTime = RIODateTimeFactory::getDateTime($mandatoryTime);
+                $final = $this->calculationOverTwentyfourHours($currentMandatoryTimeMonthly, $time, $mandatoryTimeDateTime);
+            }
+            $findOneWorkDay->offsetSet($this->getMandatoryTimeMonthlyKey(), $final);
+            // End for nightly cronjob
+
             /** @var BSONArray $times */
             $times = $findOneWorkDay->offsetGet("time");
             /*** @var BSONArray $time */
@@ -645,11 +675,16 @@ class RIOAdmin extends RIOAccessController
                     'isTimeMonthly' => $isTimeMonthly->format("H:i"),
                     'isTimeTotal' => $isTimeTotal->format("H:i"),
                     'isTimeWeekly' => $isTimeWeekly->format("H:i"),
-                    $this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
+                    // for nightly cronjob
+                    //$this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
+                    $this->getMandatoryTimeMonthlyKey() => $final,
                     $this->getMandatoryTimeTotalKey() => $mandatoryTimeTotal->format("H:i"),
                     $this->getMandatoryTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
-                    $this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
-                    $this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
+                    // for nightly cronjob
+                    //$this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
+                    //$this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
+                    $this->getDeviationTimeMonthlyKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeMonthlyKey()),
+                    $this->getDeviationTimeTotalKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeTotalKey()),
                     $this->getDeviationTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
                     $this->getDeviationTimeTotalCorrectedKey() => '',
                 ]
