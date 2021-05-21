@@ -42,10 +42,10 @@ class RIOMaybe
     }
 
     /**
-     * @param &$value
-     * @return \RIOMaybe
+     * @param $value
+     * @return RIOMaybe
      */
-    public static function ofSettable($value): RIOMaybe
+    public static function ofSettable(&$value): RIOMaybe
     {
         if (isset($value) && !empty($value)) {
             return self::of($value);

@@ -21,7 +21,6 @@ class RIOFrontendResolver extends RIOPartialResolver
 
     public function resolve(RIOResolvedAction $action): RIOResolvedAction
     {
-        var_dump($action->getPathPartials());die();
         $possible_frontend = RIOMaybe::ofSettable($action->getPathPartials()[0]);
 
         if (!$possible_frontend->isEmpty()) {
