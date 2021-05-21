@@ -63,13 +63,6 @@ class RIOApplication
 
     private function serveClientRequest(Request $request): RedirectResponse|Response
     {
-        self::$request = $request;
-
-        $resolvedAction = $this->getAreaPathParser();
-        echo "<pre>";
-        var_dump($this->resolveAndExecuteActionControllerMethodParameter($resolvedAction));
-        echo "</pre>";
-        die();
         try {
             self::$request = $request;
             $resolvedAction = $this->getAreaPathParser();
