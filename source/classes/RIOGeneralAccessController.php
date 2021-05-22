@@ -455,6 +455,8 @@ class RIOGeneralAccessController
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
         }
+        echo "test";
+        die();
         if(true === $sortByDate) {
             usort($allWorkDaysFromUserPast, function($a, $b) {
                 return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
@@ -467,8 +469,6 @@ class RIOGeneralAccessController
             $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
             $i++;
         }
-        echo "test";
-        die();
         return $OneWorkDayFromUserPastIndexed;
     }
 
