@@ -404,7 +404,7 @@ class RIOGeneralAccessController
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
             if(true === $performanceIssue) {
                 $maybePastWorkDay = new RIOWorkDayObject();
-                $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser->offsetGet("date")));
+                $maybePastWorkDay->setDate(new DateTime($OneWorkDayFromUser->offsetGet("date")));
                 //$diff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true);
                 //$pastDayDiff = $diff->d;
                 //$pastMonthDiff = $diff->m;
