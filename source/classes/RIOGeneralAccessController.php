@@ -347,12 +347,15 @@ class RIOGeneralAccessController
      * @return array
      * @throws Exception
      */
-    public function getUserAllPastWorkdaysByMonthYearUser(string $monthYear, string $username): array
+    public function getUserAllPastWorkdaysByMonthYearUser(string $monthYear, string $username, bool $bool = false): array
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
         $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
+        if($bool) {
+            return $allWorkDaysFromUser;
+        }
         return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
@@ -414,7 +417,6 @@ class RIOGeneralAccessController
             $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
             $i++;
         }
-        die();
         return $OneWorkDayFromUserPastIndexed;
     }
 
