@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 include_once __DIR__.'/../source/autoload.php';
-xdebug_info();
 (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
 error_reporting(E_ALL);
 mb_internal_encoding('UTF-8');
