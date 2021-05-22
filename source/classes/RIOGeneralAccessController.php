@@ -357,7 +357,6 @@ class RIOGeneralAccessController
         echo "<pre>";
         var_dump($pastWorkDaysUser);
         echo "</pre>";
-        die();
         return $pastWorkDaysUser;
     }
 
