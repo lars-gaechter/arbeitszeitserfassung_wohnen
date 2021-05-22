@@ -238,6 +238,7 @@ class RIOAdmin extends RIOAccessController
         $displayUsername = $user->offsetGet("displayUsername");
         $surnameUsername = $user->offsetGet("surnameUsername");
         $sessionUsername = $user->offsetGet("sessionUsername");
+        die();
         $context = [
             "nav" => $navByActive["nav"],
             "allWorkDaysFromUserPast" => $allWorkDaysFromUserPast,
@@ -250,7 +251,6 @@ class RIOAdmin extends RIOAccessController
             'surnameUsername' => $surnameUsername,
             'sessionUsername' => $sessionUsername
         ];
-        die();
         return $this->renderPage(
             "overview.twig",
             $context
