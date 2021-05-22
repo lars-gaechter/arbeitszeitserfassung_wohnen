@@ -411,7 +411,7 @@ class RIOGeneralAccessController
     /**
      * @throws Exception
      */
-    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user): array
+    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $sortByDate = false): array
     {
         $allWorkDaysFromUserPast = [];
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
@@ -424,9 +424,11 @@ class RIOGeneralAccessController
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
         }
-        usort($allWorkDaysFromUserPast, function($a, $b) {
-            return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
-        });
+        if(true === $sortByDate) {
+            usort($allWorkDaysFromUserPast, function($a, $b) {
+                return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
+            });
+        }
         $OneWorkDayFromUserPastIndexed = [];
         $i = 0;
         foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
