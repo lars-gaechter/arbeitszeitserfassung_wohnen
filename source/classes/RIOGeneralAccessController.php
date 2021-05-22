@@ -352,9 +352,9 @@ class RIOGeneralAccessController
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
+        /** @var BSONDocument[]|[] $allWorkDaysFromUser */
         $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
-        var_dump($allWorkDaysFromUser);
-        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
+        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user, true);
     }
 
     /**
@@ -390,15 +390,21 @@ class RIOGeneralAccessController
     }
 
     /**
+     * @param BSONDocument[] $allWorkDaysFromUser
+     * @param RIOWorkDayObject $currentWorkDay
+     * @param BSONDocument $user
+     * @param bool $performanceIssue
+     * @param bool $sortByDate
+     * @return array
      * @throws Exception
      */
-    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $performanceIssue = false, bool $sortByDate = false): array
+    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $performanceIssue = false, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
             if(true === $performanceIssue) {
                 $maybePastWorkDay = new RIOWorkDayObject();
-                $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser["date"]));
+                $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser->offsetGet("date")));
                 $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
                 $pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
                 $pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
