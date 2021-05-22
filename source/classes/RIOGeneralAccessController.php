@@ -442,16 +442,20 @@ class RIOGeneralAccessController
     /**
      * @throws Exception
      */
-    private function getPastWorkDaysUserTwo(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $sortByDate = false): array
+    private function getPastWorkDaysUserTwo(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $check = false, bool $sortByDate = false): array
     {
         $allWorkDaysFromUserPast = [];
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
-            $maybePastWorkDay = new RIOWorkDayObject();
-            $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser["date"]));
-            $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
-            $pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
-            $pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
-            if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
+            if(true === $check) {
+                $maybePastWorkDay = new RIOWorkDayObject();
+                $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser["date"]));
+                $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
+                $pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
+                $pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
+                if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
+                    $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
+                }
+            } else {
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
         }
