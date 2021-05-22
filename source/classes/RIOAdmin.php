@@ -233,7 +233,6 @@ class RIOAdmin extends RIOAccessController
         }
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         $test =  [
-            "allWorkDaysFromUserPast" => $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username),
             "previousMonthName" => $previousMonthYearName,
             "nextMonthName" => $nextMonthYearName,
             "currentMonthName" => $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear)),
