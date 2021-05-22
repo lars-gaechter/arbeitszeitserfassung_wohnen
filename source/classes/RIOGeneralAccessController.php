@@ -360,26 +360,6 @@ class RIOGeneralAccessController
      * Month of a year is unique
      *
      * @param string $monthYear
-     * @param string $username
-     * @return array
-     * @throws Exception
-     */
-    public function getUserAllPastWorkdaysByMonthYearUserTwo(string $monthYear, string $username): array
-    {
-        /** @var BSONDocument $user */
-        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
-        $currentWorkDay = new RIOWorkDayObject();
-        $year = RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y");
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser($year,$username)->find(["monthYear" => $monthYear])->toArray();
-        $pastWorkDaysUserTwo = $this->getPastWorkDaysUserTwo($allWorkDaysFromUser, $currentWorkDay, $user);
-        die();
-        return $pastWorkDaysUserTwo;
-    }
-
-    /**
-     * Month of a year is unique
-     *
-     * @param string $monthYear
      * @param RIOMain|RIOAdmin $controller
      * @return array
      * @throws Exception
@@ -411,42 +391,11 @@ class RIOGeneralAccessController
     /**
      * @throws Exception
      */
-    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $sortByDate = false): array
+    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $performanceIssue = false, bool $sortByDate = false): array
     {
         $allWorkDaysFromUserPast = [];
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
-            $maybePastWorkDay = new RIOWorkDayObject();
-            $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser["date"]));
-            $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
-            $pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
-            $pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
-            if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
-                $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
-            }
-        }
-        if(true === $sortByDate) {
-            usort($allWorkDaysFromUserPast, function($a, $b) {
-                return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
-            });
-        }
-        $OneWorkDayFromUserPastIndexed = [];
-        $i = 0;
-        foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
-            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $OneWorkDayFromUserPast["date"]];
-            $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
-            $i++;
-        }
-        return $OneWorkDayFromUserPastIndexed;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getPastWorkDaysUserTwo(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $check = false, bool $sortByDate = false): array
-    {
-        $allWorkDaysFromUserPast = [];
-        foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
-            if(true === $check) {
+            if(true === $performanceIssue) {
                 $maybePastWorkDay = new RIOWorkDayObject();
                 $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser["date"]));
                 $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
@@ -459,10 +408,6 @@ class RIOGeneralAccessController
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
         }
-        var_dump(count($allWorkDaysFromUser));
-        var_dump(count($allWorkDaysFromUserPast));
-        echo "test";
-        die();
         if(true === $sortByDate) {
             usort($allWorkDaysFromUserPast, function($a, $b) {
                 return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
