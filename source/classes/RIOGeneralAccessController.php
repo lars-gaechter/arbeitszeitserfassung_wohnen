@@ -405,12 +405,13 @@ class RIOGeneralAccessController
             if(true === $performanceIssue) {
                 $maybePastWorkDay = new RIOWorkDayObject();
                 $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser->offsetGet("date")));
-                //$pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
-                //$pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
-                //$pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
-
+                $diff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true);
+                $pastDayDiff = $diff->d;
+                $pastMonthDiff = $diff->m;
+                $pastYearDiff = $diff->y;
+                if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
                     $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
-
+                }
             } else {
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
