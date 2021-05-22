@@ -354,7 +354,7 @@ class RIOGeneralAccessController
         $currentWorkDay = new RIOWorkDayObject();
         /** @var BSONDocument[]|[] $allWorkDaysFromUser */
         $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
-        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user, true);
+        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
     /**
@@ -393,23 +393,25 @@ class RIOGeneralAccessController
      * @param BSONDocument[] $allWorkDaysFromUser
      * @param RIOWorkDayObject $currentWorkDay
      * @param BSONDocument $user
-     * @param bool $performanceIssue
+     * @param bool $pastWorkDay
      * @param bool $sortByDate
      * @return array
      * @throws Exception
      */
-    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $performanceIssue = false, bool $sortByDate = true): array
+    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
-            if(true === $performanceIssue) {
+            if(true === $pastWorkDay) {
                 $maybePastWorkDay = new RIOWorkDayObject();
-                $maybePastWorkDay->setDate(new DateTime($OneWorkDayFromUser->offsetGet("date")));
-                //$diff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true);
-                //$pastDayDiff = $diff->d;
-                //$pastMonthDiff = $diff->m;
-                //$pastYearDiff = $diff->y;
-                $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
+                $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser->offsetGet("date")));
+                $diff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true);
+                $pastDayDiff = $diff->d;
+                $pastMonthDiff = $diff->m;
+                $pastYearDiff = $diff->y;
+                if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
+                    $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
+                }
             } else {
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
