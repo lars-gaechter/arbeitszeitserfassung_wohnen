@@ -232,6 +232,8 @@ class RIOAdmin extends RIOAccessController
             $nextMonthYear = '';
         }
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
+        echo "test";
+        die();
         return $this->renderPage(
             "overview.twig",
             array_merge(
