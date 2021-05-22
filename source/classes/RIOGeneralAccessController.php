@@ -414,6 +414,7 @@ class RIOGeneralAccessController
             $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
             $i++;
         }
+        die();
         return $OneWorkDayFromUserPastIndexed;
     }
 
