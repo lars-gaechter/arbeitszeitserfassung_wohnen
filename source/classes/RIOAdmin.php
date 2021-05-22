@@ -238,20 +238,22 @@ class RIOAdmin extends RIOAccessController
         $displayUsername = $user->offsetGet("displayUsername");
         $surnameUsername = $user->offsetGet("surnameUsername");
         $sessionUsername = $user->offsetGet("sessionUsername");
+        $context = [
+            "nav" => $navByActive["nav"],
+            "allWorkDaysFromUserPast" => $allWorkDaysFromUserPast,
+            "previousMonthName" => $previousMonthYearName,
+            "nextMonthName" => $nextMonthYearName,
+            "currentMonthName" => $currentMonthName,
+            "previousMonth" => $previousMonthYear,
+            "nextMonth" => $nextMonthYear,
+            'displayUsername' => $displayUsername,
+            'surnameUsername' => $surnameUsername,
+            'sessionUsername' => $sessionUsername
+        ];
+        die();
         return $this->renderPage(
             "overview.twig",
-            [
-                "nav" => $navByActive["nav"],
-                "allWorkDaysFromUserPast" => $allWorkDaysFromUserPast,
-                "previousMonthName" => $previousMonthYearName,
-                "nextMonthName" => $nextMonthYearName,
-                "currentMonthName" => $currentMonthName,
-                "previousMonth" => $previousMonthYear,
-                "nextMonth" => $nextMonthYear,
-                'displayUsername' => $displayUsername,
-                'surnameUsername' => $surnameUsername,
-                'sessionUsername' => $sessionUsername
-            ]
+            $context
         );
     }
 
