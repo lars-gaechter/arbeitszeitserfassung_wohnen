@@ -408,9 +408,7 @@ class RIOGeneralAccessController
                 $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
                 $pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
                 $pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
-                if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
-                    $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
-                }
+                $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             } else {
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
