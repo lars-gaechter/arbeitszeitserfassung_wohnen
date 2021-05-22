@@ -354,6 +354,9 @@ class RIOGeneralAccessController
         $currentWorkDay = new RIOWorkDayObject();
         $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
         $pastWorkDaysUser = $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
+        echo "<pre>";
+        var_dump($pastWorkDaysUser);
+        echo "</pre>";
         die();
         return $pastWorkDaysUser;
     }
