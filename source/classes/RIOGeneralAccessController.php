@@ -401,13 +401,13 @@ class RIOGeneralAccessController
     private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
-        foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
+        foreach ($allWorkDaysFromUser as $oneWorkDayFromUser) {
             if(true === $pastWorkDay) {
-                if($OneWorkDayFromUser->offsetGet("date") !== $currentWorkDay->getDate()->format("d.m.Y")) {
-                    $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
+                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDay->getDate()->format("d.m.Y")) {
+                    $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
                 }
             } else {
-                $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
+                $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
             }
         }
         if(true === $sortByDate) {
@@ -415,40 +415,41 @@ class RIOGeneralAccessController
                 return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
             });
         }
-        $OneWorkDayFromUserPastIndexed = [];
+        $oneWorkDayFromUserPastIndexed = [];
         $i = 0;
-        foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
-            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $OneWorkDayFromUserPast["date"]];
-            $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
+        foreach ($allWorkDaysFromUserPast as $oneWorkDayFromUserPast) {
+            $oneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $oneWorkDayFromUserPast["date"]];
+            $oneWorkDayFromUserPastIndexed[] = $oneWorkDayFromUserPast;
             $i++;
         }
-        return $OneWorkDayFromUserPastIndexed;
+        return $oneWorkDayFromUserPastIndexed;
     }
 
-    private function getPastWorkDays(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, RIOUserObject $user): array
+    private function getPastWorkDays(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, RIOUserObject $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
-        foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
-            $maybePastWorkDay = new RIOWorkDayObject();
-            $maybePastWorkDay->setDate(RIODateTimeFactory::getDateTime($OneWorkDayFromUser["date"]));
-            $pastDayDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->d;
-            $pastMonthDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->m;
-            $pastYearDiff = $currentWorkDay->getDate()->diff($maybePastWorkDay->getDate(), true)->y;
-            if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
-                $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
+        foreach ($allWorkDaysFromUser as $oneWorkDayFromUser) {
+            if(true === $pastWorkDay) {
+                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDay->getDate()->format("d.m.Y")) {
+                    $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                }
+            } else {
+                $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
             }
         }
-        usort($allWorkDaysFromUserPast, function($a, $b) {
-            return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
-        });
-        $OneWorkDayFromUserPastIndexed = [];
+        if(true === $sortByDate) {
+            usort($allWorkDaysFromUserPast, function($a, $b) {
+                return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
+            });
+        }
+        $oneWorkDayFromUserPastIndexed = [];
         $i = 0;
-        foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
-            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->getUsername(), $OneWorkDayFromUserPast["date"]];
-            $OneWorkDayFromUserPastIndexed[] = $OneWorkDayFromUserPast;
+        foreach ($allWorkDaysFromUserPast as $oneWorkDayFromUserPast) {
+            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->getUsername(), $oneWorkDayFromUserPast["date"]];
+            $oneWorkDayFromUserPastIndexed[] = $oneWorkDayFromUserPast;
             $i++;
         }
-        return $OneWorkDayFromUserPastIndexed;
+        return $oneWorkDayFromUserPastIndexed;
     }
 
     /**
