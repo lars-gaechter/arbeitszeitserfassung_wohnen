@@ -369,7 +369,9 @@ class RIOGeneralAccessController
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
+        $year = RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y");
+        die();
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser($year,$username)->find(["monthYear" => $monthYear])->toArray();
         die();
         return $this->getPastWorkDaysUserTwo($allWorkDaysFromUser, $currentWorkDay, $user);
     }
