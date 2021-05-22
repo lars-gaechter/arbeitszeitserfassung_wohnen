@@ -233,20 +233,25 @@ class RIOAdmin extends RIOAccessController
         }
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         $allWorkDaysFromUserPast = $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username);
+        $currentMonthName = $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear));
+        $navByActive = $customTwigExtension->navByActive($user->offsetGet("sessionUsername"), $monthYear, "overview");
+        $displayUsername = $user->offsetGet("displayUsername");
+        $surnameUsername = $user->offsetGet("surnameUsername");
+        $sessionUsername = $user->offsetGet("sessionUsername");
         return $this->renderPage(
             "overview.twig",
             array_merge(
-                $customTwigExtension->navByActive($user->offsetGet("sessionUsername"), $monthYear, "overview"),
+                $navByActive,
                 [
                     "allWorkDaysFromUserPast" => $allWorkDaysFromUserPast,
                     "previousMonthName" => $previousMonthYearName,
                     "nextMonthName" => $nextMonthYearName,
-                    "currentMonthName" => $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear)),
+                    "currentMonthName" => $currentMonthName,
                     "previousMonth" => $previousMonthYear,
                     "nextMonth" => $nextMonthYear,
-                    'displayUsername' => $user->offsetGet("displayUsername"),
-                    'surnameUsername' => $user->offsetGet("surnameUsername"),
-                    'sessionUsername' => $user->offsetGet("sessionUsername")
+                    'displayUsername' => $displayUsername,
+                    'surnameUsername' => $surnameUsername,
+                    'sessionUsername' => $sessionUsername
                 ]
             )
         );
