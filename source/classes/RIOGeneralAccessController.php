@@ -453,9 +453,15 @@ class RIOGeneralAccessController
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
         }
+        $allWorkDaysFromUserPastUnsort = $allWorkDaysFromUserPast;
         usort($allWorkDaysFromUserPast, function($a, $b) {
             return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
         });
+        if($allWorkDaysFromUserPastUnsort !== $allWorkDaysFromUserPast) {
+            echo "ungleich";
+        } else {
+            echo "gleich";
+        }
         $OneWorkDayFromUserPastIndexed = [];
         $i = 0;
         foreach ($allWorkDaysFromUserPast as $OneWorkDayFromUserPast) {
