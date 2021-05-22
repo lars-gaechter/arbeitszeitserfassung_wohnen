@@ -401,9 +401,10 @@ class RIOGeneralAccessController
     private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
+        $currentWorkDayString = $currentWorkDay->getDate()->format("d.m.Y");
         foreach ($allWorkDaysFromUser as $oneWorkDayFromUser) {
             if(true === $pastWorkDay) {
-                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDay->getDate()->format("d.m.Y")) {
+                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDayString) {
                     $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
                 }
             } else {
@@ -428,9 +429,10 @@ class RIOGeneralAccessController
     private function getPastWorkDays(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, RIOUserObject $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
+        $currentWorkDayString = $currentWorkDay->getDate()->format("d.m.Y");
         foreach ($allWorkDaysFromUser as $oneWorkDayFromUser) {
             if(true === $pastWorkDay) {
-                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDay->getDate()->format("d.m.Y")) {
+                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDayString) {
                     $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
                 }
             } else {
