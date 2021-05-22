@@ -232,9 +232,9 @@ class RIOAdmin extends RIOAccessController
             $nextMonthYear = '';
         }
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
-        $allWorkDaysFromUserPast = $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username);
-        die();
         $currentMonthName = $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear));
+        die();
+        $allWorkDaysFromUserPast = $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username);
         die();
         $navByActive = $customTwigExtension->navByActive($user->offsetGet("sessionUsername"), $monthYear, "overview");
         $displayUsername = $user->offsetGet("displayUsername");
