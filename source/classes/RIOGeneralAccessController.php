@@ -454,9 +454,9 @@ class RIOGeneralAccessController
             if(0 !== $pastDayDiff || 0 !== $pastMonthDiff || 0 !== $pastYearDiff) {
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
-            echo "test";
-            die();
         }
+        var_dump(count($allWorkDaysFromUser));
+        var_dump(count($allWorkDaysFromUserPast));
         echo "test";
         die();
         if(true === $sortByDate) {
