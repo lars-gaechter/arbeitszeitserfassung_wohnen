@@ -343,7 +343,7 @@ class RIOGeneralAccessController
      * Month of a year is unique
      *
      * @param string $monthYear
-     * @param RIOMain|RIOAdmin $controller
+     * @param string $username
      * @return array
      * @throws Exception
      */
@@ -353,11 +353,25 @@ class RIOGeneralAccessController
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
         $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
-        $pastWorkDaysUser = $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
-        echo "<pre>";
-        var_dump($pastWorkDaysUser);
-        echo "</pre>";
-        return $pastWorkDaysUser;
+        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
+    }
+
+    /**
+     * Month of a year is unique
+     *
+     * @param string $monthYear
+     * @param string $username
+     * @return array
+     * @throws Exception
+     */
+    public function getUserAllPastWorkdaysByMonthYearUserTwo(string $monthYear, string $username): array
+    {
+        /** @var BSONDocument $user */
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
+        $currentWorkDay = new RIOWorkDayObject();
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
+        die();
+        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
     /**
