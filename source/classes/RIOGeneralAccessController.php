@@ -366,6 +366,7 @@ class RIOGeneralAccessController
      */
     public function getUserAllPastWorkdaysByMonthYearUserTwo(string $monthYear, string $username): array
     {
+        die();
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
