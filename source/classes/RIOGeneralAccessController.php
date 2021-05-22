@@ -294,7 +294,7 @@ class RIOGeneralAccessController
      * @param array $time
      * @param \DateTime $addDateTime
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function calculationOverTwentyfourHours(DateTime $dateTime, array $time, DateTime $addDateTime): string
     {
@@ -409,7 +409,7 @@ class RIOGeneralAccessController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user): array
     {
@@ -438,9 +438,9 @@ class RIOGeneralAccessController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    private function getPastWorkDaysUserTwo(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user): array
+    private function getPastWorkDaysUserTwo(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $sortByDate = false): array
     {
         $allWorkDaysFromUserPast = [];
         foreach ($allWorkDaysFromUser as $OneWorkDayFromUser) {
@@ -453,14 +453,10 @@ class RIOGeneralAccessController
                 $allWorkDaysFromUserPast[] = $OneWorkDayFromUser;
             }
         }
-        $allWorkDaysFromUserPastUnsort = $allWorkDaysFromUserPast;
-        usort($allWorkDaysFromUserPast, function($a, $b) {
-            return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
-        });
-        if($allWorkDaysFromUserPastUnsort !== $allWorkDaysFromUserPast) {
-            echo "ungleich";
-        } else {
-            echo "gleich";
+        if(true === $sortByDate) {
+            usort($allWorkDaysFromUserPast, function($a, $b) {
+                return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
+            });
         }
         $OneWorkDayFromUserPastIndexed = [];
         $i = 0;
