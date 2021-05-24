@@ -274,55 +274,9 @@ class RIOGeneralAccessController
         ];
     }
 
-    /**
-     * @param string $stringTime
-     * @return int[]
-     */
-    public function stringTimeToIntArray(string $stringTime): array
-    {
-        $array = explode(':', $stringTime);
-        return [
-            "hour" => $array[0],
-            "minute" => $array[1]
-        ];
-    }
 
-    /**
-     * Only for monthly calculation usage
-     *
-     * @param \DateTime $dateTime
-     * @param array $time
-     * @param \DateTime $addDateTime
-     * @return string
-     * @throws Exception
-     */
-    public function calculationOverTwentyfourHours(DateTime $dateTime, array $time, DateTime $addDateTime): string
-    {
-        $firstDateTime = RIODateTimeFactory::getDateTime("00:00");
-        $newDateTime = RIODateTimeFactory::getDateTime();
-        $nowDayNumber = (int)$dateTime->format("d");
-        $nowYearNumber = (int)$dateTime->format("Y");
-        $firstDayNumber = (int)$addDateTime->format("d");
-        $firstYearNumber = (int)$addDateTime->format("Y");
-        $addNumberOfDays = $firstDayNumber - $nowDayNumber;
-        $addNumberOfYears = $firstYearNumber - $nowYearNumber;
-        $dateTime->setTime($time["hour"], $time["minute"]);
-        $afterDayNumber = (int)$dateTime->format("d");
-        $numberOfDays = $afterDayNumber - $nowDayNumber;
-        $hoursOfDays = $numberOfDays*24;
-        $restHour = (int)$dateTime->format("H");
-        $totalHour = $hoursOfDays + $restHour;
-        $hourFinal = $totalHour <= 9 ? '0'.$totalHour : $totalHour;
-        $restMinute = (int)$dateTime->format("i");
-        $minuteFinal = $restMinute <= 9 ? '0'.$restMinute : $restMinute;
-        $newDateTime->setTime($hourFinal, $minuteFinal);
-        $interval = new DateInterval("P".$addNumberOfYears."Y".$addNumberOfDays."DT".$addDateTime->format("H")."H".$addDateTime->format("i")."M");
-        $newDateTime->add($interval);
-        $finalInterval = $firstDateTime->diff($newDateTime);
-        $hour = ($finalInterval->d*24)+$finalInterval->h <= 9 ? '0'.($finalInterval->d*24)+$finalInterval->h : ($finalInterval->d*24)+$finalInterval->h;
-        $minute = $finalInterval->i <= 9 ? '0'.$finalInterval->i : $finalInterval->i;
-        return $hour.':'.$minute;
-    }
+
+
 
     /**
      * Every workday of an user is unique

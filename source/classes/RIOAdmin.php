@@ -491,10 +491,8 @@ class RIOAdmin extends RIOAccessController
             $findOneWorkDay = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOne($this->getDate());
 
             // Start for nightly cronjob
-            /** @var BSONDocument[] $findWorkDaysFromLastMonth */
-            //$findWorkDaysFromLastMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getLastMonth())->toArray();
             /** @var BSONDocument[] $findWorkDaysFromThisMonth */
-            //$findWorkDaysFromThisMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getMonth())->toArray();
+            $findWorkDaysFromThisMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getMonth())->toArray();
 
 
             /** @var BSONDocument $lastDayThisMonth */
@@ -504,19 +502,7 @@ class RIOAdmin extends RIOAccessController
             }
 
 
-            $mandatoryTimeMonthly = $lastDayThisMonth->offsetGet($this->getMandatoryTimeMonthlyKey());
-            $currentMandatoryTimeMonthly = RIODateTimeFactory::getDateTime();
-            $time = $this->stringTimeToIntArray($mandatoryTimeMonthly);
-            $mandatoryTime = $findOneWorkDay->offsetGet($this->getMandatoryTimeKey());
-            $mandatoryTimeCorrected = $findOneWorkDay->offsetGet($this->getMandatoryTimeCorrectedKey());
-            if('' !== $mandatoryTimeCorrected) {
-                $mandatoryTimeCorrectedDateTime = RIODateTimeFactory::getDateTime($mandatoryTimeCorrected);
-                $final = $this->calculationOverTwentyfourHours($currentMandatoryTimeMonthly, $time, $mandatoryTimeCorrectedDateTime);
-            } else {
-                $mandatoryTimeDateTime = RIODateTimeFactory::getDateTime($mandatoryTime);
-                $final = $this->calculationOverTwentyfourHours($currentMandatoryTimeMonthly, $time, $mandatoryTimeDateTime);
-            }
-            $findOneWorkDay->offsetSet($this->getMandatoryTimeMonthlyKey(), $final);*/
+            */
             // End for nightly cronjob
 
             /** @var BSONArray $times */
