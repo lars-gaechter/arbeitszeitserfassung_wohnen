@@ -1,0 +1,58 @@
+[{
+  "_id": {
+    "$oid": "60abd65b5a3d544caa2f1ac5"
+  },
+  "date": "24.05.2021",
+  "monthYear": "05.2021",
+  "weekYear": "21.2021",
+  "month": "05",
+  "week": "21",
+  "mandatoryTime": "00:00",
+  "mandatoryTimeCorrected": "",
+  "timeCredit": "00:00",
+  "timeCreditCorrected": "",
+  "absentAllDay": "offizieller Feiertag",
+  "absentAfternoon": "offizieller Feiertag",
+  "absentMorning": "offizieller Feiertag",
+  "time": [
+    {
+      "start": "18:37",
+      "startCorrected": "",
+      "comment": "",
+      "lastEditedUser": "",
+      "lastEditedDate": "",
+      "lastEditedTime": "",
+      "end": "18:44",
+      "endCorrected": "",
+      "workingTimePerformed": "00:07",
+      "workingTimePerformedCorrected": "",
+      "presenceTime": "00:07",
+      "presenceTimeCorrected": "",
+      "isTime": "00:07",
+      "diff": "00:07",
+      "diffNegativePositive": "+"
+    },
+    {
+      "start": "18:45",
+      "startCorrected": "",
+      "comment": "",
+      "lastEditedUser": "",
+      "lastEditedDate": "",
+      "lastEditedTime": ""
+    }
+  ],
+  "deviation": "00:07",
+  "deviationNegativeOrPositiveOrZero": "+",
+  "deviationTimeMonthly": "00:00",
+  "deviationTimeTotal": "00:00",
+  "deviationTimeTotalCorrected": "",
+  "deviationTimeWeekly": "00:00",
+  "isTimeMonthly": "00:00",
+  "isTimeTotal": "00:00",
+  "isTimeWeekly": "00:00",
+  "mandatoryTimeMonthly": "00:00",
+  "mandatoryTimeTotal": "00:00",
+  "mandatoryTimeWeekly": "00:00",
+  "presenceTime": "00:07",
+  "presenceTimeCorrected": ""
+}]
