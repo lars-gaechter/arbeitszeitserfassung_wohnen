@@ -492,13 +492,13 @@ class RIOAdmin extends RIOAccessController
 
             // Start for nightly cronjob
             /** @var BSONDocument[] $findWorkDaysFromLastMonth */
-            $findWorkDaysFromLastMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getLastMonth())->toArray();
+            //$findWorkDaysFromLastMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getLastMonth())->toArray();
             /** @var BSONDocument[] $findWorkDaysFromThisMonth */
-            $findWorkDaysFromThisMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getMonth())->toArray();
+            //$findWorkDaysFromThisMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getMonth())->toArray();
 
 
             /** @var BSONDocument $lastDayThisMonth */
-            $lastDayThisMonth = end($findWorkDaysFromThisMonth);
+            /*$lastDayThisMonth = end($findWorkDaysFromThisMonth);
             if(count($findWorkDaysFromThisMonth) >= 2) {
                 $lastDayThisMonth = $findWorkDaysFromThisMonth[count($findWorkDaysFromThisMonth)-2];
             }
@@ -516,7 +516,7 @@ class RIOAdmin extends RIOAccessController
                 $mandatoryTimeDateTime = RIODateTimeFactory::getDateTime($mandatoryTime);
                 $final = $this->calculationOverTwentyfourHours($currentMandatoryTimeMonthly, $time, $mandatoryTimeDateTime);
             }
-            $findOneWorkDay->offsetSet($this->getMandatoryTimeMonthlyKey(), $final);
+            $findOneWorkDay->offsetSet($this->getMandatoryTimeMonthlyKey(), $final);*/
             // End for nightly cronjob
 
             /** @var BSONArray $times */
@@ -681,15 +681,15 @@ class RIOAdmin extends RIOAccessController
                     'isTimeTotal' => $isTimeTotal->format("H:i"),
                     'isTimeWeekly' => $isTimeWeekly->format("H:i"),
                     // for nightly cronjob
-                    //$this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
-                    $this->getMandatoryTimeMonthlyKey() => $final,
+                    $this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
+                    //$this->getMandatoryTimeMonthlyKey() => $final,
                     $this->getMandatoryTimeTotalKey() => $mandatoryTimeTotal->format("H:i"),
                     $this->getMandatoryTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
                     // for nightly cronjob
-                    //$this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
-                    //$this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
-                    $this->getDeviationTimeMonthlyKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeMonthlyKey()),
-                    $this->getDeviationTimeTotalKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeTotalKey()),
+                    $this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
+                    $this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
+                    //$this->getDeviationTimeMonthlyKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeMonthlyKey()),
+                    //$this->getDeviationTimeTotalKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeTotalKey()),
                     $this->getDeviationTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
                     $this->getDeviationTimeTotalCorrectedKey() => '',
                 ]
