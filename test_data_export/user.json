@@ -5,8 +5,8 @@
   "sessionUsername": "l.gaechter",
   "displayUsername": "Lars",
   "surnameUsername": "Gaechter",
-  "sessionId": "",
-  "timeRecordStarted": false,
+  "sessionId": "3u2ecp8mo3m17kifflfpmmmtjt",
+  "timeRecordStarted": true,
   "mandatoryTime": "08:00",
   "location": "dietikon"
 },{
@@ -16,8 +16,8 @@
   "sessionUsername": "m.schmid",
   "displayUsername": "Monika",
   "surnameUsername": "Schmid",
-  "sessionId": "4qeabtic4r5ebgn788uor7khso",
-  "timeRecordStarted": true,
+  "sessionId": "bh6jhc7dft570pmpmcg438rah8",
+  "timeRecordStarted": false,
   "mandatoryTime": "08:00",
   "location": "dietikon"
 }]

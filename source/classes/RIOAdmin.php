@@ -24,6 +24,16 @@ class RIOAdmin extends RIOAccessController
     }
 
     /**
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws \Exception
+     */
+    public function cronJob(): Response
+    {
+        $cronJob = new RIOCronJob(RIODateTimeFactory::getDateTime());
+        $cronJob->usersEndStart();
+    }
+
+    /**
      * Delete current user authentication with saved session id and username in mongodb
      *
      * @return Response
@@ -489,22 +499,6 @@ class RIOAdmin extends RIOAccessController
         if($user->isTimeRecordStarted()) {
             /** @var BSONDocument $findOneWorkDay */
             $findOneWorkDay = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOne($this->getDate());
-
-            // Start for nightly cronjob
-            /** @var BSONDocument[] $findWorkDaysFromThisMonth */
-            $findWorkDaysFromThisMonth = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->find($this->getMonth())->toArray();
-
-
-            /** @var BSONDocument $lastDayThisMonth */
-            /*$lastDayThisMonth = end($findWorkDaysFromThisMonth);
-            if(count($findWorkDaysFromThisMonth) >= 2) {
-                $lastDayThisMonth = $findWorkDaysFromThisMonth[count($findWorkDaysFromThisMonth)-2];
-            }
-
-
-            */
-            // End for nightly cronjob
-
             /** @var BSONArray $times */
             $times = $findOneWorkDay->offsetGet("time");
             /*** @var BSONArray $time */
@@ -657,28 +651,29 @@ class RIOAdmin extends RIOAccessController
             $deviationTimeWeekly->add($mandatoryTimeWeekly->diff($isTimeWeekly));
             $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOneAndUpdate(
                 $this->getTimeRecordingFilterStarted(),
-                ['$set' => [
-                    'presenceTime' => $presenceTimeTotal->format("H:i"),
-                    'presenceTimeCorrected' => '',
-                    'time' => $findOneWorkDay->offsetGet("time"),
-                    'deviation' => $deviation->format("H:i"),
-                    'deviationNegativeOrPositiveOrZero' => $deviationNegativeOrPositiveOrZero,
-                    'isTimeMonthly' => $isTimeMonthly->format("H:i"),
-                    'isTimeTotal' => $isTimeTotal->format("H:i"),
-                    'isTimeWeekly' => $isTimeWeekly->format("H:i"),
-                    // for nightly cronjob
-                    $this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
-                    //$this->getMandatoryTimeMonthlyKey() => $final,
-                    $this->getMandatoryTimeTotalKey() => $mandatoryTimeTotal->format("H:i"),
-                    $this->getMandatoryTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
-                    // for nightly cronjob
-                    $this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
-                    $this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
-                    //$this->getDeviationTimeMonthlyKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeMonthlyKey()),
-                    //$this->getDeviationTimeTotalKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeTotalKey()),
-                    $this->getDeviationTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
-                    $this->getDeviationTimeTotalCorrectedKey() => '',
-                ]
+                ['$set' =>
+                    [
+                        'presenceTime' => $presenceTimeTotal->format("H:i"),
+                        'presenceTimeCorrected' => '',
+                        'time' => $findOneWorkDay->offsetGet("time"),
+                        'deviation' => $deviation->format("H:i"),
+                        'deviationNegativeOrPositiveOrZero' => $deviationNegativeOrPositiveOrZero,
+                        'isTimeMonthly' => $isTimeMonthly->format("H:i"),
+                        'isTimeTotal' => $isTimeTotal->format("H:i"),
+                        'isTimeWeekly' => $isTimeWeekly->format("H:i"),
+                        // for nightly cronjob
+                        $this->getMandatoryTimeMonthlyKey() => $mandatoryTimeMonthly->format("H:i"),
+                        //$this->getMandatoryTimeMonthlyKey() => $final,
+                        $this->getMandatoryTimeTotalKey() => $mandatoryTimeTotal->format("H:i"),
+                        $this->getMandatoryTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
+                        // for nightly cronjob
+                        $this->getDeviationTimeMonthlyKey() => $deviationTimeMonthly->format("H:i"),
+                        $this->getDeviationTimeTotalKey() => $deviationTimeTotal->format("H:i"),
+                        //$this->getDeviationTimeMonthlyKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeMonthlyKey()),
+                        //$this->getDeviationTimeTotalKey() => $lastDayThisMonth->offsetGet($this->getDeviationTimeTotalKey()),
+                        $this->getDeviationTimeWeeklyKey() => $mandatoryTimeWeekly->format("H:i"),
+                        $this->getDeviationTimeTotalCorrectedKey() => '',
+                    ]
                 ]
             );
             $this->getUsers()->findOneAndUpdate(
