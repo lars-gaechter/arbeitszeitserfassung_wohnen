@@ -116,7 +116,12 @@ class RIOMongoDatabase
         return $this->getUsers(["time_record_started" => false]);
     }
 
-    public function getUsers($filter = [], array $options = []): array
+    /**
+     * @param array $filter
+     * @param array $options
+     * @return BSONDocument[]
+     */
+    public function getUsers(array $filter = [], array $options = []): array
     {
         return $this->getUsersCollection()->find($filter)->toArray();
     }

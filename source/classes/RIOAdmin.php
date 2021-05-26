@@ -121,17 +121,23 @@ class RIOAdmin extends RIOAccessController
                 ["sessionUsername" => $user->offsetGet("sessionUsername")],
                 ['$set' => ['mandatoryTime' => $updatedMandatoryTime->format("H:i")]]
             );
+            return RIORedirect::redirectResponse(['rioadmin', 'edituser', $username, "success"]);
         }
-        return RIORedirect::redirectResponse(['rioadmin', 'edituser', $username]);
+        return RIORedirect::redirectResponse(['rioadmin', 'edituser', $username, "failure"]);
     }
 
-    public function editUser(string $username): RedirectResponse|Response
+    public function editUser(string $username, string $state): RedirectResponse|Response
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $workday = new RIOWorkDayObject();
         $monthYear = $workday->getDate()->format("m.Y");
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
+        if(null !== $state) {
+            $stateArray = ['state' => $state];
+        } else {
+            $stateArray = [];
+        }
         return $this->renderPage(
             "edit_user.twig",
             array_merge(
@@ -140,7 +146,8 @@ class RIOAdmin extends RIOAccessController
                     "mandatoryTime" => $user->offsetGet("mandatoryTime"),
                     'monthYear' => $monthYear,
                     'sessionUsername' => $user->offsetGet("sessionUsername")
-                ]
+                ],
+                $stateArray
             )
         );
     }

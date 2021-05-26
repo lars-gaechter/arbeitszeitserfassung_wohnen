@@ -25,37 +25,49 @@ class RIOMain extends RIOAccessController
     /**
      * show home or do auto login if already an user is logged in
      *
+     * @param string $state
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
-    public function showHomepage(): Response
+    public function showHomepage(string $state = null): Response
     {
-        return $this->sessionLogin();
+        if(null === $state) {
+            $state = "unchanged";
+        }
+        return $this->sessionLogin($state);
     }
 
-    private function showHome(): Response
+    private function showHome(string $state): Response
     {
+        if(null !== $state) {
+            $stateArray = ['state' => $state];
+        } else {
+            $stateArray = [];
+        }
         return $this->renderPage(
             "home.twig",
-            [
-                'action' => getAbsolutePath(["postlogin"])
-            ]
+            array_merge(
+                [
+                    'action' => getAbsolutePath(["postlogin"])
+                ],
+                $stateArray
+            )
         );
     }
 
     /**
      * Tries to login user by current session if saved
      *
+     * @param string $state
      * @return Response
-     * @throws Exception
      */
-    public function sessionLogin(): Response
+    public function sessionLogin(string $state): Response
     {
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         if($customTwigExtension->isLoggedIn()) {
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         }
-        return $this->showHome();
+        return $this->showHome($state);
     }
 
     /**

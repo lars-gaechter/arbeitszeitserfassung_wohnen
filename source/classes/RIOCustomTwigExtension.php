@@ -44,7 +44,7 @@ class RIOCustomTwigExtension extends AbstractExtension
                 [
                     "name" => "Benutzer",
                     "active" => "edit_user" === $active,
-                    "link" => $this->getAbsolutePath(["rioadmin","editUser", $sessionUsername]),
+                    "link" => $this->getAbsolutePath(["rioadmin","editUser", $sessionUsername, "unchanged"]),
                     "mobile" => true
                 ],
                 [

@@ -45,18 +45,28 @@ class RIOCronJob
         // Active user which haven time record started
         $usersActive = $this->mongoDB->getActiveUsers();
         $today = ['date' => $this->dateTime->format("d.m.Y")];
+        $yesterday = ['date' => RIODateTimeFactory::getDateTime('yesterday')->format("d.m.Y")];
         // Update active users
         //$this->calcActiveUsers($usersActive, $today, $year);
         // Update users
-        $this->calcUsers($users, $today, $year);
+        $this->calcUsers($users, $today, $year, $yesterday);
         // Update inactive users
         //$this->calcInactiveUsers($usersInactive, $today, $year);
     }
 
-    private function calcUsers($users, $today, $year): void
+    /**
+     * @param BSONDocument[] $users
+     * @param array $today
+     * @param string $year
+     * @param array $yesterday
+     * @throws \Exception
+     */
+    private function calcUsers(array $users, array $today, string $year, array $yesterday): void
     {
         foreach ($users as $user) {
             $workDaysCollection = $this->mongoDB->getWorkDaysCollectionByYearUser($year, $user->offsetGet("sessionUsername"));
+            /** @var BSONDocument $yesterdayWorkDay */
+            $yesterdayWorkDay = $workDaysCollection->findOne($yesterday);
             /** @var BSONDocument $findOneWorkDay */
             $findOneWorkDay = $workDaysCollection->findOne($today);
             // Get all mandatory time calc
@@ -70,6 +80,8 @@ class RIOCronJob
 
             $isTimeMonthly = $this->calcIsTimeMonthly($workDaysCollection, $findOneWorkDay);
             $deviationTimeMonthly = $this->calcDeviationTimeMonthly($isTimeMonthly, $findOneWorkDay->offsetGet("mandatoryTimeMonthly"));
+            $deviationTimeTotal = $this->calcDeviationTimeTotal($findOneWorkDay, $yesterdayWorkDay);
+            $deviationTimeWeekly = $this->calcDeviationTimeWeekly($findOneWorkDay, $yesterdayWorkDay);
 
             $updateFutureImplementation = [
                 'mandatoryTimeWeekly' => $findOneWorkDay->offsetGet("mandatoryTimeWeekly"),
@@ -79,8 +91,8 @@ class RIOCronJob
                 'mandatoryTimeMonthly' => $findOneWorkDay->offsetGet("mandatoryTimeMonthly"),
                 'isTimeMonthly' => $isTimeMonthly,
                 'deviationTimeMonthly' => $deviationTimeMonthly,
-                'deviationTimeTotal' => '',
-                'deviationTimeWeekly' => ''
+                'deviationTimeTotal' => $deviationTimeTotal,
+                'deviationTimeWeekly' => $deviationTimeWeekly
             ];
 
             echo "<pre>";
@@ -382,10 +394,10 @@ class RIOCronJob
         // Is last day a corrected mandatory time set
         if('' !== $mandatoryTimeCorrected) {
             $mandatoryTimeCorrectedDateTime = RIODateTimeFactory::getDateTime($mandatoryTimeCorrected);
-            $finalMandatoryTimeMonthly = $this->calculationOverTwentyfourHours(RIODateTimeFactory::getDateTime(), $time, $mandatoryTimeCorrectedDateTime);
+            $finalMandatoryTimeMonthly = $this->calculationOverTwentyfourHours($time, $mandatoryTimeCorrectedDateTime);
         } else {
             $mandatoryTimeDateTime = RIODateTimeFactory::getDateTime($mandatoryTime);
-            $finalMandatoryTimeMonthly = $this->calculationOverTwentyfourHours(RIODateTimeFactory::getDateTime(), $time, $mandatoryTimeDateTime);
+            $finalMandatoryTimeMonthly = $this->calculationOverTwentyfourHours($time, $mandatoryTimeDateTime);
         }
         $finalMandatoryTimeWeekly = "";
         $finalMandatoryTimeTotal = "";
@@ -412,15 +424,18 @@ class RIOCronJob
     /**
      * Only for monthly calculation usage
      *
-     * @param \DateTime $dateTime
-     * @param array $time
-     * @param \DateTime $addDateTime
+     * @param array $time add of sub time
+     * @param \DateTime $addDateTime initial, time can be positiv or negative
      * @param string $addition + or - time
+     * @param string $addDateTimeAddition initial time is + or -
+     * @param bool $returnOperator example true +08:45, false 08:45 or true -08:45, false 08:45
      * @return string
      * @throws \Exception
      */
-    private function calculationOverTwentyfourHours(DateTime $dateTime, array $time, DateTime $addDateTime, string $addition = ""): string
+    private function calculationOverTwentyfourHours(array $time, DateTime $addDateTime, string $addition = "", string $addDateTimeAddition = "", bool $returnOperator = false): string
     {
+        $operator = "";
+        $dateTime = RIODateTimeFactory::getDateTime();
         if("+" === $addition || "" === $addition) {
             $subtraction = false;
         }
@@ -449,11 +464,19 @@ class RIOCronJob
         if(false === $subtraction) {
             $newDateTime->add($interval);
         } else {
-            $newDateTime->sub($interval);
+            if($addition === $addDateTimeAddition) {
+                $operator .= "-";
+                $newDateTime->add($interval);
+            } else {
+                $newDateTime->sub($interval);
+            }
         }
         $finalInterval = $firstDateTime->diff($newDateTime);
         $hour = ($finalInterval->d*24)+$finalInterval->h <= 9 ? '0'.($finalInterval->d*24)+$finalInterval->h : ($finalInterval->d*24)+$finalInterval->h;
         $minute = $finalInterval->i <= 9 ? '0'.$finalInterval->i : $finalInterval->i;
+        if(true === $returnOperator) {
+            return $operator.$hour.':'.$minute;
+        }
         return $hour.':'.$minute;
     }
 
@@ -530,10 +553,10 @@ class RIOCronJob
         $time = $this->stringTimeToIntArray($isTimeMonthly);
         if('' !== $presenceTimeCorrected) {
             $presenceTimeCorrectedDateTime = RIODateTimeFactory::getDateTime($presenceTimeCorrected);
-            $finalPresenceTimeMonthly = $this->calculationOverTwentyfourHours(RIODateTimeFactory::getDateTime(), $time, $presenceTimeCorrectedDateTime);
+            $finalPresenceTimeMonthly = $this->calculationOverTwentyfourHours($time, $presenceTimeCorrectedDateTime);
         } else {
             $presenceTimeDateTime = RIODateTimeFactory::getDateTime($presenceTime);
-            $finalPresenceTimeMonthly = $this->calculationOverTwentyfourHours(RIODateTimeFactory::getDateTime(), $time, $presenceTimeDateTime);
+            $finalPresenceTimeMonthly = $this->calculationOverTwentyfourHours($time, $presenceTimeDateTime);
         }
         return $finalPresenceTimeMonthly;
     }
@@ -557,6 +580,48 @@ class RIOCronJob
         $hourFinal = $h <= 9 ? '0'.$h : $h;
         $minuteFinal = $m <= 9 ? '0'.$m : $m;
         return $positiveNegative.$hourFinal.':'.$minuteFinal;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function calcDeviationTimeTotal(BSONDocument $findOneWorkDay, BSONDocument $yesterdayWorkDay): string
+    {
+        $additionDeviationTimeTotal = $yesterdayWorkDay->offsetGet("deviationTimeTotal");
+        $addition = substr($additionDeviationTimeTotal,0,1);
+        $deviationTimeTotal = substr($additionDeviationTimeTotal,1);
+        $deviationTimeTotalArray = $this->stringTimeToIntArray($deviationTimeTotal);
+        $addTime = $this->stringTimeToIntArray($findOneWorkDay->offsetGet("deviation"));
+        $addTimeAddition = $findOneWorkDay->offsetGet("deviationNegativeOrPositiveOrZero");
+        $addDateTime = RIODateTimeFactory::getDateTime();
+        $addDateTime->setTime($addTime["hour"],$addTime["minute"]);
+        return $this->calculationOverTwentyfourHours($deviationTimeTotalArray, $addDateTime, $addTimeAddition);
+    }
+
+    /**
+     * If yesterday and today are in same week, then add them together else start at 00:00
+     *
+     * @param \MongoDB\Model\BSONDocument $findOneWorkDay Today
+     * @param \MongoDB\Model\BSONDocument $yesterdayWorkDay Yesterday
+     * @return string
+     * @throws \Exception
+     */
+    private function calcDeviationTimeWeekly(BSONDocument $findOneWorkDay, BSONDocument $yesterdayWorkDay): string
+    {
+        $deviation = $findOneWorkDay->offsetGet("deviation");
+        $addTime = $this->stringTimeToIntArray($deviation);
+        $addTimeAddition = $findOneWorkDay->offsetGet("deviationNegativeOrPositiveOrZero");
+        if($findOneWorkDay->offsetGet("week") === $yesterdayWorkDay->offsetGet("week")) {
+            $additionDeviationTimeWeekly = $yesterdayWorkDay->offsetGet("deviationTimeWeekly");
+            $addition = substr($additionDeviationTimeWeekly,0,1);
+            $deviationTimeWeekly = substr($additionDeviationTimeWeekly,1);
+            $deviationTimeWeeklyArray = $this->stringTimeToIntArray($deviationTimeWeekly);
+            $addDateTime = RIODateTimeFactory::getDateTime();
+            $addDateTime->setTime($addTime["hour"],$addTime["minute"]);
+            return $this->calculationOverTwentyfourHours($deviationTimeWeeklyArray, $addDateTime, $addTimeAddition, $addition, true);
+        } else {
+            return $addTimeAddition.$deviation;
+        }
     }
 
     /**

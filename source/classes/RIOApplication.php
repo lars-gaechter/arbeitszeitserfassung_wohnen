@@ -241,6 +241,9 @@ class RIOApplication
                 return $response;
             }
         }
+        // TODO: add param for state
+        var_dump($this->getAreaPathParser());
+        die();
         return call_user_func([$instance, $_ENV['EMPTY_URL_CONTROLLER']]);
     }
 

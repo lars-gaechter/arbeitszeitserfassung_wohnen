@@ -2752,10 +2752,68 @@
       "comment": "",
       "lastEditedUser": "",
       "lastEditedDate": "",
-      "lastEditedTime": ""
+      "lastEditedTime": "",
+      "end": "14:52",
+      "endCorrected": "",
+      "workingTimePerformed": "04:27",
+      "workingTimePerformedCorrected": "",
+      "presenceTime": "04:27",
+      "presenceTimeCorrected": "",
+      "isTime": "04:35",
+      "diff": "03:25",
+      "diffNegativePositive": "-"
     }
   ],
-  "deviation": "07:52",
+  "deviation": "03:25",
+  "deviationNegativeOrPositiveOrZero": "-",
+  "deviationTimeMonthly": "+06:37",
+  "deviationTimeTotal": "+26:14",
+  "deviationTimeTotalCorrected": "",
+  "deviationTimeWeekly": "-02:22",
+  "isTimeMonthly": "30:37",
+  "isTimeTotal": "00:00",
+  "isTimeWeekly": "00:00",
+  "mandatoryTimeMonthly": "24:00",
+  "mandatoryTimeTotal": "00:00",
+  "mandatoryTimeWeekly": "00:00",
+  "presenceTime": "04:35",
+  "presenceTimeCorrected": ""
+},{
+  "_id": {
+    "$oid": "60ade75230176d7402691ef2"
+  },
+  "date": "26.05.2021",
+  "monthYear": "05.2021",
+  "weekYear": "21.2021",
+  "month": "05",
+  "week": "21",
+  "mandatoryTime": "08:00",
+  "mandatoryTimeCorrected": "",
+  "timeCredit": "00:00",
+  "timeCreditCorrected": "",
+  "absentAllDay": "(nicht extern)",
+  "absentAfternoon": "(nicht extern)",
+  "absentMorning": "(nicht extern)",
+  "time": [
+    {
+      "start": "08:14",
+      "startCorrected": "",
+      "comment": "",
+      "lastEditedUser": "",
+      "lastEditedDate": "",
+      "lastEditedTime": "",
+      "end": "08:15",
+      "endCorrected": "",
+      "workingTimePerformed": "00:01",
+      "workingTimePerformedCorrected": "",
+      "presenceTime": "00:01",
+      "presenceTimeCorrected": "",
+      "isTime": "00:01",
+      "diff": "07:59",
+      "diffNegativePositive": "-"
+    }
+  ],
+  "deviation": "07:59",
   "deviationNegativeOrPositiveOrZero": "-",
   "deviationTimeMonthly": "00:00",
   "deviationTimeTotal": "00:00",
@@ -2767,6 +2825,6 @@
   "mandatoryTimeMonthly": "00:00",
   "mandatoryTimeTotal": "00:00",
   "mandatoryTimeWeekly": "00:00",
-  "presenceTime": "00:08",
+  "presenceTime": "00:01",
   "presenceTimeCorrected": ""
 }]

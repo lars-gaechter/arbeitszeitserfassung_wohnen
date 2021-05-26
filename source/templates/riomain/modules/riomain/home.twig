@@ -3,6 +3,11 @@
     {{ show_form }}
     <h3>Login</h3>
     <form action="{{ action }}" method="post">
+        {% if state is same as("failure") %}
+            <div>
+                <span class="badge bg-danger">Logindaten sind falsch.</span>
+            </div>
+        {% endif %}
         <div class="mb-3">
             <label for="username" class="form-label">Benutzername:</label>
             <input id="username" name="username" type="text" placeholder="m.muster" class="form-control" required>

@@ -1,5 +1,5 @@
 # Installationsanleitung - MongoDB als Datebase-Server und Apache2 mit PHP 8 als Webserver
-### Version: 0.1, Status: Erster Entwurf, Datum: 26.03.2021, Author: Lars Gächter, URL:
+### Version: 0.1, Status: Erster Entwurf, Datum: 26.03.2021, Author: Lars Gächter, URL: [https://gitlab.rafisa.org/l.gaechter/arbeitszeitserfassung_wohnen/-/blob/master/doc/readme/time_recording_server.md](doc/readme/time_recording_server.md)
 ## 1. Kurzfassung
 In dieser Installationsanleitung wird beschrieben, wie man auf einem Ubuntu-Server (Ubuntu 20.04 (Focal)) den MongoDB-Server und Apache2-Server und PHP 8 installiert.
 ## 2. Installation
