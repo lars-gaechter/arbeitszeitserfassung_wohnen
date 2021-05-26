@@ -34,24 +34,6 @@ class RIOMain extends RIOAccessController
        return RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
-    private function showHome(string $state): Response
-    {
-        if(null !== $state) {
-            $stateArray = ['state' => $state];
-        } else {
-            $stateArray = [];
-        }
-        return $this->renderPage(
-            "home.twig",
-            array_merge(
-                [
-                    'action' => getAbsolutePath(["postlogin"])
-                ],
-                $stateArray
-            )
-        );
-    }
-
     public function login(string $state): Response
     {
         if(null !== $state) {
@@ -76,13 +58,13 @@ class RIOMain extends RIOAccessController
      * @param string $state
      * @return Response
      */
-    public function sessionLogin(string $state): Response
+    public function sessionLogin(): Response
     {
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         if($customTwigExtension->isLoggedIn()) {
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         }
-        return $this->showHome($state);
+        return $this->login("failure");
     }
 
     /**
