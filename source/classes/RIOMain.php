@@ -89,7 +89,6 @@ class RIOMain extends RIOAccessController
         $surnameUsername = $results[0]["sn"][0];
         $session = $this->getSession();
         $sessionId = $session->getId();
-        $request = $this->getRequest();
         $maybeObject = [
             'sessionUsername' => $sessionUsername,
             'displayUsername' => $displayUsername,
@@ -114,6 +113,7 @@ class RIOMain extends RIOAccessController
         try {
             $bind = ldap_bind($ldap, $dn, $password);
         } catch (Exception $e) {
+            return RIORedirect::redirectResponse(["login", "failure"]);
             throw new Exception($e->getMessage(). ", dn = ".$dn.", password = ".$password);
         }
         if ($bind) {
