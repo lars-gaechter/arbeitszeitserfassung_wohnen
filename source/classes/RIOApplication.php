@@ -241,10 +241,7 @@ class RIOApplication
                 return $response;
             }
         }
-        // TODO: add param for state
-        var_dump($this->getAreaPathParser()->getPathPartials());
-        die();
-        return call_user_func([$instance, $_ENV['EMPTY_URL_CONTROLLER']]);
+        return call_user_func([$instance, $_ENV['EMPTY_URL_CONTROLLER'], "unchanged"]);
     }
 
     private static function getTwig(string $areaName): Environment
