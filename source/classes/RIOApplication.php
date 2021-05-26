@@ -242,7 +242,7 @@ class RIOApplication
             }
         }
         // TODO: add param for state
-        var_dump($this->getAreaPathParser());
+        var_dump($this->getAreaPathParser()->getPathPartials());
         die();
         return call_user_func([$instance, $_ENV['EMPTY_URL_CONTROLLER']]);
     }
