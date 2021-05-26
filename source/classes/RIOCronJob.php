@@ -2,6 +2,7 @@
 
 use MongoDB\Collection;
 use MongoDB\Model\BSONDocument;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Nightly cronjob which calc today with last day or only today
@@ -12,7 +13,7 @@ class RIOCronJob
 {
     /**
      * Have to update data in database
-     * @var \RIOMongoDatabase|null
+     * @var RIOMongoDatabase|null
      */
     private ?RIOMongoDatabase $mongoDB;
 
@@ -32,7 +33,6 @@ class RIOCronJob
      * Day ends at 23:59 and starts at 00:00
      *
      * @throws Exception
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function usersEndStart(): void
     {
@@ -59,7 +59,7 @@ class RIOCronJob
      * @param array $today
      * @param string $year
      * @param array $yesterday
-     * @throws \Exception
+     * @throws Exception
      */
     private function calcUsers(array $users, array $today, string $year, array $yesterday): void
     {
@@ -205,10 +205,10 @@ class RIOCronJob
     /**
      * Stop time, calc time
      *
-     * @param \MongoDB\Model\BSONDocument $findOneWorkDay
+     * @param BSONDocument $findOneWorkDay
      * @param string $sessionUsername
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateTodayTimes(BSONDocument $findOneWorkDay, string $sessionUsername): array
     {
@@ -322,8 +322,8 @@ class RIOCronJob
     }
 
     /**
-     * @throws \Exception
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws Exception
+     * @throws TransportExceptionInterface
      */
     private function createNewWorkDay(Collection $workDaysCollection, BSONDocument $user, bool $timeRecordStarted): void
     {
@@ -370,7 +370,7 @@ class RIOCronJob
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function calcMandatoryTimeMonthlyWeeklyAndTotal(Collection $workDaysCollection, BSONDocument $findOneWorkDay): array
     {
@@ -430,7 +430,7 @@ class RIOCronJob
      * @param string $addDateTimeAddition initial time is + or -
      * @param bool $returnOperator example true +08:45, false 08:45 or true -08:45, false 08:45
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     private function calculationOverTwentyfourHours(array $time, DateTime $addDateTime, string $addition = "", string $addDateTimeAddition = "", bool $returnOperator = false): string
     {
@@ -486,7 +486,7 @@ class RIOCronJob
      *
      * @param string $username
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function getUserAllPastWorkdays(string $username): array
     {
@@ -500,11 +500,11 @@ class RIOCronJob
     /**
      * @param array $allWorkDaysFromUser
      * @param \RIOWorkDayObject $currentWorkDay
-     * @param \MongoDB\Model\BSONDocument $user
+     * @param BSONDocument $user
      * @param bool $pastWorkDay
      * @param bool $sortByDate
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
@@ -583,7 +583,7 @@ class RIOCronJob
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function calcDeviationTimeTotal(BSONDocument $findOneWorkDay, BSONDocument $yesterdayWorkDay): string
     {
@@ -601,10 +601,10 @@ class RIOCronJob
     /**
      * If yesterday and today are in same week, then add them together else start at 00:00
      *
-     * @param \MongoDB\Model\BSONDocument $findOneWorkDay Today
-     * @param \MongoDB\Model\BSONDocument $yesterdayWorkDay Yesterday
+     * @param BSONDocument $findOneWorkDay Today
+     * @param BSONDocument $yesterdayWorkDay Yesterday
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     private function calcDeviationTimeWeekly(BSONDocument $findOneWorkDay, BSONDocument $yesterdayWorkDay): string
     {
@@ -623,38 +623,4 @@ class RIOCronJob
             return $addTimeAddition.$deviation;
         }
     }
-
-    /**
-     * Month of a year is unique
-     *
-     * @param string $monthYear
-     * @param string $username
-     * @return array
-     * @throws Exception
-     */
-    /*
-    private function getUserAllPastWorkdaysByMonthYearUser(string $monthYear, string $username): array
-    {
-        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
-        $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
-        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
-    }*/
-
-    /**
-     * Week of a year is unique
-     *
-     * @param string $weekYear
-     * @param string $username
-     * @return array
-     * @throws \Exception
-     */
-    /*
-    private function getUserAllPastWorkdaysByWeek(string $weekYear, string $username): array
-    {
-        $user = new RIOUserObject($controller);
-        $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.01.".explode('.',$weekYear)[1])->format("Y"),$user->getUsername())->find(["sessionUsername" => $user->getUsername(), "weekYear" => $weekYear])->toArray();
-        return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
-    }*/
 }

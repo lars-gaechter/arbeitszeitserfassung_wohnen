@@ -60,7 +60,7 @@ class RIOCustomTwigExtension extends AbstractExtension
     public function logoLink(): string
     {
         if($this->isLoggedIn()) {
-            return $this->getAbsolutePath(["sessionlogin"]);
+            return $this->getAbsolutePath(["sessionLogin"]);
         }
         return $this->getAbsolutePath();
     }

@@ -5,6 +5,10 @@ use MongoDB\Model\BSONDocument;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Twig\Environment;
 
 /**
@@ -24,8 +28,7 @@ class RIOAdmin extends RIOAccessController
     }
 
     /**
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function cronJob(): Response
     {
@@ -55,11 +58,11 @@ class RIOAdmin extends RIOAccessController
     /**
      * @param string $location
      * @param string $date
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @return Response
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function getHoliday(string $location, string $date): Response
     {
@@ -126,6 +129,11 @@ class RIOAdmin extends RIOAccessController
         return RIORedirect::redirectResponse(['rioadmin', 'edituser', $username, "failure"]);
     }
 
+    /**
+     * @param string $username
+     * @param string $state
+     * @return RedirectResponse|Response
+     */
     public function editUser(string $username, string $state): RedirectResponse|Response
     {
         /** @var BSONDocument $user */
@@ -158,6 +166,7 @@ class RIOAdmin extends RIOAccessController
      * @param string $username
      * @param string $date
      * @param string $indexOfTime
+     * @param string $state
      * @return RedirectResponse|Response
      * @throws Exception
      */
@@ -280,6 +289,10 @@ class RIOAdmin extends RIOAccessController
     }
 
     /**
+     * @param string $username
+     * @param string $date
+     * @param string $indexOfTime
+     * @return RedirectResponse|Response
      * @throws Exception
      */
     public function updatePresenceTimeCorrections(string $username, string $date, string $indexOfTime): RedirectResponse|Response
@@ -431,6 +444,9 @@ class RIOAdmin extends RIOAccessController
     }
 
     /**
+     * @param string $monthYear
+     * @param string $djacent
+     * @return string
      * @throws Exception
      */
     public function getAdjacentMonth(string $monthYear, string $djacent = "previous"): string
@@ -473,7 +489,7 @@ class RIOAdmin extends RIOAccessController
      *  if yes then update existing work day with mew start time
      *
      * @return RedirectResponse|Response
-     * @throws Exception|\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws Exception|TransportExceptionInterface
      */
     public function start(): RedirectResponse|Response
     {
@@ -500,10 +516,11 @@ class RIOAdmin extends RIOAccessController
                 ['$set' => [ 'timeRecordStarted' => true ]]
             );
         }
-        return RIORedirect::redirectResponse(["rioadmin", "sessionlogin"]);
+        return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
     }
 
     /**
+     * @return RedirectResponse|Response
      * @throws Exception
      */
     public function stop(): RedirectResponse|Response
@@ -694,6 +711,6 @@ class RIOAdmin extends RIOAccessController
                 ['$set' => ['timeRecordStarted' => false]]
             );
         }
-        return RIORedirect::redirectResponse(["rioadmin", "sessionlogin"]);
+        return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
     }
 }
