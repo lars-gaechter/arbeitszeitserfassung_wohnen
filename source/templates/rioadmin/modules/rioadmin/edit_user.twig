@@ -8,12 +8,12 @@
             <div id="mandatoryTimeHelp" class="form-text">Von Montag bis Freitag ausgenommen von Samstag, Sonntag und Feiertag. Diese Änderung wird erst am nächsten Tag in Kraft treten.</div>
         </div>
         {% if state is same as("success") %}
-            <div>
+            <div class="mb-3">
                 <span class="badge bg-success">Änderung wurde erfolgreich übernommen.</span>
             </div>
         {% endif %}
         {% if state is same as("failure") %}
-            <div>
+            <div class="mb-3">
                 <span class="badge bg-danger">Änderung wurde nicht erfolgreich übernommen.</span>
             </div>
         {% endif %}

@@ -150,7 +150,7 @@
             <p>Wurde von {{ lastEditedUser }} zuletzt am {{ lastEditedDate }} um {{ lastEditedTime }} Uhr korrigiert.</p>
         {% endif %}
         {% if state is same as("failure") %}
-            <div>
+            <div class="mb-3">
                 <span class="badge bg-danger">Änderung wurde nicht erfolgreich übernommen.</span>
             </div>
         {% endif %}
