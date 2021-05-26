@@ -31,7 +31,7 @@ class RIOMain extends RIOAccessController
      */
     public function showHomepage(): Response
     {
-        RIORedirect::redirectResponse(["login", "unchanged"]);
+       return RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
     private function showHome(string $state): Response
