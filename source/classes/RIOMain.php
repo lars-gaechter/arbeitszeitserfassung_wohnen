@@ -64,7 +64,7 @@ class RIOMain extends RIOAccessController
         if($customTwigExtension->isLoggedIn()) {
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         }
-        return $this->login("failure");
+        return RIORedirect::redirectResponse(["login", "failure"]);
     }
 
     /**
@@ -138,7 +138,7 @@ class RIOMain extends RIOAccessController
             }
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         } else {
-            return $this->login("failure");
+            return RIORedirect::redirectResponse(["login", "failure"]);
         }
     }
 
@@ -157,6 +157,6 @@ class RIOMain extends RIOAccessController
             $request->getSession()->set("username", $usernamePost);
             return $this->userValidate($usernamePost, $passwordPost);
         }
-        return $this->login("failure");
+        return RIORedirect::redirectResponse(["login", "failure"]);
     }
 }
