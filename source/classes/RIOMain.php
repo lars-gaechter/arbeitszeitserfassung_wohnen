@@ -110,12 +110,18 @@ class RIOMain extends RIOAccessController
         $auth_find = $this->getUsers()->findOne(
             $maybeObject
         );
-        try {
+        if(RIOConfig::isDevelopmentMode()) {
+            try {
+                $bind = ldap_bind($ldap, $dn, $password);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage(). ", dn = ".$dn.", password = ".$password);
+            }
+        } else {
             $bind = ldap_bind($ldap, $dn, $password);
-        } catch (Exception $e) {
-            // TODO: only works with wrong password but only username is correct like LDAP
-            return RIORedirect::redirectResponse(["login", "failure"]);
-            throw new Exception($e->getMessage(). ", dn = ".$dn.", password = ".$password);
+            if(false === $bind) {
+                // Username was correct but password was wrong
+                return RIORedirect::redirectResponse(["login", "failure"]);
+            }
         }
         if ($bind) {
             ldap_unbind($ldap);
