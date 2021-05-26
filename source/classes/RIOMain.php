@@ -29,13 +29,8 @@ class RIOMain extends RIOAccessController
      * @return Response
      * @throws \Exception
      */
-    public function showHomepage(string $state): Response
+    public function showHomepage(): Response
     {
-        /*
-        if(null === $state) {
-            $state = "unchanged";
-        }
-        return $this->sessionLogin($state);*/
         RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
