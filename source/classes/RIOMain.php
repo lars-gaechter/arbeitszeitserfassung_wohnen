@@ -156,7 +156,7 @@ class RIOMain extends RIOAccessController
             }
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         } else {
-            return $this->showHomepage();
+            return $this->login("failure");
         }
     }
 
@@ -175,6 +175,6 @@ class RIOMain extends RIOAccessController
             $request->getSession()->set("username", $usernamePost);
             return $this->userValidate($usernamePost, $passwordPost);
         }
-        return $this->showHomepage();
+        return $this->login("failure");
     }
 }
