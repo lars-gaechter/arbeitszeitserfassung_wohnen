@@ -11,13 +11,13 @@
             <label for="password" class="form-label">Passwort:</label>
             <input id="password" name="password" type="password" placeholder="Passwort" class="form-control" required>
         </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </div>
         {% if state is same as("failure") %}
             <div>
                 <span class="badge bg-danger">Logindaten sind falsch.</span>
             </div>
         {% endif %}
+        <div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
     </form>
 {% endblock %}

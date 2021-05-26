@@ -3,20 +3,22 @@
     <h3>Benutzer</h3>
     <form action="{{ getAbsolutePath(['rioadmin','updateUser',sessionUsername]) }}" method="post">
         <div class="mb-3">
-            {% if state is same as("success") %}
-                <div>
-                    <span class="badge bg-success">Änderung wurde erfolgreich übernommen.</span>
-                </div>
-            {% endif %}
-            {% if state is same as("failure") %}
-                <div>
-                    <span class="badge bg-danger">Änderung wurde nicht erfolgreich übernommen.</span>
-                </div>
-            {% endif %}
             <label for="mandatoryTime" class="form-label">Pflichtzeit pro Tag</label>
             <input type="time" class="form-control" id="mandatoryTime" name="mandatoryTime" value="{{ mandatoryTime }}" aria-describedby="mandatoryTimeHelp">
             <div id="mandatoryTimeHelp" class="form-text">Von Montag bis Freitag ausgenommen von Samstag, Sonntag und Feiertag. Diese Änderung wird erst am nächsten Tag in Kraft treten.</div>
         </div>
-        <button type="submit" class="btn btn-primary">OK</button>
+        {% if state is same as("success") %}
+            <div>
+                <span class="badge bg-success">Änderung wurde erfolgreich übernommen.</span>
+            </div>
+        {% endif %}
+        {% if state is same as("failure") %}
+            <div>
+                <span class="badge bg-danger">Änderung wurde nicht erfolgreich übernommen.</span>
+            </div>
+        {% endif %}
+        <div>
+            <button type="submit" class="btn btn-primary">OK</button>
+        </div>
     </form>
 {% endblock %}

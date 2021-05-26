@@ -119,8 +119,7 @@ class RIOMain extends RIOAccessController
         } else {
             $bind = ldap_bind($ldap, $dn, $password);
             if(false === $bind) {
-                // Username was correct but password was wrong
-                return new Response("Test");
+                // Username or password was wrong
                 return RIORedirect::redirectResponse(["login", "failure"]);
             }
         }

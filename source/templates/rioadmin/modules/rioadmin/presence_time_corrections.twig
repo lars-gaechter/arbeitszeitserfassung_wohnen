@@ -149,6 +149,13 @@
         {% if lastEditedUser is not same as('') or lastEditedDate is not same as('') or lastEditedTime is not same as('') %}
             <p>Wurde von {{ lastEditedUser }} zuletzt am {{ lastEditedDate }} um {{ lastEditedTime }} Uhr korrigiert.</p>
         {% endif %}
-        <button type="submit" class="btn btn-primary">OK</button>
+        {% if state is same as("failure") %}
+            <div>
+                <span class="badge bg-danger">Änderung wurde nicht erfolgreich übernommen.</span>
+            </div>
+        {% endif %}
+        <div>
+            <button type="submit" class="btn btn-primary">OK</button>
+        </div>
     </form>
 {% endblock %}

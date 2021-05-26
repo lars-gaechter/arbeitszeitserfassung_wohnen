@@ -161,7 +161,7 @@ class RIOAdmin extends RIOAccessController
      * @return RedirectResponse|Response
      * @throws Exception
      */
-    public function presenceTimeCorrections(string $username, string $date, string $indexOfTime): RedirectResponse|Response
+    public function presenceTimeCorrections(string $username, string $date, string $indexOfTime, string $state): RedirectResponse|Response
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
@@ -182,6 +182,11 @@ class RIOAdmin extends RIOAccessController
         $workdayObject = new RIOWorkDayObject();
         $monthYear = $workdayObject->getDate()->format("m.Y");
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
+        if(null !== $state) {
+            $stateArray = ['state' => $state];
+        } else {
+            $stateArray = [];
+        }
         return $this->renderPage(
             "presence_time_corrections.twig",
             array_merge(
@@ -219,7 +224,8 @@ class RIOAdmin extends RIOAccessController
                     'lastEditedUser' => $time->offsetGet("lastEditedUser"),
                     'lastEditedDate' => $time->offsetGet("lastEditedDate"),
                     'lastEditedTime' => $time->offsetGet("lastEditedTime")
-                ]
+                ],
+                $stateArray
             )
         );
     }
