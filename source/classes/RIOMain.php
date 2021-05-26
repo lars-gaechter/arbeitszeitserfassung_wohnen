@@ -113,6 +113,7 @@ class RIOMain extends RIOAccessController
         try {
             $bind = ldap_bind($ldap, $dn, $password);
         } catch (Exception $e) {
+            // TODO: only works with wrong password but only username is correct like LDAP
             return RIORedirect::redirectResponse(["login", "failure"]);
             throw new Exception($e->getMessage(). ", dn = ".$dn.", password = ".$password);
         }
