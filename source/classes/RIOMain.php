@@ -29,15 +29,35 @@ class RIOMain extends RIOAccessController
      * @return Response
      * @throws \Exception
      */
-    public function showHomepage(string $state = null): Response
+    public function showHomepage(string $state): Response
     {
+        /*
         if(null === $state) {
             $state = "unchanged";
         }
-        return $this->sessionLogin($state);
+        return $this->sessionLogin($state);*/
+        RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
     private function showHome(string $state): Response
+    {
+        if(null !== $state) {
+            $stateArray = ['state' => $state];
+        } else {
+            $stateArray = [];
+        }
+        return $this->renderPage(
+            "home.twig",
+            array_merge(
+                [
+                    'action' => getAbsolutePath(["postlogin"])
+                ],
+                $stateArray
+            )
+        );
+    }
+
+    public function login(string $state): Response
     {
         if(null !== $state) {
             $stateArray = ['state' => $state];

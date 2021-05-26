@@ -241,7 +241,7 @@ class RIOApplication
                 return $response;
             }
         }
-        return call_user_func([$instance, $_ENV['EMPTY_URL_CONTROLLER'], "unchanged"]);
+        return call_user_func([$instance, $_ENV['EMPTY_URL_CONTROLLER']]);
     }
 
     private static function getTwig(string $areaName): Environment
