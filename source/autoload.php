@@ -18,8 +18,6 @@ if (!$found_autoloader_file) {
 
 include_once __DIR__ . '/functions.php';
 
-include_once __DIR__ . '/system.php';
-
 
 $env_file = dirname(__DIR__) . '/.env';
 $env_exists = file_exists($env_file);
