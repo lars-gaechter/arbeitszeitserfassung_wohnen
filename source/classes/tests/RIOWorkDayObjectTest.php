@@ -2,20 +2,22 @@
 
 namespace source\classes\tests;
 
+use Exception;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use RIODateTimeFactory;
 use RIOWorkDayObject;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-/** The import directory before the git directory can vary the path. */
-include_once 'C:\Users\l.gaechter\git\lab\arbeitszeitserfassung_wohnen\source\RIOAutoloader.php';
-include_once 'C:\Users\l.gaechter\git\lab\arbeitszeitserfassung_wohnen\source\functions.php';
+include_once __DIR__.'\..\..\RIOAutoloader.php';
+include_once __DIR__.'\..\..\functions.php';
 
 class RIOWorkDayObjectTest extends TestCase
 {
 
     /**
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testIsSaturday(): void
     {
@@ -27,7 +29,7 @@ class RIOWorkDayObjectTest extends TestCase
     }
 
     /**
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testIsSunday(): void
     {
@@ -41,8 +43,8 @@ class RIOWorkDayObjectTest extends TestCase
     /**
      * Test
      *
-     * @throws \PHPUnit\Framework\ExpectationFailedException|\Exception
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws ExpectationFailedException|Exception
+     * @throws TransportExceptionInterface
      */
     public function testIsHoliday(): void
     {
@@ -54,7 +56,7 @@ class RIOWorkDayObjectTest extends TestCase
     }
 
     /**
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testMandatoryTimeToday(): void
     {
