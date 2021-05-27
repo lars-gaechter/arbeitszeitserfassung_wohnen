@@ -10,6 +10,7 @@ use MongoDB\InsertManyResult;
 use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\UpdateResult;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Manage like a facade a single database with any number of collection/s
@@ -52,10 +53,20 @@ class RIOMongoDatabase
         return $_ENV["DB_NAME"];
     }
 
-    private function getClient(): Client
+    private function getClient(): Client|RedirectResponse
     {
         if(!isset($this->client)) {
-            return new Client($_ENV["MONGODB"]);
+            $client = new Client($_ENV["MONGODB"]);
+            try {
+                $databaseInfoIterator = $client->listDatabases();
+            } catch (RIOConnectionFailed $connectionFailed) {
+                if (RIOConfig::isInDebugMode()) {
+                    throw new Error("The database connection could not be established.", 0, $connectionFailed);
+                } else {
+                    return RIORedirect::error(503);
+                }
+            }
+            return $client;
         }
         return $this->client;
     }

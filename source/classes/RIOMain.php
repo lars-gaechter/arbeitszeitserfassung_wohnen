@@ -25,9 +25,7 @@ class RIOMain extends RIOAccessController
     /**
      * show home or do auto login if already an user is logged in
      *
-     * @param string $state
      * @return Response
-     * @throws \Exception
      */
     public function showHomepage(): Response
     {
@@ -55,7 +53,6 @@ class RIOMain extends RIOAccessController
     /**
      * Tries to login user by current session if saved
      *
-     * @param string $state
      * @return Response
      */
     public function sessionLogin(): Response
@@ -64,7 +61,7 @@ class RIOMain extends RIOAccessController
         if($customTwigExtension->isLoggedIn()) {
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         }
-        return RIORedirect::redirectResponse(["login", "failure"]);
+        return RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
     /**
@@ -81,6 +78,7 @@ class RIOMain extends RIOAccessController
         /** @var resource $ldap */
         $ldap = ldap_connect($_ENV["LDAP_HOST"], $_ENV["LDAP_PORT"]);
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+        // TODO: uncatchable connection error on follow line below
         $search = ldap_search($ldap, $_ENV["LDAP_SEARCH_ROOT"], '(' . $_ENV["LDAP_RDN"] . '=' . $username . ')');
         $results = ldap_get_entries($ldap, $search);
         $dn = $results[0]['dn'];
@@ -102,6 +100,7 @@ class RIOMain extends RIOAccessController
         $authObjectNoTime = array_merge(
             $maybeAuthObject,
             [
+                // New created user has by default no time record
                 'timeRecordStarted' => false,
                 "mandatoryTime" => $user->getMandatoryTime()->format("H:i"),
                 "location" => $user->getLocation()
@@ -110,41 +109,37 @@ class RIOMain extends RIOAccessController
         $auth_find = $this->getUsers()->findOne(
             $maybeObject
         );
-        if(RIOConfig::isDevelopmentMode()) {
-            try {
-                $bind = ldap_bind($ldap, $dn, $password);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage(). ", dn = ".$dn.", password = ".$password);
-            }
-        } else {
+        try {
             $bind = ldap_bind($ldap, $dn, $password);
-            if(false === $bind) {
-                // Username or password was wrong
+        } catch (Exception $e) {
+            if(RIOConfig::isInDebugMode()) {
+                throw new Exception($e->getMessage(). ", dn = ".$dn.", password = ".$password);
+            } else {
+                // Username was correct but password was wrong
                 return RIORedirect::redirectResponse(["login", "failure"]);
             }
         }
         if ($bind) {
             ldap_unbind($ldap);
+            if("0" === (string)$this->getSession()->getMetadataBag()->getLifetime()) {
+                $this->getSession()->getMetadataBag()->stampNew($_ENV["SESSION_LIFE_TIME"]);
+            }
             if(null === $auth_find) {
-                if("0" === $this->getSession()->getMetadataBag()->getLifetime()) {
-                    $this->getSession()->getMetadataBag()->stampNew($_ENV["SESSION_LIFE_TIME"]);
-                }
                 $this->getUsers()->insertOne(
                     $authObjectNoTime
                 );
             } else {
-                if("0" === $this->getSession()->getMetadataBag()->getLifetime()) {
-                    $this->getSession()->getMetadataBag()->stampNew($_ENV["SESSION_LIFE_TIME"]);
-                }
                 $this->getUsers()->updateOne(
                     $maybeObject,
                     [
+                        // Update new sessionId from client
                         '$set' => [ 'sessionId' => $sessionId ]
                     ]
                 );
             }
             return RIORedirect::redirectResponse(["rioadmin", "sessionLogin"]);
         } else {
+            // Username or password was wrong
             return RIORedirect::redirectResponse(["login", "failure"]);
         }
     }
@@ -164,6 +159,6 @@ class RIOMain extends RIOAccessController
             $request->getSession()->set("username", $usernamePost);
             return $this->userValidate($usernamePost, $passwordPost);
         }
-        return RIORedirect::redirectResponse(["login", "failure"]);
+        return RIORedirect::error(500);
     }
 }

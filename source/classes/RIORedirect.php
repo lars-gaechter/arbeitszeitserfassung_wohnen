@@ -12,7 +12,7 @@ class RIORedirect
      */
     public static function error(int $code): RedirectResponse
     {
-        return RIORedirect::redirectResponse("error.php?status=$code");
+        return RIORedirect::redirectResponse(["error.php?status=$code"]);
     }
 
     /**

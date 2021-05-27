@@ -51,19 +51,23 @@ class RIOWorkDayObject implements RIOToJSON
 
     /**
      * RIOWorkDayObject constructor.
+     * @param \DateTime|null $date
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws \Exception
      */
-    public function __construct()
+    public function __construct(DateTime $date = null)
     {
-        /*
-        $user = new RIOUserObject();
-        $this->username = $user->getUsername();*/
         $this->username = '';
         $this->absentAllDay = new RIOAbsentOptionObject();
         $this->absentAfternoon = new RIOAbsentOptionObject();
-        $this->date = RIODateTimeFactory::getDateTime();
+        if(null === $date) {
+            $this->date = RIODateTimeFactory::getDateTime();
+        } else {
+            $this->date = $date;
+        }
         $this->deviation = RIODateTimeFactory::getDateTime();
         $this->hoursWorked = RIODateTimeFactory::getDateTime();
-        $this->specialCompensation = $this->isRIOHoliday() || $this->isSunday();
+        $this->specialCompensation = $this->isRIOHoliday() || $this->isSunday() || $this->isSaturday();
         $this->mandatoryTime = RIODateTimeFactory::getDateTime();
         if(true === $this->specialCompensation) {
             $this->mandatoryTime->setTime(0,0);
@@ -165,7 +169,7 @@ class RIOWorkDayObject implements RIOToJSON
     public function isRIOHoliday(): bool
     {
         $user = new RIOUserObject();
-        $date = RIODateTimeFactory::getDateTime();
+        $date = $this->getDate();
         $response = $this->getHoliday($user->getLocation(), $date->format("Y-m-d"));
         return '' !== json_decode($response->getContent(),true)["holiday"];
     }

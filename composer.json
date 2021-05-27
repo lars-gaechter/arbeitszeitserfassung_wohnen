@@ -10,6 +10,7 @@
         "symfony/http-foundation": "^5.2",
         "symfony/stopwatch": "^5.2",
         "symfony/http-client": "^5.2",
-        "ext-xdebug": "*"
+        "ext-xdebug": "*",
+        "phpunit/phpunit": "^9.5"
     }
 }

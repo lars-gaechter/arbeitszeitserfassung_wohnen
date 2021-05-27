@@ -23,6 +23,7 @@ class RIOUserObject implements RIOToJSON
             $this->workDays = $accessController->getWorkDaysByUser();
             if(false === array_key_exists("mandatoryTime", $user)){
                 $this->mandatoryTime = RIODateTimeFactory::getDateTime();
+                // New created user has by default 8 hour and 0 minute mandatory time
                 $this->mandatoryTime->setTime(8,0);
             } else {
                 $this->mandatoryTime = RIODateTimeFactory::getDateTime($user["mandatoryTime"]);
@@ -31,6 +32,7 @@ class RIOUserObject implements RIOToJSON
             $this->mandatoryTime = RIODateTimeFactory::getDateTime();
             $this->mandatoryTime->setTime(8,0);
         }
+        // New created user has by default location dietikon
         $this->location = "dietikon";
     }
 

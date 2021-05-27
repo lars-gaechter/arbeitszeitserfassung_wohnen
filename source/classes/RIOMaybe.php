@@ -23,7 +23,9 @@ class RIOMaybe
                 }
                 public function getValue(): void
                 {
-                    throw new Error('Tried to getValue from empty RIOMaybe!');
+                    if(RIOConfig::isInDebugMode()) {
+                        throw new Error('Tried to getValue from empty RIOMaybe!');
+                    }
                 }
             };
         }
@@ -60,8 +62,10 @@ class RIOMaybe
 
     private function checkIfValidState(): void
     {
-        if (!isset($this->value)) {
-            throw new Error('RIOMaybe state is invalid');
+        if(RIOConfig::isInDebugMode()) {
+            if (!isset($this->value)) {
+                throw new Error('RIOMaybe state is invalid');
+            }
         }
     }
 }

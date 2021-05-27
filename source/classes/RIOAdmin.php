@@ -174,11 +174,11 @@ class RIOAdmin extends RIOAccessController
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
-        if(null === $user) {
+        if(null === $user && RIOConfig::isInDebugMode()) {
             throw new Error("User with this username ".$username." doesn't exist.");
         }
         $workDays = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime($date)->format("Y"),$username);
-        if(null === $workDays) {
+        if(null === $workDays && RIOConfig::isInDebugMode()) {
             throw new Error("User ".$username." has not workday collection for the year ".RIODateTimeFactory::getDateTime($date)->format("Y"));
         }
         $givenTime = ["date" => $date];
@@ -314,19 +314,20 @@ class RIOAdmin extends RIOAccessController
         $workingTimePerformedCorrected = $request->get($this->getWorkingTimePerformedCorrectedKey());
         $deviationTimeTotal = $request->get($this->getDeviationTimeTotalKey());
 
-        // Input validation
-        if(RIODateTimeFactory::getDateTime($startCorrected) > RIODateTimeFactory::getDateTime($endCorrected)) {
-            throw new Error("Start time cannot be after end time or end time before start time.");
-        }
-
-        if(false === array_search($absentAllDay, RIOAbsentOptionObject::getOptions(), true)) {
-            throw new Error("The option ".$absentAllDay." doesn't exist for ".$this->getAbsentAllDayKey());
-        }
-        if(false === array_search($absentMorning, RIOAbsentOptionObject::getOptions(), true)) {
-            throw new Error("The option ".$absentMorning." doesn't exist for ".$this->getAbsentMorningKey());
-        }
-        if(false === array_search($absentAfternoon, RIOAbsentOptionObject::getOptions(), true)) {
-            throw new Error("The option ".$absentAfternoon." doesn't exist for ".$this->getAbsentAfternoonKey());
+        if(RIOConfig::isInDebugMode()) {
+            // Input validation
+            if(RIODateTimeFactory::getDateTime($startCorrected) > RIODateTimeFactory::getDateTime($endCorrected)) {
+                throw new Error("Start time cannot be after end time or end time before start time.");
+            }
+            if(false === array_search($absentAllDay, RIOAbsentOptionObject::getOptions(), true)) {
+                throw new Error("The option ".$absentAllDay." doesn't exist for ".$this->getAbsentAllDayKey());
+            }
+            if(false === array_search($absentMorning, RIOAbsentOptionObject::getOptions(), true)) {
+                throw new Error("The option ".$absentMorning." doesn't exist for ".$this->getAbsentMorningKey());
+            }
+            if(false === array_search($absentAfternoon, RIOAbsentOptionObject::getOptions(), true)) {
+                throw new Error("The option ".$absentAfternoon." doesn't exist for ".$this->getAbsentAfternoonKey());
+            }
         }
 
         // Get database objects for this request
@@ -471,8 +472,10 @@ class RIOAdmin extends RIOAccessController
                 $year = $date->format("Y");
             }
         }
-        if(null === $djacentMonth || null === $year) {
-            throw new Error("Wrong adjacent argument can be previous or next");
+        if(RIOConfig::isInDebugMode()) {
+            if(null === $djacentMonth || null === $year) {
+                throw new Error("Wrong adjacent argument can be previous or next");
+            }
         }
         $currentDate = RIODateTimeFactory::getDateTime();
         $date->setDate($year, $djacentMonth, 1);

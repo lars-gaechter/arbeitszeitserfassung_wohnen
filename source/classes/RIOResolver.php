@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 class RIOResolver
 {
     private RIOResolverConfig $config;
@@ -26,13 +28,10 @@ class RIOResolver
     /**
      * @throws RIONotFoundException
      */
-    public function resolveWithResolvedAction(RIOResolvedAction $resolved_action): RIOResolvedAction
+    public function resolveWithResolvedAction(RIOResolvedAction $resolved_action): RIOResolvedAction | RedirectResponse
     {
-        /**
-         * @var RIOResolveException
-         */
+        /** @var RIOResolveException|null $lastError */
         $lastError = null;
-
         foreach ($this->config->getSteps() as $step) {
             $solved = false;
             $lastSuccessfulAction = RIOResolvedAction::create($resolved_action);
@@ -48,10 +47,12 @@ class RIOResolver
                     $lastError = $e;
                 }
             }
-
             if (!$solved) {
                 // 404
-                throw new RIONotFoundException("RIOResolver didn't find it", 0, $lastError);
+                if(RIOConfig::isInDebugMode()) {
+                    throw new RIONotFoundException("RIOResolver didn't find it", 0, $lastError);
+                }
+                return RIORedirect::error(404);
             }
         }
 
@@ -74,7 +75,6 @@ class RIOResolver
     {
         // Remove get parameters
         $getRemoved = explode('?', $path, 2);
-
         return $getRemoved[0];
     }
 }

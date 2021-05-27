@@ -111,7 +111,8 @@ class RIOApplication
         }
         if("Rioadmin" === $class) {
             $customTwigExtension = new RIOCustomTwigExtension($request);
-            if(!$customTwigExtension->isLoggedIn()) {
+            $isNotLoggedIn = !$customTwigExtension->isLoggedIn();
+            if($isNotLoggedIn) {
                 return RIORedirect::redirectResponse();
             }
         }
@@ -179,20 +180,22 @@ class RIOApplication
                     if($paramTypeUser !== $paramTypeSystem) {
                         // User value its type isn't the same type as required
                         if(!settype($paramValueUser, $paramTypeSystem)) {
-                            throw new \Whoops\Exception\ErrorException(
-                                "The name of the requested parameter at position ".
-                                $userParamIteration.
-                                " === ".
-                                $parameter->getPosition().
-                                " is ".
-                                $parameter->getName().
-                                " We had to set value to a different type with settype(value_with_wrong_type, actual_type_we_need) which somehow failed to change. The type of requested value user parameter value is ".
-                                $paramValueUser.
-                                " and type of ".
-                                $paramTypeUser.
-                                " and the required type of this parameter is a/n ".
-                                $paramTypeSystem
-                            );
+                            if(RIOConfig::isInDebugMode()) {
+                                throw new \Whoops\Exception\ErrorException(
+                                    "The name of the requested parameter at position ".
+                                    $userParamIteration.
+                                    " === ".
+                                    $parameter->getPosition().
+                                    " is ".
+                                    $parameter->getName().
+                                    " We had to set value to a different type with settype(value_with_wrong_type, actual_type_we_need) which somehow failed to change. The type of requested value user parameter value is ".
+                                    $paramValueUser.
+                                    " and type of ".
+                                    $paramTypeUser.
+                                    " and the required type of this parameter is a/n ".
+                                    $paramTypeSystem
+                                );
+                            }
                         }
                     }
                     $allParametersWithRequiredTypes[] = $paramValueUser;

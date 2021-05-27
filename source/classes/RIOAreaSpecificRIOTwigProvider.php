@@ -95,10 +95,12 @@ final class RIOAreaSpecificRIOTwigProvider implements RIOTwigProvider
 
     private function checkIfDirectoriesExist(string $area_name): void
     {
-        if (!is_dir(
-            dirname(__DIR__) . '/'
-        )) {
-            throw new Error("The twig template folder \"$area_name/\" is missing. "."The path \"/source/templates/$area_name/\" should exist.");
+        if(RIOConfig::isInDebugMode()) {
+            if (!is_dir(
+                dirname(__DIR__) . '/'
+            )) {
+                throw new Error("The twig template folder \"$area_name/\" is missing. "."The path \"/source/templates/$area_name/\" should exist.");
+            }
         }
     }
 }

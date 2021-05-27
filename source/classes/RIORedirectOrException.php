@@ -26,9 +26,7 @@ class RIORedirectOrException
         $previous = null
     ): RedirectResponse
     {
-
-
-        if(RIOConfig::isDevelopmentMode()) {
+        if(RIOConfig::isInDebugMode()) {
             throw new \Whoops\Exception\ErrorException(
                 $message,
                 $code,
@@ -38,7 +36,6 @@ class RIORedirectOrException
                 $previous
             );
         }
-
         return RIORedirect::error($error_code);
     }
 }

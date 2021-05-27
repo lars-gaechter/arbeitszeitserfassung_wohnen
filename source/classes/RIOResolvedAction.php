@@ -33,7 +33,9 @@ class RIOResolvedAction
     public function removeFirstArrayElement(): void
     {
         if (!isset($this->path_partials[0])) {
-            throw new Error("Trying to remove path partial which doesn't exist");
+            if(RIOConfig::isInDebugMode()) {
+                throw new Error("Trying to remove path partial which doesn't exist");
+            }
         }
         unset($this->path_partials[0]);
         $this->path_partials = array_values($this->path_partials);
