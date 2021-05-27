@@ -1,0 +1,48 @@
+dn: ou=People,dc=rafisa,dc=org
+objectClass: organizationalUnit
+ou: People
+
+
+dn: ou=Groups,dc=rafisa,dc=org
+objectClass: organizationalUnit
+ou: Groups
+
+
+dn: cn=Administration,ou=Groups,dc=rafisa,dc=org
+objectClass: posixGroup
+cn: Administration
+gidNumber: 5000
+
+
+dn: uid=l.gaechter,ou=People,dc=rafisa,dc=org
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: Lars
+sn: Gaechter
+givenName: Lars
+cn: Lars Gaechter
+displayName: Lars Gaechter
+uidNumber: 10000
+gidNumber: 5000
+userPassword: {CRYPT}x
+gecos: Lars Gaechter
+loginShell: /bin/bash
+homeDirectory: /home/l.gaechter
+
+
+dn: uid=m.schmid,ou=People,dc=rafisa,dc=org
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: Monika
+sn: Schmid
+givenName: Monika
+cn: Monika Schmid
+displayName: Monika Schmid
+uidNumber: 11000
+gidNumber: 5000
+userPassword: {CRYPT}x
+gecos: Monika Schmid
+loginShell: /bin/bash
+homeDirectory: /home/m.schmid
