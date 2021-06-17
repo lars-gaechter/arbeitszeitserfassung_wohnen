@@ -1,6 +1,5 @@
 <?php
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 include_once __DIR__.'/source/autoload.php';
 $ENVFile = ".env";
@@ -21,7 +20,7 @@ if("true" === $_ENV["MAINTENANCE"]) {
     $cronJob = new RIOCronJob($dateTime);
     try {
         $cronJob->usersEndStart();
-    } catch (TransportExceptionInterface | Exception $e) {
+    } catch (Exception $e) {
         throw new Error($e);
     }
     $contentAfterExecute = file_get_contents($cronLogFile);

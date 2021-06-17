@@ -34,26 +34,27 @@ Kopiere die bereits vorhandene .env.example Datei und benenne die neue .env, die
 cp .env.example .env
 ```
 
-| Variable         | Beschreibung               | Werte          |
-| ---------------- | -------------------------- | -------------- |
-| HOSTNAME         | Domainname der Applikation | example.ch     |
-| API_HOSTNAME     | Domainname der API         | example.ch     |
-| LDAP_HOST        | IP vom LDAP Server         | 127.0.0.1      |
-| LDAP_SEARCH_ROOT | LDAP Verbindung            | ou=\*,dc=\*,dc=\* |
-| LDAP_PORT        | LDAP Port                  | 389 \| \*        |
-| LDAP_RDN         | LDAP uid                   | uid            |
-| HTTPS            | HTTP oder HTTPS            | false / true   |
-| API_HTTPS        | HTTP oder HTTPS von API     | false / true   |
-| DEFAULT_AREA_NAME | RIOAdmin | riomain |
-| EMPTY_URL_CONTROLLER | example.ch/ | showHomepage |
-| SESSION_LIFE_TIME | In Sekunden, 28800 sind 8 Stunden | 28800 \| \* |
-| DEVELOPMENT_MODE | Twig Cache | false \| true |
-| DEBUG | PHP Errors | false \| true |
-| SESSION_LIFE_TIME | In Sekunden, 28800 sind 8 Stunden | \* |
-| MAINTENANCE | Seite im Bau, standardmässig nicht | false \|true |
-| LAUNCH_YEAR | Jahr in dem die Applikation in Produktion kommt | 2021\| \* |
-| MONGODB | Verbindung zu MongoDB mit Port | mongodb://localhost:27017 |
-| DB_NAME | Datenbank in MongoDB standardmässig "time" | time |
+Unten die Umgebungsvariablen in einer Tabelle im Detail 
+
+| Variable         | Beschreibung               | Werte          | Typ          |
+| ---------------- | -------------------------- | -------------- | -------------- |
+| HOSTNAME         | Domainname der Applikation | example.ch     | string     |
+| API_HOSTNAME     | Domainname der API         | example.ch     | string     |
+| LDAP_HOST        | IP vom LDAP Server         | 127.0.0.1      | string     |
+| LDAP_SEARCH_ROOT | LDAP Verbindung            | ou=\*,dc=\*,dc=\* | string     |
+| LDAP_PORT        | LDAP Port                  | 389 \| \*        | string     |
+| LDAP_RDN         | LDAP uid                   | uid            | int  |
+| HTTPS            | HTTP oder HTTPS            | false / true   | bool  |
+| API_HTTPS        | HTTP oder HTTPS von API     | false / true   | bool  |
+| DEFAULT_AREA_NAME | RIOAdmin | riomain | string |
+| EMPTY_URL_CONTROLLER | example.ch/ | showHomepage | string |
+| SESSION_LIFE_TIME | Session Lebenszeit in Sekunden, 28800 sind 8 Stunden | 28800 \| \* | int   |
+| DEVELOPMENT_MODE | Twig Cache | false \| true | bool  |
+| DEBUG | PHP Errors | false \| true | bool  |
+| MAINTENANCE | Seite im Bau, standardmässig nicht | false \|true | bool  |
+| LAUNCH_YEAR | Jahr in dem die Applikation in Produktion kommt | 2021\| \* | int   |
+| MONGODB | Verbindung zu MongoDB mit Port | mongodb://localhost:27017 | string |
+| DB_NAME | Datenbank in MongoDB standardmässig "time" | time | string |
 
 ### 1.2.5 Installieren von Composer
 
