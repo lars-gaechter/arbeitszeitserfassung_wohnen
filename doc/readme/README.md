@@ -5,7 +5,7 @@
 ```
 127.0.0.1           local.standortbestimmung.ch
 ```
-# vhost xampp by deafult dir
+# vhost xampp by default dir
 ## C:\xampp\apache\conf\extra
 ### example bottom last line
 ### use ## on every (multiple) line to comment out

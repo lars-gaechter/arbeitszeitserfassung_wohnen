@@ -34,3 +34,7 @@ Backup of *.doc*
 ~$*.xls*
 *.xlk
 *.~vsd*
+# NetBeans
+/nbproject/
+# Twig cache
+/cache/twig/

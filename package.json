@@ -17,9 +17,9 @@
   },
   "scripts": {
     "css:prod": "sass source/scss/_main.scss public/css/main.css --style compressed",
-    "css:dev": "sass --watch source/scss/_main.scss public/css/main.css --style compressed",
-    "js:prod": "./node_modules/.bin/webpack",
-    "js:dev": "./node_modules/.bin/webpack --watch"
+    "css:dev": "sass --watch source/scss/_main.scss public/css/main.css",
+    "js:prod": "./node_modules/.bin/webpack --mode=production",
+    "js:dev": "./node_modules/.bin/webpack --mode=none --watch"
   },
   "repository": {
     "type": "git",

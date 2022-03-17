@@ -29,12 +29,7 @@ class RIOMain extends RIOAccessController
      */
     public function showHomepage(): Response
     {
-       return $this->postLogin();
-    }
-
-    private function getRemoteUser(): string
-    {
-        return isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'] : '';
+       return RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
     public function login(string $state): Response
@@ -69,10 +64,6 @@ class RIOMain extends RIOAccessController
         return RIORedirect::redirectResponse(["login", "unchanged"]);
     }
 
-    private function showForm($message) {
-        echo($message);
-    }
-
     /**
      * Check if given user and password exists in LDAP
      *  create new MongoDB user if not exists or just insert new session id
@@ -84,9 +75,6 @@ class RIOMain extends RIOAccessController
      */
     private function userValidate(string $username, string $password): ?Response
     {
-	$failure = function ($error) {
-            $this->showForm($error);
-        };
         $session = $this->getSession();
         $sessionId = $session->getId();
         if($username === "testuser" && $password === "Password1" && "true" === $_ENV["DEVELOPMENT_MODE"] && "true" === $_ENV["DEBUG"]) {
@@ -100,7 +88,8 @@ class RIOMain extends RIOAccessController
           ['sessionId' => $sessionId]
         );
         $user = new RIOUserObject();
-        $authObjectNoTime = array_merge(
+        
+$authObjectNoTime = array_merge(
             $maybeAuthObject,
             [
                 // New created user has by default no time record
@@ -114,10 +103,10 @@ class RIOMain extends RIOAccessController
         );
             return $this->doLogin($authObjectNoTime, $maybeObject, $auth_find, $sessionId);
         } else {
-	    $maybeObject = [
-            'sessionUsername' => $username, //$sessionUsername,
-            'displayUsername' => "test", //$displayUsername,
-            'surnameUsername' => $username //$surnameUsername
+            $maybeObject = [
+            'sessionUsername' => $sessionUsername,
+            'displayUsername' => $displayUsername,
+            'surnameUsername' => $surnameUsername
         ];
         $maybeAuthObject = array_merge(
           $maybeObject,
@@ -138,25 +127,11 @@ class RIOMain extends RIOAccessController
         );
             /** @var resource $ldap */
             $ldap = ldap_connect($_ENV["LDAP_HOST"], $_ENV["LDAP_PORT"]);
-	    echo "ldap_connect return not false: ";
-	    var_dump($ldap);
+	    var_dump($ldap);die();
             ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-	    var_dump($ldap);
             // TODO: uncatchable connection error on follow line below
-            //$search = ldap_search($ldap, $_ENV["LDAP_SEARCH_ROOT"], '(' . $_ENV["LDAP_RDN"] . '=' . $username . ')');
-	    var_dump(ldap_search($ldap, $_ENV["LDAP_SEARCH_ROOT"], ""));
-	    echo "die";die();
-	    $search = ldap_search($ldap, $_ENV["LDAP_SEARCH_ROOT"], '(' . $_ENV["LDAP_RDN"] . '=' . $username . ')');
-            var_dump($search);die();
-	    if (!$search) {
-		echo "no search";
-                return $failure(ldap_error($ldap));
-	    }
+            $search = ldap_search($ldap, $_ENV["LDAP_SEARCH_ROOT"], '(' . $_ENV["LDAP_RDN"] . '=' . $username . ')');
             $results = ldap_get_entries($ldap, $search);
-            if (!$results){
-		echo 'no results';
-                return $failure(ldap_error($ldap));
-	    }
             $dn = $results[0]['dn'];
             $displayUsername = $results[0]['uid'][0];
             $sessionUsername = $results[0]['uid'][1];
@@ -212,52 +187,12 @@ class RIOMain extends RIOAccessController
     public function postLogin(): Response
     {
         $request = $this->getRequest();
-        //$usernamePost = $request->get("username");
-        $usernamePost = $this->getRemoteUser();
-        //$passwordPost = $request->get("password");
-        if (null !== $usernamePost /*&& null !== $passwordPost*/) {
-            // Save remote user in the session
-            // TODO: Check if session auth is async to htaccess auth, but should be controlled everything independet only by htaccess matters
+        $usernamePost = $request->get("username");
+        $passwordPost = $request->get("password");
+        if (null !== $usernamePost && null !== $passwordPost) {
             $request->getSession()->set("username", $usernamePost);
-            return $this->checkIfNewUser($usernamePost);
-            //return $this->userValidate($usernamePost, $passwordPost);
+            return $this->userValidate($usernamePost, $passwordPost);
         }
         return RIORedirect::error(500);
-    }
-
-    /**
-     * If remote user doesn't exist in the mongo db we just create a new one else do nothing
-     */
-    private function checkIfNewUser($username): Response
-    {
-        $failure = function ($error) {
-            $this->showForm($error);
-        };
-        $session = $this->getSession();
-        $sessionId = $session->getId();
-        
-	    $maybeObject = [
-            'sessionUsername' => $username, //$sessionUsername,
-            'displayUsername' => $username, //$displayUsername, TODO: need correct diplay name like first- and lastname
-            'surnameUsername' => $username //$surnameUsername
-        ];
-        $maybeAuthObject = array_merge(
-          $maybeObject,
-          ['sessionId' => $sessionId]
-        );
-        $user = new RIOUserObject();
-        $authObjectNoTime = array_merge(
-            $maybeAuthObject,
-            [
-                // New created user has by default no time record
-                'timeRecordStarted' => false,
-                "mandatoryTime" => $user->getMandatoryTime()->format("H:i"),
-                "location" => $user->getLocation()
-            ]
-        );
-        $auth_find = $this->getUsers()->findOne(
-            $maybeObject
-        );
-        return $this->doLogin($authObjectNoTime, $maybeObject, $auth_find, $sessionId);
     }
 }

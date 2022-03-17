@@ -57,9 +57,7 @@ class RIOGeneralAccessController
             $mandatoryTime->setTime(0,0);
         }
         return [
-            'date' => $this->dateTime->format("d.m.Y"),
-            'monthYear' => $this->dateTime->format("m.Y"),
-            'weekYear' => $this->dateTime->format("W.Y"),
+            'day' => $this->dateTime->format("d"),
             'month' => $this->dateTime->format("m"),
             'week' => $this->dateTime->format("W"),
             $this->getMandatoryTimeKey() => $mandatoryTime->format("H:i"),
@@ -85,14 +83,16 @@ class RIOGeneralAccessController
     public function getTimeRecordingFilter(): array
     {
         return [
-            'date' => $this->dateTime->format("d.m.Y")
+            'day' => $this->dateTime->format("d"),
+            'month' => $this->dateTime->format("m")
         ];
     }
 
     public function getTimeRecordingFilterStarted(): array
     {
         return [
-            'date' => $this->dateTime->format("d.m.Y")
+            'day' => $this->dateTime->format("d"),
+            'month' => $this->dateTime->format("m")
         ];
     }
 
@@ -253,7 +253,8 @@ class RIOGeneralAccessController
     public function getDate(): array
     {
         return [
-            'date' => $this->dateTime->format("d.m.Y")
+            'day' => $this->dateTime->format("d"),
+            'month' => $this->dateTime->format("m")
         ];
     }
 
@@ -290,7 +291,7 @@ class RIOGeneralAccessController
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
         $allWorkDaysFromUser = $this->getWorkDays()->find(["sessionUsername" => $user->getUsername()])->toArray();
-        return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
+        return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);;
     }
 
     /**
@@ -307,23 +308,44 @@ class RIOGeneralAccessController
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
         $currentWorkDay = new RIOWorkDayObject();
         /** @var BSONDocument[]|[] $allWorkDaysFromUser */
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["monthYear" => $monthYear])->toArray();
-        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user);
+        $monthYearArray = explode(".",$monthYear);
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["month" => $monthYearArray[0]])->toArray();
+        return $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user, $monthYear);
     }
 
     /**
      * Month of a year is unique
      *
      * @param string $monthYear
+     * @param string $username
+     * @return array
+     * @throws Exception
+     */
+    public function getUserAllPastWorkdaysByMonthYearUserTest(string $monthYear, string $username): array
+    {
+        /** @var BSONDocument $user */
+        $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
+        $currentWorkDay = new RIOWorkDayObject();
+        /** @var BSONDocument[]|[] $allWorkDaysFromUser */
+        $monthYearArray = explode(".",$monthYear);
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$username)->find(["month" => $monthYearArray[0]])->toArray();
+        $return = $this->getPastWorkDaysUser($allWorkDaysFromUser, $currentWorkDay, $user, $monthYear);
+        return $return;
+    }
+
+    /**
+     * Month of a year is unique
+     *
+     * @param string $month
      * @param RIOMain|RIOAdmin $controller
      * @return array
      * @throws Exception
      */
-    public function getUserAllPastWorkdaysByMonthYear(string $monthYear, RIOMain|RIOAdmin $controller): array
+    public function getUserAllPastWorkdaysByMonth(string $month, RIOMain|RIOAdmin $controller): array
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$monthYear)->format("Y"),$user->getUsername())->find(["sessionUsername" => $user->getUsername(), "monthYear" => $monthYear])->toArray();
+        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.".$month)->format("Y"),$user->getUsername())->find(["sessionUsername" => $user->getUsername(), "month" => $month])->toArray();
         return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
@@ -335,11 +357,20 @@ class RIOGeneralAccessController
      * @return array
      * @throws Exception
      */
-    public function getUserAllPastWorkdaysByWeek(string $weekYear, RIOMain|RIOAdmin $controller): array
+    public function getUserAllPastWorkdaysByWeek(string $week, RIOMain|RIOAdmin $controller): array
     {
         $user = new RIOUserObject($controller);
         $currentWorkDay = new RIOWorkDayObject();
-        $allWorkDaysFromUser = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime("01.01.".explode('.',$weekYear)[1])->format("Y"),$user->getUsername())->find(["sessionUsername" => $user->getUsername(), "weekYear" => $weekYear])->toArray();
+        $allWorkDaysFromUser = 
+            $this->getWorkDaysByYearUser(
+                RIODateTimeFactory::getDateTime("01.01.".explode('.',$week.".".$currentWorkDay->getDate()->format("Y"))[1])->format("Y"),
+                $user->getUsername()
+            )->find(
+                [
+                    "sessionUsername" => $user->getUsername(),
+                    "week" => $week
+                ]
+                )->toArray();
         return $this->getPastWorkDays($allWorkDaysFromUser, $currentWorkDay, $user);
     }
 
@@ -352,28 +383,43 @@ class RIOGeneralAccessController
      * @return array
      * @throws Exception
      */
-    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, bool $pastWorkDay = true, bool $sortByDate = true): array
+    private function getPastWorkDaysUser(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, BSONDocument $user, string $monthYear, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
-        $currentWorkDayString = $currentWorkDay->getDate()->format("d.m.Y");
+        $day = $currentWorkDay->getDate()->format("d");
+        $date = $currentWorkDay->getDate()->format("d.m.Y");
         foreach ($allWorkDaysFromUser as $oneWorkDayFromUser) {
             if(true === $pastWorkDay) {
-                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDayString) {
-                    $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                if($oneWorkDayFromUser->offsetExists("day")) {
+                    if($oneWorkDayFromUser->offsetGet("day") !== $day) {
+                        $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                    }
+                } else {
+                    if($oneWorkDayFromUser->offsetGet("day") . '.' . $monthYear !== $date) {
+                        $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                    }
                 }
             } else {
                 $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
             }
         }
         if(true === $sortByDate) {
+            /** @var BSONDocument $a */
             usort($allWorkDaysFromUserPast, function($a, $b) {
-                return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
+                if($a->offsetExists('day') && $b->offsetExists('day')) {
+                    return RIODateTimeFactory::getDateTime($a['day']) <=> RIODateTimeFactory::getDateTime($b['day']);
+                }
+                return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['day'] . '.' . $monthYear);
             });
         }
         $oneWorkDayFromUserPastIndexed = [];
         $i = 0;
         foreach ($allWorkDaysFromUserPast as $oneWorkDayFromUserPast) {
-            $oneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $oneWorkDayFromUserPast["date"]];
+            if($oneWorkDayFromUserPast->offsetExists('day')) {
+                $oneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $oneWorkDayFromUserPast["day"]];
+            } else {
+                $oneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->offsetGet("sessionUsername"), $oneWorkDayFromUserPast["day"] . '.' . $monthYear];
+            }
             $oneWorkDayFromUserPastIndexed[] = $oneWorkDayFromUserPast;
             $i++;
         }
@@ -383,11 +429,18 @@ class RIOGeneralAccessController
     private function getPastWorkDays(array $allWorkDaysFromUser, RIOWorkDayObject $currentWorkDay, RIOUserObject $user, bool $pastWorkDay = true, bool $sortByDate = true): array
     {
         $allWorkDaysFromUserPast = [];
-        $currentWorkDayString = $currentWorkDay->getDate()->format("d.m.Y");
+        $day = $currentWorkDay->getDate()->format("d");
+        $date = $currentWorkDay->getDate()->format("d.m.Y");
         foreach ($allWorkDaysFromUser as $oneWorkDayFromUser) {
             if(true === $pastWorkDay) {
-                if($oneWorkDayFromUser->offsetGet("date") !== $currentWorkDayString) {
-                    $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                if($oneWorkDayFromUser->offsetExists("day")) {
+                    if($oneWorkDayFromUser->offsetGet("day") !== $day) {
+                        $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                    }
+                } else {
+                    if($oneWorkDayFromUser->offsetGet("date") !== $date) {
+                        $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
+                    }
                 }
             } else {
                 $allWorkDaysFromUserPast[] = $oneWorkDayFromUser;
@@ -395,13 +448,20 @@ class RIOGeneralAccessController
         }
         if(true === $sortByDate) {
             usort($allWorkDaysFromUserPast, function($a, $b) {
+                if($a->offsetExists('day') && $b->offsetExists('day')) {
+                    return RIODateTimeFactory::getDateTime($a['day']) <=> RIODateTimeFactory::getDateTime($b['day']);
+                }
                 return RIODateTimeFactory::getDateTime($a['date']) <=> RIODateTimeFactory::getDateTime($b['date']);
             });
         }
         $oneWorkDayFromUserPastIndexed = [];
         $i = 0;
         foreach ($allWorkDaysFromUserPast as $oneWorkDayFromUserPast) {
-            $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->getUsername(), $oneWorkDayFromUserPast["date"]];
+            if($oneWorkDayFromUserPast->offsetExists('day')) {
+                $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->getUsername(), $oneWorkDayFromUserPast["day"]];
+            } else {
+                $OneWorkDayFromUserPast["presenceTimeCorrections"] = [$user->getUsername(), $oneWorkDayFromUserPast["date"]];
+            }
             $oneWorkDayFromUserPastIndexed[] = $oneWorkDayFromUserPast;
             $i++;
         }

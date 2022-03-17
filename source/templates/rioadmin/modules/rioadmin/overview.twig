@@ -1,6 +1,13 @@
 {% extends "base.twig" %}
-{% macro link(oneWorkDayFromUserPast, key) %}
-    <a href="{{ getAbsolutePath(['rioadmin','presenceTimeCorrections']|merge(oneWorkDayFromUserPast.presenceTimeCorrections)|merge([key])) ~ 'unchanged' }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
+{% macro link(oneWorkDayFromUserPast, key, monthYear) %}
+    {% set
+        presenceTimeCorrectionsArguments = 
+        {
+            0 : oneWorkDayFromUserPast.presenceTimeCorrections[0],
+            1 : oneWorkDayFromUserPast.day ~ '.' ~ monthYear
+        } 
+    %}
+    <a href="{{ getAbsolutePath(['rioadmin','presenceTimeCorrections']|merge(presenceTimeCorrectionsArguments)|merge([key])) ~ 'unchanged' }}"><img src="{{ getAbsolutePath(['img']) ~ 'properties.gif' }}" alt="Details" title="bearbeiten"></a>
 {% endmacro %}
 {% block content %}
     {% import _self as overview %}
@@ -54,19 +61,19 @@
             {# @var MongoDB\Model\BSONDocument time #}
             {% for key,time in oneWorkDayFromUserPast.offsetGet("time") %}
                 <tr>
-                    <td>{{ overview.link(oneWorkDayFromUserPast, key) }}</td>
+                    <td>{{ overview.link(oneWorkDayFromUserPast, key, monthYear) }}</td>
                     {% if false is same as(printDate) %}
-                        <th scope="row" rowspan="{{ length }}">{{ getWeekDayShortNameByDate(oneWorkDayFromUserPast.date) }}</th>
+                        <th scope="row" rowspan="{{ length }}">{{ getWeekDayShortNameByDate(oneWorkDayFromUserPast.day ~ '.' ~ monthYear ) }}</th>
                         <th scope="row" rowspan="{{ length }}">{{ oneWorkDayFromUserPast.date }}</th>
                     {% endif %}
                     <td>{{ '' is same as(time.offsetGet("startCorrected")) ? time.offsetGet("start") : time.offsetGet("startCorrected") }}</td>
-                    <td>{{ '' is same as(time.offsetGet("endCorrected")) ? time.offsetGet("end") : time.offsetGet("endCorrected") }}</td>
+                    <td>{% if time.offsetExists("endCorrected") %}{{ '' is same as(time.offsetGet("endCorrected")) ? time.offsetGet("end") : time.offsetGet("endCorrected") }}{% endif %}</td>
                     {% if false is same as(printMandatoryTime) %}
                         <td rowspan="{{ length }}">{{ oneWorkDayFromUserPast.offsetGet("mandatoryTime") }}</td>
                         {% set printMandatoryTime = true %}
                     {% endif %}
-                    <td>{{ time.offsetGet("isTime") }}</td>
-                    <td>{{ time.offsetGet("diffNegativePositive")~time.offsetGet("diff") }}</td>
+                    <td>{% if time.offsetExists("isTime") %}{{ time.offsetGet("isTime") }}{% endif %}</td>
+                    <td>{% if time.offsetExists("diffNegativePositive") %}{{ time.offsetGet("diffNegativePositive")~time.offsetGet("diff") }}{% endif %}</td>
                     {% if false is same as(printDate) %}
                         <td rowspan="{{ length }}">{{ oneWorkDayFromUserPast.offsetGet("deviationTimeWeekly") }}</td>
                         <td rowspan="{{ length }}">{{ oneWorkDayFromUserPast.offsetGet("deviationTimeMonthly") }}</td>

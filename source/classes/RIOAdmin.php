@@ -42,7 +42,7 @@ class RIOAdmin extends RIOAccessController
      * @return Response
      * @throws Exception
      */
-    public function logout(): Response
+    private /*public*/ function logout(): Response
     {
         $user = new RIOUserObject($this);
         $this->getUsers()->updateOne(
@@ -114,6 +114,12 @@ class RIOAdmin extends RIOAccessController
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
+        $session = $this->getSession();
+        $sessionId = $session->getId();
+        if($user->offsetGet("sessionId") !== $sessionId) {
+            // Forbidden access!
+            $user = $this->getUsers()->findOne(['sessionId' => $sessionId]);
+        }
         $request = $this->getRequest();
         $mandatoryTime = $request->get("mandatoryTime");
         if(null !== $mandatoryTime && '' !== $mandatoryTime) {
@@ -138,6 +144,12 @@ class RIOAdmin extends RIOAccessController
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
+        $session = $this->getSession();
+        $sessionId = $session->getId();
+        if($user->offsetGet("sessionId") !== $sessionId) {
+            // Forbidden access!
+            $user = $this->getUsers()->findOne(['sessionId' => $sessionId]);
+        }
         $workday = new RIOWorkDayObject();
         $monthYear = $workday->getDate()->format("m.Y");
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
@@ -174,6 +186,12 @@ class RIOAdmin extends RIOAccessController
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
+        $session = $this->getSession();
+        $sessionId = $session->getId();
+        if($user->offsetGet("sessionId") !== $sessionId) {
+            // Forbidden access!
+            $user = $this->getUsers()->findOne(['sessionId' => $sessionId]);
+        }
         if(null === $user && RIOConfig::isInDebugMode()) {
             throw new Error("User with this username ".$username." doesn't exist.");
         }
@@ -181,7 +199,7 @@ class RIOAdmin extends RIOAccessController
         if(null === $workDays && RIOConfig::isInDebugMode()) {
             throw new Error("User ".$username." has not workday collection for the year ".RIODateTimeFactory::getDateTime($date)->format("Y"));
         }
-        $givenTime = ["date" => $date];
+        $givenTime = ["day" => RIODateTimeFactory::getDateTime($date)->format("d"),"month" => RIODateTimeFactory::getDateTime($date)->format("m")];
         /** @var BSONDocument $workDay */
         $workDay = $workDays->findOne($givenTime);
         /** @var BSONArray $times */
@@ -249,6 +267,12 @@ class RIOAdmin extends RIOAccessController
     {
         /** @var BSONDocument $user */
         $user = $this->getUsers()->findOne(['sessionUsername' => $username]);
+        $session = $this->getSession();
+        $sessionId = $session->getId();
+        if($user->offsetGet("sessionId") !== $sessionId) {
+            // Forbidden access!
+            $user = $this->getUsers()->findOne(['sessionId' => $sessionId]);
+        }
         $previousMonthYear = $this->getAdjacentMonth($monthYear);
         if([] !== $this->getUserAllPastWorkdaysByMonthYearUser($previousMonthYear, $username)) {
             $previousMonthYearName = $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$previousMonthYear));
@@ -265,7 +289,7 @@ class RIOAdmin extends RIOAccessController
         }
         $customTwigExtension = new RIOCustomTwigExtension($this->getRequest());
         $currentMonthName = $this->getFormattedDateByDate(RIODateTimeFactory::getDateTime("01.".$monthYear));
-        $allWorkDaysFromUserPast = $this->getUserAllPastWorkdaysByMonthYearUser($monthYear, $username);
+        $allWorkDaysFromUserPast = $this->getUserAllPastWorkdaysByMonthYearUserTest($monthYear, $username);
         $navByActive = $customTwigExtension->navByActive($user->offsetGet("sessionUsername"), $monthYear, "overview");
         $displayUsername = $user->offsetGet("displayUsername");
         $surnameUsername = $user->offsetGet("surnameUsername");
@@ -280,7 +304,8 @@ class RIOAdmin extends RIOAccessController
             "nextMonth" => $nextMonthYear,
             'displayUsername' => $displayUsername,
             'surnameUsername' => $surnameUsername,
-            'sessionUsername' => $sessionUsername
+            'sessionUsername' => $sessionUsername,
+            'monthYear' => $monthYear
         ];
         return $this->renderPage(
             "overview.twig",
@@ -529,9 +554,10 @@ class RIOAdmin extends RIOAccessController
     public function stop(): RedirectResponse|Response
     {
         $user = new RIOUserObject($this);
+        $year = RIODateTimeFactory::getDateTime()->format("Y");
         if($user->isTimeRecordStarted()) {
             /** @var BSONDocument $findOneWorkDay */
-            $findOneWorkDay = $this->getWorkDaysByYearUser(RIODateTimeFactory::getDateTime()->format("Y"),$user->getUsername())->findOne($this->getDate());
+            $findOneWorkDay = $this->getWorkDaysByYearUser($year,$user->getUsername())->findOne($this->getDate());
             /** @var BSONArray $times */
             $times = $findOneWorkDay->offsetGet("time");
             /*** @var BSONArray $time */
@@ -622,8 +648,6 @@ class RIOAdmin extends RIOAccessController
                         $time->offsetSet($this->getDiffNegativePositiveKey(), $isTimeNegativeOrPositiveOrZero);
                     }
                 }
-
-
             }
             $mandatoryTime = RIODateTimeFactory::getDateTime($findOneWorkDay->offsetGet($this->getMandatoryTimeKey()));
             $deviationDiff = $mandatoryTime->diff($presenceTimeTotal);
@@ -639,9 +663,9 @@ class RIOAdmin extends RIOAccessController
             if($presenceTimeTotal->format("H:i") < $findOneWorkDay->offsetGet($this->getMandatoryTimeKey())) {
                 $deviationNegativeOrPositiveOrZero .= '-';
             }
-            $userMonth = $this->getUserAllPastWorkdaysByMonthYear($findOneWorkDay->offsetGet("monthYear"), $this);
+            $userMonth = $this->getUserAllPastWorkdaysByMonth($findOneWorkDay->offsetGet("month"), $this);
             $userTotal = $this->getUserAllPastWorkdays($this);
-            $userWeek = $this->getUserAllPastWorkdaysByWeek($findOneWorkDay->offsetGet("weekYear"), $this);
+            $userWeek = $this->getUserAllPastWorkdaysByWeek($findOneWorkDay->offsetGet("week"), $this);
             $isTimeMonthly = RIODateTimeFactory::getDateTime();
             $isTimeMonthly->setTime(0, 0);
             $mandatoryTimeMonthly = RIODateTimeFactory::getDateTime();
